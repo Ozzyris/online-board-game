@@ -1,0 +1,77 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+#PUBLIC
+# compiled output
+/public/dist
+/public/dist-server
+/public/tmp
+/public/out-tsc
+# dependencies
+/public/node_modules
+/public/src/environments
+# IDEs and editors
+/public/.idea
+/public/.project
+/public/.classpath
+/public/.c9/
+/public/*.launch
+/public/.settings/
+/public/*.sublime-workspace
+# IDE - VSCode
+/public/.vscode/*
+/public/!.vscode/settings.json
+/public/!.vscode/tasks.json
+/public/!.vscode/launch.json
+/public/!.vscode/extensions.json
+# misc
+/public/.sass-cache
+/public/connect.lock
+/public/coverage
+/public/libpeerconnection.log
+/public/npm-debug.log
+/public/testem.log
+/public/typings
+# e2e
+/public/e2e/*.js
+/public/e2e/*.map
+# System Files
+/public/.DS_Store
+/public/Thumbs.db
+
+# SERVER
+# dependencies
+/server/node_modules
+/server/config.js
+
+#DATABASE
+/database/*
+
+#APPLICATION
+/application/*~
+/application/*.sw[mnpcod]
+/application/.tmp
+/application/*.tmp
+/application/*.tmp.*
+/application/*.sublime-project
+/application/*.sublime-workspace
+/application/.DS_Store
+/application/Thumbs.db
+/application/UserInterfaceState.xcuserstate
+/application/$RECYCLE.BIN/
+
+/application/*.log
+/application/log.txt
+/application/npm-debug.log*
+
+/application/.idea
+/application/.ionic
+/application/.sass-cache
+/application/.sourcemaps
+/application/.versions
+/application/.vscode
+/application/coverage
+/application/dist
+/application/node_modules
+/application/platforms
+/application/plugins
+/application/www
