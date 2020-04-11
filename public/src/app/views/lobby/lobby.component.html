@@ -1,0 +1,90 @@
+<toaster></toaster>
+<modal-name></modal-name>
+
+<section class="lobby">
+	<div class="top_bar">
+		<div class="inner_container">
+			<div class="title">
+				<img src="../../../assets/images/logo-galerapagos.png" alt="logo-galerapagos">
+				<span>Illegal</span>
+			</div>
+			<div class="user_actions">
+				<a class="link" (click)="remove_player()"><span class="icon"></span>Leave game</a>
+				<p>Hello, {{current_player.name}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="main_content">
+		<div class="body">
+			<div class="inner_container">
+				<div class="activities">
+					<ul>
+						<li class="new">
+							<p class="text"><span>Alexandre</span>left the lobby.</p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text">The game will start <span>1 seconde</span></p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text">The game will start <span>2 secondes</span></p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text">The game will start <span>3 secondes</span></p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text"><span>Alexandre</span>is ready to start the game</p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text"><span>Alexandre</span>says: Hello les petites couilles molles!</p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text"><span>Alexandre</span>joined the lobby.</p>
+							<p class="time">a few moment ago</p>
+						</li>
+						<li>
+							<p class="text">Connected to the server</p>
+							<p class="time">a few moment ago</p>
+						</li>
+					</ul>
+				</div>
+				<div class="chatbox">
+					<input type="text" placeholder="You may speak here">
+					<a class="button"><span></span>send</a>
+				</div>
+			</div>
+		</div>
+		<div class="right_bar">
+			<div class="players_content">
+				<div class="players_header">
+					<h4>Joueur <span>(0/7 online)</span></h4>
+				</div>
+				<div class="players_body">
+					<ul>
+						<li  *ngFor="let player_details of players_details">
+							<span class="indicator" [ngClass]="player_details.status"></span>
+							<div class="content">
+								<p>{{player_details.name}}</p>
+								<p class="small">Active {{player_details.last_online_time | amTimeAgo }}</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="action_content">
+				<div class="inner_group">
+					<div class="input_group">
+						<input type="text" value="{{share_link}}">
+						<a class="input_button" (click)="copy_to_clipboard()">Copy</a>
+					</div>
+					<a class="button inactive" [routerLink]="['/board']">Lancer la partie</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

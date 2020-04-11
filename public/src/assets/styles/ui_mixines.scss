@@ -1,0 +1,97 @@
+// =============================================================================
+// VARIABLE
+// =============================================================================
+$white: #ffffff;
+
+$classic_red: rgb(225, 89, 68);
+$classic_blue: rgb(95, 170, 239);
+$classic_green: #3FB39D;
+
+$primary_blue_light: #4D648C;
+$primary_blue_med: #6F82A4;
+$primary_blue_dark: #3C4F71;
+
+$secondary_yellow_med: #FFBC00;
+
+// =============================================================================
+// String Replace
+// =============================================================================
+@function str-replace($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+	}
+
+	@return $string;
+}
+
+// =============================================================================
+// Font Face
+// =============================================================================
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+	$src: null;
+
+	$extmods: (
+		eot: "?",
+		svg: "#" + str-replace($name, " ", "_")
+	);
+
+	$formats: (
+		otf: "opentype",
+		ttf: "truetype"
+	);
+
+	@each $ext in $exts {
+		$extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+		$format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+		$src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+	}
+
+	@font-face {
+		font-family: quote($name);
+		font-style: $style;
+		font-weight: $weight;
+		src: $src;
+	}
+}
+
+
+// =============================================================================
+// CONTAINTER SIZING
+// =============================================================================
+@mixin container_sizing( $max_size ){
+	width: 90%;
+	max-width: $max_size;
+	margin: 0 auto;
+}
+
+// =============================================================================
+// TEXT
+// =============================================================================
+@mixin primary_title( $color ){
+	color: $color;
+	font-family: 'istok';
+	font-size: 28px;
+	font-weight: 400;
+	text-transform: uppercase;
+	line-height: 28px;
+}
+
+@mixin secondary_title( $color ){}
+
+@mixin third_title( $color ){
+	@media screen and (min-width: 992px ){}
+}
+
+@mixin primary_text( $color ){
+	color: $color;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 22px;
+}
+
+@mixin primary_link( $color ){
+	@media screen and (min-width: 992px ){}
+	&:hover{}
+}

@@ -1,0 +1,46 @@
+// =============================================================================
+// IMPORT
+// =============================================================================
+@import "./assets/styles/ui_mixines";
+
+
+// =============================================================================
+// FONTS
+// =============================================================================
+@include font-face(font_awesome, './assets/fonts/font_awesome/fa-light-300', 300, normal, eot woff ttf svg); 
+@include font-face(font_awesome, './assets/fonts/font_awesome/fa-solid-900', 900, normal, eot woff ttf svg); 
+@include font-face(baloo_thambi, './assets/fonts/baloo_thambi/bold/baloothambi_bold', 800, normal, ttf);
+@include font-face(baloo_thambi, './assets/fonts/baloo_thambi/regular/baloothambi_regular', 400, normal, ttf);
+
+// =============================================================================
+// RESET CSS
+// =============================================================================
+body, html{
+    font-size: 1rem;
+    background-color: #F9FAFC;
+    line-height: 1;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-overflow-scrolling: touch;
+}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, a, code, img, strong, ol, ul, li, form, label, article, aside, canvas, details, footer, header, nav, section{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+	font-family: 'baloo_thambi';
+}
+section, article, nav, header, footer, details, aside{ display: block; }
+ol, ul { list-style: none; }
+a{ text-decoration: none; }
+input, textarea, li, svg{
+    &:focus{
+        outline: none;
+    }
+    border-radius: 0;
+}
+textarea, input.text, input[type="text"], input[type="button"], input[type="submit"], .input-checkbox {
+    -webkit-appearance: none;
+    border-radius: 0;
+}

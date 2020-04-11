@@ -1,0 +1,17 @@
+<section class="game_id" *ngIf="is_modal_active">
+	<div class="modal">
+		<div class="header">
+			<h4>Vous avez été invité à jouer au Illegal Gallerapagos</h4>
+		</div>
+		<div class="body">
+			<div class="input-group" >
+				<label>Entrez votre nom</label>
+				<input type="text" [(ngModel)]="input_player_name">
+				<p class="info" *ngIf="info_player_name"><span class="icon"></span>{{info_player_name}}</p>
+			</div>
+		</div>
+		<div class="footer">
+			<a class="button" (click)="add_player()">Entrer dans le lobby</a>
+		</div>
+	</div>
+</section>
