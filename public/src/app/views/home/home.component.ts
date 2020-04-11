@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 //Services
 import { ActivityApiService } from '../../services/activity_api/activity_api.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
+
 
 @Component({
 	selector: 'app-home',
@@ -13,8 +15,16 @@ import { ActivityApiService } from '../../services/activity_api/activity_api.ser
 
 export class HomeComponent implements OnInit {
 
-	constructor( public activityApi_service: ActivityApiService, private router: Router ){}
-	ngOnInit(){}
+	constructor( public activityApi_service: ActivityApiService, private route: ActivatedRoute, public toaster_service: ToasterService, private router: Router ){}
+	ngOnInit(){
+		this.route.params.subscribe( params => {
+			if( params.info == 'game-dont-exist'){
+				setTimeout(()=>{
+					this.toaster_service.launch_toast({ message: 'This game doest exist' });
+				}, 1000);
+			}
+		})
+	}
 
 	create_lobby(){
 		this.activityApi_service.create_lobby()

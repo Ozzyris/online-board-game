@@ -87,7 +87,12 @@ game.statics.get_all_players = function( game_token ){
 	return new Promise((resolve, reject) => {
 		game.findOne({game_token: game_token}, {}).exec()
 			.then(game => {
-				resolve( game.players );             
+				if( game ){
+					resolve( game.players );
+				}
+				else{
+					resolve( undefined );
+				}
 			})
 	})
 };

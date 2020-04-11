@@ -1,6 +1,3 @@
-// if new player -> create account
-// else -> co user
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
@@ -111,9 +108,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	get_all_players_details(){
 		this.activityApi_service.get_all_players_details({ game_token: this.game_token })
 			.subscribe( players_details => {
-				this.players_details = players_details;
-				this.init_current_player( players_details);
-
+				if( players_details == null ){
+					localStorage.clear();
+					this.router.navigate(['/home', 'game-dont-exist']);
+				}else{
+					this.players_details = players_details;
+					this.init_current_player( players_details);
+				}
 			})
 	}
 
