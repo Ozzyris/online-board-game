@@ -27,6 +27,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	game_token: string;
 	share_link: string;
 	player_id_subscription: Subscription;
+	leave_confirmation_subscription: Subscription;
 	current_player: any = {}
 	players_details: any = [];
 
@@ -57,6 +58,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			this.socket.on('update-player-status', (data) => { observer.next(data); this.update_player_status(data); });
 			this.socket.on('new-activity', (data) => { observer.next(data); this.new_activity(data); });
 			this.socket.on('update-player', (data) => { observer.next(data); this.update_player(data); });
+			this.socket.on('leave-game', (data) => { observer.next(data); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -64,10 +66,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
 	handshake( data ){
 		this.toaster_service.launch_toast({ message: data.content });
-		// get the last 50 activities. (stream like observable)
 	}
 	update_player_status( payload ){
-		console.log( payload );
+		// console.log( payload );
 		for (var i = this.players_details.length - 1; i >= 0; i--) {
 			if( this.players_details[i]._id == payload.player_id ){
 				this.players_details[i].status = payload.status;
@@ -75,13 +76,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		}
 	}
 	new_activity( data ){
-		console.log( 'new_activity' + data );
+		// console.log( 'new_activity' + data );
 	}
 	update_player( payload ){
-		console.log( payload );
-
 		if(payload.type == 'add-player'){
-			this.players_details.push(payload);
+			this.players_details.push(payload.player_details);
 		}else if(payload.type == 'remove-player'){
 			for (var i = this.players_details.length - 1; i >= 0; i--) {
 				if( this.players_details[i]._id == payload.player_id ){
@@ -89,10 +88,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 				}
 			}
 		}
-		
-		
 	}
-
 	init_lobby(){
 		return new Promise((resolve, reject)=>{
 			this.get_elem_from_storage( 'player_id' )
@@ -116,7 +112,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		this.activityApi_service.get_all_players_details({ game_token: this.game_token })
 			.subscribe( players_details => {
 				this.players_details = players_details;
-				console.log( this.players_details );
 				this.init_current_player( players_details);
 
 			})
@@ -140,13 +135,30 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	}
 
 	remove_player(){
-		this.activityApi_service.remove_player({ game_token: this.game_token, player_id: this.current_player.player_id })
+		if( this.current_player.rank == "administrator" ){
+			this.modalName_service.open_modal({ modal_id: 'alert', status: 'open', title: 'Are you sure to leave this game?', content: 'As administrator of this game, if you leave everyone will be kicked out of the game.'});
+
+			this.leave_confirmation_subscription = this.modalName_service.get_leave_confirmation()
+				.subscribe( confirmation_to_leave=> {
+					this.activityApi_service.delete_lobby({ game_token: this.game_token })
+						.subscribe( is_game_closed => {
+							localStorage.clear();
+							this.router.navigate(['/home']);
+						}, error => {
+							console.log( error );
+						})
+					this.leave_confirmation_subscription.unsubscribe();
+				});
+			
+		}else{
+			this.activityApi_service.remove_player({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( is_player_removed => {
 					localStorage.clear();
 					this.router.navigate(['/home']);
 				}, error => {
 					console.log( error );
 				})
+		}
 	}
 
 	copy_to_clipboard(){

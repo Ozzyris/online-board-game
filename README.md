@@ -5,9 +5,16 @@ A way to play board game online to play during confinement.
 > non fonctionnel
 
 ### Todo
-- [ ] Si l'admin se casse alors la jeu est fermé
+- [x] New player dosen't display their name
+- [x] Remove player
+- [x] If player removed how to get info for the message "user as left the lobby"
+- [x] Kick user out player modale
+- [x] If the admin leave the game is closed
+- [x] Confirmation modal when the admin leave
+- [ ] Catch empty game and redirect user to home + toast
+- [ ] Si error dans token = pas de création de nouveau jeux
 - [ ] Bug de online offline
-- [ ] Remove player
 - [ ] Amelioration des status en online & offline
 - [ ] create channel in io
 - [ ] meilleur deconnexion
+- [ ] get the last 50 activities. (stream like observable) when connected to the server (handshake)

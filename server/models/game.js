@@ -124,9 +124,11 @@ game.statics.add_player = function( game_token, player ){
 
 game.statics.remove_player = function( game_token, player_id ){
 	return new Promise((resolve, reject) => {
-        game.updateOne({ game_token: game_token, 'players.$._id': player_id }, {
+        game.updateOne({ game_token: game_token }, {
             $pull: { 
-                "players" : '',
+                "players" : {
+                	'_id': player_id
+                }
             },
 		}).exec()
 		.then( is_player_removed => {
@@ -157,6 +159,15 @@ game.statics.add_activity = function(game_token, payload){
         }).exec()
         .then (is_activity_added => {
             resolve( is_activity_added );
+        })
+    })
+};
+
+game.statics.remove_game = function(game_token){
+    return new Promise((resolve, reject) => {
+        game.deleteOne({ game_token: game_token }, {}).exec()
+        .then (is_game_deleted => {
+            resolve( is_game_deleted );
         })
     })
 };

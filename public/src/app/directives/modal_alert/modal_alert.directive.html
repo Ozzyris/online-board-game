@@ -1,0 +1,12 @@
+<section class="alert_modal"  *ngIf="is_modal_active">
+	<div class="modal">
+		<div class="header">
+			<h4>{{title}}</h4>
+			<p>{{content}}</p>
+		</div>
+		<div class="footer">
+			<a class="confirm" (click)="confirmation()">Yes, I am sure</a>
+			<a class="cancel" (click)="is_modal_active = false">Annuler</a>
+		</div>
+	</div>
+</section>

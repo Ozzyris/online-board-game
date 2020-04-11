@@ -24,6 +24,11 @@ export class ActivityApiService {
 		return this.http.get(url, this.httpOptions);
 	}
 
+	delete_lobby( payload ){
+		let url = this.base_url + 'delete-lobby';
+		return this.http.post(url, payload, this.httpOptions);
+	}
+
 	add_player( payload ): Observable<any>{
 		let url = this.base_url + 'add-player';
 		return this.http.post(url, payload, this.httpOptions);

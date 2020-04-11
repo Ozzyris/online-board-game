@@ -20,6 +20,8 @@ import { SanitizerPipe } from './pipes/sanitizer/sanitizer.pipe';
 //DIRECTIVES
 import { ModalNameDirective } from './directives/modal_name/modal_name.directive';
 import { ModalPlayerDirective } from './directives/modal_player/modal_player.directive';
+import { ModalBannedDirective } from './directives/modal_banned/modal_banned.directive';
+import { ModalAlertDirective } from './directives/modal_alert/modal_alert.directive';
 import { ToasterDirective } from './directives/toaster/toaster.directive';
 
 @NgModule({
@@ -31,6 +33,8 @@ import { ToasterDirective } from './directives/toaster/toaster.directive';
 		SanitizerPipe,
 		ModalNameDirective,
 		ModalPlayerDirective,
+		ModalBannedDirective,
+		ModalAlertDirective,
 		ToasterDirective
 	],
 	imports: [

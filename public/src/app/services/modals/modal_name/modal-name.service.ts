@@ -9,6 +9,7 @@ import { Observable, Subject } from 'rxjs';
 export class ModalNameService {
 	private is_modal_name_open = new Subject<any>();
 	public player_id = new Subject<any>();
+	public leave_confirmation = new Subject<any>();
 
 	constructor(){}
 
@@ -23,5 +24,8 @@ export class ModalNameService {
 	}
 	get_player_id(): Observable<any> {
 		return this.player_id;
+	}
+	get_leave_confirmation(): Observable<any> {
+		return this.leave_confirmation;
 	}
 }

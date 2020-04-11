@@ -19,7 +19,6 @@ export class ToasterDirective implements OnInit, OnDestroy{
 	ngOnInit(){
 		this.toaster_subscription = this.toaster_service.get_toaster_status()
 			.subscribe( toaster_content => {
-				console.log( toaster_content.message );
 				this.toaster_message = toaster_content.message;
 				this.is_toaster_active = true;
 				setTimeout(()=>{
