@@ -38,6 +38,9 @@ function connect_player(){
 			global_io.emit( 'update-player-status', {player_id: global_socket.player_id, status: 'online'} );
 			global_io.emit( 'new-activity', activity );
 		})
+		.catch( error => {
+			console.log( error );
+		})
 }
 function disconnect(){
 	console.log('disconnect');
@@ -49,7 +52,7 @@ function disconnect(){
 			return game_model.get_a_player( global_socket.game_token, global_socket.player_id );
 		})
 		.then(player => {
-			// console.log( player );
+			console.log( player );
 			activity.author_id = global_socket.player_id;
 			activity.content = '<span>' + player.name + '</span> left the lobby.';
 			return game_model.add_activity( global_socket.game_token, activity );
@@ -58,6 +61,10 @@ function disconnect(){
 			// console.log( is_activity_added );
 			global_io.emit( 'update-player-status', {player_id: global_socket.player_id, status: 'offline'} );
 			global_io.emit( 'new-activity', activity );
+		})
+		.catch( error => {
+			// disconnect someone who does not exsit on the database anymore
+			// console.log( error );
 		})
 }
 

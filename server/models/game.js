@@ -108,7 +108,7 @@ game.statics.get_a_player = function(game_token, player_id){
                         }
                     }
                 }else{
-                    resolve( undefined );
+                    reject( undefined );
                 }                
             })
     })
