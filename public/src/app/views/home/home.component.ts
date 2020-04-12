@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit {
 	}
 
 	create_lobby(){
+		localStorage.clear();
+		
 		this.activityApi_service.create_lobby()
 			.subscribe( game_token => {
 				this.router.navigate(['/lobby', game_token]);

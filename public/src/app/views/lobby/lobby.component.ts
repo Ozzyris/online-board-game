@@ -162,6 +162,24 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	kick_out_player( player_id, player_name ){
+		this.modalName_service.open_modal({ modal_id: 'alert', status: 'open', title: 'Are you sure to kick out ' + player_name + ' ?', content: 'As administrator of this game, kicking out ' + player_name + ' will force him/her out of the game for good.'});
+
+
+		this.leave_confirmation_subscription = this.modalName_service.get_leave_confirmation()
+			.subscribe( confirmation_to_leave=> {
+				this.activityApi_service.remove_player({ game_token: this.game_token, player_id: player_id, kicked_out: true })
+					.subscribe( is_player_removed => {
+					
+						this.toaster_service.launch_toast({ message: player_name + ' has been kicked out' });
+					}, error => {
+						console.log( error );
+					});
+					
+					this.leave_confirmation_subscription.unsubscribe();
+			});
+	}
+
 	copy_to_clipboard(){
 		const temp_textarea = document.createElement('textarea');
 		temp_textarea.style.position = 'fixed';

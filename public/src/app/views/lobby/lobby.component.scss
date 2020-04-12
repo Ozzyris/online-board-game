@@ -262,7 +262,6 @@ section.lobby{
 							}
 							div.content{
 								float: left;
-								
 
 								p{
 									font-size: 14px;
@@ -270,7 +269,7 @@ section.lobby{
 
 									&:first-letter{
 										text-transform: capitalize
-					}
+									}
 
 									&.small{
 										font-size: 11px;
@@ -279,6 +278,37 @@ section.lobby{
 
 										&:first-letter{
 											text-transform: capitalize
+										}
+									}
+								}
+							}
+							div.action{
+								float: right;
+
+								a.link{
+									font-family: 'font_awesome';
+									font-size: 11px;
+									font-weight: 300;
+									color: #191919;
+									cursor: pointer;
+									transition: all 200ms;
+									position: relative;
+									
+									&:hover{
+										font-weight: 900;
+
+										&:after{
+											content: 'Kick out';
+											font-family: 'baloo_thambi';
+											font-weight: 400;
+											font-size: 10px;
+											background-color: #191919;
+											padding: 2px 8px;
+											color: white;
+											border-radius: 2px;
+											position: absolute;
+											top: 0;
+											left: -55px;
 										}
 									}
 								}

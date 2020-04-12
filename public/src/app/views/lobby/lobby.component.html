@@ -74,6 +74,9 @@
 								<p>{{player_details.name}}</p>
 								<p class="small">Active {{player_details.last_online_time | amTimeAgo }}</p>
 							</div>
+							<div class="action" *ngIf="current_player.rank == 'administrator' && player_details.rank != 'administrator'">
+								<a class="link" (click)="kick_out_player( player_details._id, player_details.name)" ></a>
+							</div>
 						</li>
 					</ul>
 				</div>

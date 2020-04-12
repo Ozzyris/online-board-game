@@ -8,6 +8,7 @@ var game = new mongoose.Schema({
 	players: [
 		{
 			name: {type: String},
+			socket_id: {type: String},
 			creation_date: {type: Date, default: () => moment()},
 			status: {type: String, default: 'offline'}, //[ "online", "inactive", "offline"]
 			last_online_time: {type: Date, default: () => moment()},
@@ -147,6 +148,19 @@ game.statics.update_activity_status = function(game_token, player_id, status){
         game.updateOne({ game_token: game_token, 'players._id': player_id }, {
             $set: { 
                 "players.$.status" : status,
+            }
+        }).exec()
+        .then ( is_status_updated => {
+            resolve( is_status_updated );
+        })
+    })
+};
+
+game.statics.update_socket_id = function(game_token, player_id, soket_id){
+    return new Promise((resolve, reject) => {
+        game.updateOne({ game_token: game_token, 'players._id': player_id }, {
+            $set: { 
+                "players.$.socket_id" : soket_id,
             }
         }).exec()
         .then ( is_status_updated => {
