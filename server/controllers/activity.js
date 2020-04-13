@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 // HELPERS
 const token_manager = require('../helpers/token_manager'),
 	  activity_helper = require('../helpers/activity_helper'),
-	  io_activity_helper = require('../helpers/io_activity_helper');
+	  littlebirds = require('../helpers/littlebirds');
 
 	router.get('/ping', function (req, res) {
 		res.status(200).json({message: 'pong'});
@@ -34,7 +34,7 @@ const token_manager = require('../helpers/token_manager'),
 	router.post('/delete-lobby', function (req, res) {
 		game_model.remove_game( req.body.game_token )
 			.then(is_game_removed => {
-				io_activity_helper.broadcast('leave-game', req.body.game_token, {});
+				littlebirds.broadcast('leave-game', req.body.game_token, {});
 				res.status(200).json({ message: 'lobby deleted' });
 			})
 			.catch( error => {
@@ -67,7 +67,7 @@ const token_manager = require('../helpers/token_manager'),
 			})
 			.then(players => {
 				res.status(200).json({ player_id: players[(players.length - 1)]._id });
-				io_activity_helper.broadcast('update-player', req.body.game_token, {type:'add-player', player_details: players[(players.length - 1)]})
+				littlebirds.broadcast('update-player', req.body.game_token, {type:'add-player', player_details: players[(players.length - 1)]})
 			})
 			.catch( error => {
 				res.status(401).json( error );
@@ -76,7 +76,7 @@ const token_manager = require('../helpers/token_manager'),
 
 	router.post('/remove-player', function (req, res) {
 		if( req.body.kicked_out == true ){ // If the player as been kicked out by the admin then emit the kicked out screen
-			io_activity_helper.broadcast('leave-game', req.body.player_id, {});
+			littlebirds.broadcast('leave-game', req.body.player_id, {});
 		}
 
 		let activity = {};
@@ -89,11 +89,12 @@ const token_manager = require('../helpers/token_manager'),
 				return game_model.remove_player( req.body.game_token, req.body.player_id )
 			})
 			.then(is_new_player_removed => {
-				io_activity_helper.broadcast('update-player', req.body.game_token, {type:'remove-player', player_id: req.body.player_id });
+				littlebirds.broadcast('update-player', req.body.game_token, {type:'remove-player', player_id: req.body.player_id });
 				return game_model.add_activity( req.body.game_token, activity );
 			})
 			.then(is_activity_added => {
-				io_activity_helper.broadcast( 'new-activity', req.body.game_token, activity );
+				activity.status = 'new';
+				littlebirds.broadcast( 'new-activity', req.body.game_token, activity );
 				res.status(200).json({ message: 'player removed' });
 			})
 			.catch( error => {

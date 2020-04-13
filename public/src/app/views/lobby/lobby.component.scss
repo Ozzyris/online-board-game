@@ -157,7 +157,7 @@ section.lobby{
 								font-size: 14px;
 								font-weight: 400;
 
-								span{
+								&::ng-deep span{
 									font-size: 14px;
 									font-weight: 800;
 									margin-right: 3px;

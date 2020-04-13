@@ -17,10 +17,12 @@ A way to play board game online to play during confinement.
 - [x] Let admin kicked out a user
 	- [x] save socket id on user database
 - [x] Limit username size
-- [ ] Bug de online offline
+- [x] Create channel in io
+- [x] Bug de online offline
+- [x] Chat
+- [ ] Activity
+	- [x] display activites from socket io
+	- [ ] display activities from backend
+- [ ] Meilleur deconnexion
 - [ ] Amelioration des status en online & offline
-- [x] create channel in io
-- [ ] meilleur deconnexion
-- [ ] activity
-- [ ] get the last 50 activities. (stream like observable) when connected to the server (handshake)
-- [ ] chat
+- [ ] Get the last 50 activities. (stream like observable) when connected to the server (handshake)

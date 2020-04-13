@@ -21,43 +21,15 @@
 			<div class="inner_container">
 				<div class="activities">
 					<ul>
-						<li class="new">
-							<p class="text"><span>Alexandre</span>left the lobby.</p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text">The game will start <span>1 seconde</span></p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text">The game will start <span>2 secondes</span></p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text">The game will start <span>3 secondes</span></p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text"><span>Alexandre</span>is ready to start the game</p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text"><span>Alexandre</span>says: Hello les petites couilles molles!</p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text"><span>Alexandre</span>joined the lobby.</p>
-							<p class="time">a few moment ago</p>
-						</li>
-						<li>
-							<p class="text">Connected to the server</p>
-							<p class="time">a few moment ago</p>
+						<li *ngFor="let activity of activities" [ngClass]="{'new': activity.status == 'new'}">
+							<p class="text" [innerHtml]="activity.content" ></p>
+							<p class="time" [innerHtml]="activity.timestamp | amTimeAgo"></p>
 						</li>
 					</ul>
 				</div>
 				<div class="chatbox">
-					<input type="text" placeholder="You may speak here">
-					<a class="button"><span></span>send</a>
+					<input type="text" placeholder="You may speak here" [(ngModel)]="chat_input">
+					<a class="button" (click)="send_chat()"><span></span>send</a>
 				</div>
 			</div>
 		</div>

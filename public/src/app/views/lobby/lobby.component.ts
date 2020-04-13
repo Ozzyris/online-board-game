@@ -27,6 +27,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	leave_confirmation_subscription: Subscription;
 	current_player: any = {}
 	players_details: any = [];
+	activities: any = [];
+
+	//chat
+	chat_input: string;
 
 	//Socket.io
 	private socket;
@@ -53,8 +57,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			this.socket = io.connect( environment.api_url );
 			this.socket.on('handshake', (payload) => { this.handshake(payload); });
 			this.socket.on('update-player-status', (payload) => { this.update_player_status(payload); });
-			this.socket.on('new-activity', (activity) => { this.new_activity(activity); });
-			this.socket.on('update-player', (player) => { this.update_player(player); });
+			this.socket.on('new-activity', (activity) => { this.new_activity( activity ); });
+			this.socket.on('update-player', (player) => { this.update_player( player ); });
 			this.socket.on('leave-game', (payload) => { this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
 			return () => { this.socket.disconnect(); }; 
 		})
@@ -72,8 +76,18 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			}
 		}
 	}
-	new_activity( data ){
-		// console.log( 'new_activity' + data );
+	new_activity( activity ){
+		this.activities.unshift( activity );
+		this.denewsify_activity( activity.timestamp );
+	}
+	denewsify_activity(timestamp){
+		setTimeout(()=>{
+			for (var i = this.activities.length - 1; i >= 0; i--) {
+				if(this.activities[i].timestamp == timestamp){
+					this.activities[i].status = '';
+				}
+			}
+		},10000);
 	}
 	update_player( payload ){
 		if(payload.type == 'add-player'){
@@ -194,5 +208,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		document.body.removeChild(temp_textarea);
 
 		this.toaster_service.launch_toast({ message: 'Le lien de partage à été copié' });
+	}
+
+	send_chat(){
+		if( this.chat_input == undefined ){
+			console.log('empty');
+		}
+		
+		this.socket.emit('send-message', {content: this.chat_input});
+		this.chat_input = undefined;
 	}
 }
