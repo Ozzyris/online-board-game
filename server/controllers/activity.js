@@ -102,7 +102,6 @@ const token_manager = require('../helpers/token_manager'),
 	});
 
 	router.post('/get-all-players-details', function (req, res) {
-		console.log( req.body.game_token );
 		game_model.get_all_players( req.body.game_token )
 			.then(players_details => {
 				res.status(200).json( players_details );

@@ -8,7 +8,6 @@ var game = new mongoose.Schema({
 	players: [
 		{
 			name: {type: String},
-			socket_id: {type: String},
 			creation_date: {type: Date, default: () => moment()},
 			status: {type: String, default: 'offline'}, //[ "online", "inactive", "offline"]
 			last_online_time: {type: Date, default: () => moment()},

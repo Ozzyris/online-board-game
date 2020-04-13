@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 //services
 import { ModalNameService } from '../../services/modals/modal_name/modal-name.service';
 import { ActivityApiService } from '../../services/activity_api/activity_api.service';
+import { ValidatorService } from '../../services/validator/validator.service';
 
 @Component({
 	selector: 'modal-name',
@@ -24,7 +25,7 @@ export class ModalNameDirective implements OnInit, OnDestroy{
 	// Game
 	game_token: string;
 
-	constructor( public activityApi_service: ActivityApiService, public modalName_service: ModalNameService ){}
+	constructor( public activityApi_service: ActivityApiService, public modalName_service: ModalNameService, private validator_service: ValidatorService ){}
 	ngOnInit(){
 		this.modal_subscription = this.modalName_service.get_modal_status()
 			.subscribe( modal_info => {
@@ -42,10 +43,20 @@ export class ModalNameDirective implements OnInit, OnDestroy{
 
 	add_player(){
 		this.info_player_name = '';
+		let is_name_correct = true;
 
 		if( this.input_player_name == undefined ){
 			this.info_player_name = 'This field is required';
-		}else{
+			is_name_correct = false
+		}
+		if( this.input_player_name.length > 30 ){
+			this.info_player_name = 'Your username is too damn long';
+			is_name_correct = false
+		}
+
+		this.input_player_name = this.validator_service.generate_url( this.input_player_name );
+
+		if(is_name_correct == true){
 			this.activityApi_service.add_player({ game_token: this.game_token, player_name: this.input_player_name })
 				.subscribe( is_player_added => {
 					localStorage.setItem('player_id', is_player_added.player_id );

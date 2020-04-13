@@ -1,26 +1,26 @@
 const game_model = require('../models/game').game;
 
 //VARS
-var	global_io,
+let	global_io,
 	global_socket;
 
 function activity(io, socket) {
 	global_io = io;
 	global_socket = socket;
 
-	socket.on('connect-player', function ( payload ) {
+	global_socket.on('connect-player', ( payload ) => {
 		global_socket.game_token = payload.game_token;
 		global_socket.player_id = payload.player_id;
 
 		connect_player();
 	});
-	socket.on('disconnect', function () {
+
+	global_socket.on('disconnect', () => {
 		disconnect()
 	});
 }
 
 function connect_player(){
-	console.log('connect');
 	let activity = {};
 
 	game_model.update_activity_status( global_socket.game_token, global_socket.player_id, 'online'  )
@@ -30,6 +30,8 @@ function connect_player(){
 		})
 		.then(player => {
 			// console.log( player );
+
+			console.log('connect ' + player.name);
 			global_socket.join( global_socket.player_id );
 			global_socket.join( global_socket.game_token );
 
@@ -47,7 +49,6 @@ function connect_player(){
 		})
 }
 function disconnect(){
-	console.log('disconnect');
 	let activity = {};
 
 	game_model.update_activity_status( global_socket.game_token, global_socket.player_id, 'offline'  )
@@ -57,6 +58,7 @@ function disconnect(){
 		})
 		.then(player => {
 			// console.log( player );
+			console.log('disconnect ' + player.name);
 			activity.author_id = global_socket.player_id;
 			activity.content = '<span>' + player.name + '</span> left the lobby.';
 			return game_model.add_activity( global_socket.game_token, activity );

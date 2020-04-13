@@ -51,18 +51,18 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	init_socket_io(){
 		let observable = new Observable(observer => {
 			this.socket = io.connect( environment.api_url );
-			this.socket.on('handshake', (data) => { observer.next(data); this.handshake(data); });
-			this.socket.on('update-player-status', (data) => { observer.next(data); this.update_player_status(data); });
-			this.socket.on('new-activity', (data) => { observer.next(data); this.new_activity(data); });
-			this.socket.on('update-player', (data) => { observer.next(data); this.update_player(data); });
-			this.socket.on('leave-game', (data) => { observer.next(data); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
+			this.socket.on('handshake', (payload) => { this.handshake(payload); });
+			this.socket.on('update-player-status', (payload) => { this.update_player_status(payload); });
+			this.socket.on('new-activity', (activity) => { this.new_activity(activity); });
+			this.socket.on('update-player', (player) => { this.update_player(player); });
+			this.socket.on('leave-game', (payload) => { this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
 	}
 
-	handshake( data ){
-		this.toaster_service.launch_toast({ message: data.content });
+	handshake( message ){
+		this.toaster_service.launch_toast({ message: message.content });
 	}
 	update_player_status( payload ){
 		// console.log( payload );
