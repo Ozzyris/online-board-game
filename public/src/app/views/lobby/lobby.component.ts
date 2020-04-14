@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, forkJoin, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 //Socket.io
 import * as io from 'socket.io-client';
@@ -27,7 +28,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	leave_confirmation_subscription: Subscription;
 	current_player: any = {}
 	players_details: any = [];
+
 	activities: any = [];
+	activity_subscription = new Subject<any>();
 
 	//chat
 	chat_input: string;
@@ -67,9 +70,16 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
 	handshake( message ){
 		this.toaster_service.launch_toast({ message: message.content });
+		this.get_last_50_activities();
 	}
+	get_last_50_activities(){
+		this.activityApi_service.get_last_50_activities({ game_token: this.game_token })
+			.subscribe( last_50_activities => {
+				this.activities = last_50_activities;
+			});
+	}
+
 	update_player_status( payload ){
-		// console.log( payload );
 		for (var i = this.players_details.length - 1; i >= 0; i--) {
 			if( this.players_details[i]._id == payload.player_id ){
 				this.players_details[i].status = payload.status;
@@ -87,7 +97,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 					this.activities[i].status = '';
 				}
 			}
-		},10000);
+		},30000);
 	}
 	update_player( payload ){
 		if(payload.type == 'add-player'){
@@ -213,6 +223,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	send_chat(){
 		if( this.chat_input == undefined ){
 			console.log('empty');
+			return;
 		}
 		
 		this.socket.emit('send-message', {content: this.chat_input});

@@ -109,6 +109,13 @@ const token_manager = require('../helpers/token_manager'),
 			})
 	});
 
+	router.post('/get-last-50-activities', function (req, res) {
+		game_model.get_last_activities( req.body.game_token, 50 )
+			.then(last_50_activities => {
+				res.status(200).json( last_50_activities );
+			})
+	});
+
 module.exports = {
 	"activity" : router
 };

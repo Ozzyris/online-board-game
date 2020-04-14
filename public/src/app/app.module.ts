@@ -16,6 +16,7 @@ import { BoardComponent } from './views/board/board.component';
 
 //PIPES
 import { SanitizerPipe } from './pipes/sanitizer/sanitizer.pipe';
+import { SortByDatePipe } from './pipes/sort_by_date/sort-by-date.pipe';
 
 //DIRECTIVES
 import { ModalNameDirective } from './directives/modal_name/modal_name.directive';
@@ -35,7 +36,8 @@ import { ToasterDirective } from './directives/toaster/toaster.directive';
 		ModalPlayerDirective,
 		ModalBannedDirective,
 		ModalAlertDirective,
-		ToasterDirective
+		ToasterDirective,
+		SortByDatePipe
 	],
 	imports: [
 		BrowserModule,

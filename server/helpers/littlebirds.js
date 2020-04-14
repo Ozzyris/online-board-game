@@ -105,6 +105,6 @@ function broadcast(route, game_token, payload){
 }
 
 module.exports={
-    init_socket_io: init_socket_io,
-    broadcast: broadcast
+	init_socket_io: init_socket_io,
+	broadcast: broadcast
 };

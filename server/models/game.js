@@ -58,7 +58,7 @@ var game = new mongoose.Schema({
 		]
 	},
 	water_cards: {
-        current_card: {
+		current_card: {
 			name: {type: String},
 			position: {type: Number},
 			illustration: {type: String},
@@ -98,20 +98,20 @@ game.statics.get_all_players = function( game_token ){
 };
 
 game.statics.get_a_player = function(game_token, player_id){
-    return new Promise((resolve, reject) => {
-        game.findOne({game_token: game_token}, {}).exec()
-            .then(game => {
-                if( game ){
-                    for (var i = game.players.length - 1; i >= 0; i--) {
-                        if( game.players[i]._id == player_id){
-                            resolve( game.players[i] );
-                        }
-                    }
-                }else{
-                    reject( undefined );
-                }                
-            })
-    })
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					for (var i = game.players.length - 1; i >= 0; i--) {
+						if( game.players[i]._id == player_id){
+							resolve( game.players[i] );
+						}
+					}
+				}else{
+					reject( undefined );
+				}
+			})
+	})
 };
 
 game.statics.add_player = function( game_token, player ){
@@ -129,67 +129,86 @@ game.statics.add_player = function( game_token, player ){
 
 game.statics.remove_player = function( game_token, player_id ){
 	return new Promise((resolve, reject) => {
-        game.updateOne({ game_token: game_token }, {
-            $pull: { 
-                "players" : {
-                	'_id': player_id
-                }
-            },
+		game.updateOne({ game_token: game_token }, {
+			$pull: { 
+				"players" : {
+					'_id': player_id
+				}
+			},
 		}).exec()
 		.then( is_player_removed => {
-		    resolve( is_player_removed );
+			resolve( is_player_removed );
 		})
 	})
 };
 
 game.statics.update_activity_status = function(game_token, player_id, status){
-    return new Promise((resolve, reject) => {
-        game.updateOne({ game_token: game_token, 'players._id': player_id }, {
-            $set: { 
-                "players.$.status" : status,
-            }
-        }).exec()
-        .then ( is_status_updated => {
-            resolve( is_status_updated );
-        })
-    })
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token, 'players._id': player_id }, {
+			$set: { 
+				"players.$.status" : status,
+			}
+		}).exec()
+		.then ( is_status_updated => {
+			resolve( is_status_updated );
+		})
+	})
 };
 
 game.statics.update_socket_id = function(game_token, player_id, soket_id){
-    return new Promise((resolve, reject) => {
-        game.updateOne({ game_token: game_token, 'players._id': player_id }, {
-            $set: { 
-                "players.$.socket_id" : soket_id,
-            }
-        }).exec()
-        .then ( is_status_updated => {
-            resolve( is_status_updated );
-        })
-    })
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token, 'players._id': player_id }, {
+			$set: { 
+				"players.$.socket_id" : soket_id,
+			}
+		}).exec()
+		.then ( is_status_updated => {
+			resolve( is_status_updated );
+		})
+	})
 };
 
 game.statics.add_activity = function(game_token, payload){
-    return new Promise((resolve, reject) => {
-        game.updateOne({ game_token: game_token }, {
-            $push:{
-                'activities': payload
-            }
-        }).exec()
-        .then (is_activity_added => {
-            resolve( is_activity_added );
-        })
-    })
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token }, {
+			$push:{
+				'activities': payload
+			}
+		}).exec()
+		.then (is_activity_added => {
+			resolve( is_activity_added );
+		})
+	})
 };
 
 game.statics.remove_game = function(game_token){
-    return new Promise((resolve, reject) => {
-        game.deleteOne({ game_token: game_token }, {}).exec()
-        .then (is_game_deleted => {
-            resolve( is_game_deleted );
-        })
-    })
+	return new Promise((resolve, reject) => {
+		game.deleteOne({ game_token: game_token }, {}).exec()
+		.then (is_game_deleted => {
+			resolve( is_game_deleted );
+		})
+	})
 };
 
+game.statics.get_last_activities = function(game_token, count){
+	return new Promise((resolve, reject) => {
+		game.findOne(
+				{ game_token: game_token },
+				{ activities:
+					[
+     					{ $sort: { timestamp: -1 } },
+    					{ $slice: count }
+   					]
+				}).exec()
+			.then(game => {
+				if( game ){
+					resolve( game.activities );
+				}else{
+					reject( undefined );
+				}
+			})
+	})
+};
 
 var game = mongoose.DB.model('game', game);
 module.exports.game = game

@@ -43,4 +43,9 @@ export class ActivityApiService {
 		let url = this.base_url + 'get-all-players-details';
 		return this.http.post(url, payload, this.httpOptions);
 	}
+
+	get_last_50_activities( payload ): Observable<any>{
+		let url = this.base_url + 'get-last-50-activities';
+		return this.http.post(url, payload, this.httpOptions);
+	}
 }

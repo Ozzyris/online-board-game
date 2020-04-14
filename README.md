@@ -2,7 +2,9 @@
 A way to play board game online to play during confinement.
 
 ### Status
-> non fonctionnel
+> Home : DONE
+> Lobby : WORK IN PRO
+> Board : TO BE DONE
 
 ### Todo
 - [x] New player dosen't display their name
@@ -20,9 +22,10 @@ A way to play board game online to play during confinement.
 - [x] Create channel in io
 - [x] Bug de online offline
 - [x] Chat
-- [ ] Activity
+- [x] Get the last 50 activities.
+- [x] Activity
 	- [x] display activites from socket io
-	- [ ] display activities from backend
+	- [x] display activities from backend
 - [ ] Meilleur deconnexion
 - [ ] Amelioration des status en online & offline
-- [ ] Get the last 50 activities. (stream like observable) when connected to the server (handshake)
+- [ ] Bug when sometime chat send doesn't go anywhere
