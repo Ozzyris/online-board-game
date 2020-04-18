@@ -1,10 +1,11 @@
-const game_model = require('../models/game').game
+const game_model = require('../models/game').game,
 	  moment = require('moment');
 
 var global_io; 
 
 // HELPERS
-const activity_helper = require('../helpers/activity_helper');
+const activity_helper = require('../helpers/activity_helper'),
+	  cron_helper = require('../helpers/cron_helper');
 
 function init_socket_io( io ){
 	global_io = io;
@@ -28,6 +29,7 @@ function init_socket_io( io ){
 }
 
 function handshake( socket ){
+	console.log( 'Player_id from handshake ' + socket.player_id );
 	let handshake_payload = {
 			timestamp: moment(),
 			content: 'Connecté au serveur'
@@ -40,7 +42,19 @@ function handshake( socket ){
 function connect_player( socket ){
 	let activity = {};
 
-	game_model.update_activity_status( socket.game_token, socket.player_id, 'online'  )
+	cron_helper.is_there_a_cron_active( socket.player_id )
+		.then(is_cron_active => {
+			console.log('is_cron_active: ' + is_cron_active);
+
+			if(is_cron_active){
+				return cron_helper.stop_cron( socket.player_id );
+			}else{
+				return;
+			}
+		})
+		.then(is_activity_status_updated => {
+			return game_model.update_activity_status( socket.game_token, socket.player_id, 'online'  );
+		})
 		.then(is_activity_status_updated => {
 			return game_model.get_a_player( socket.game_token, socket.player_id );
 		})
@@ -51,6 +65,11 @@ function connect_player( socket ){
 
 			activity.author_id = socket.player_id;
 			activity.content = '<span>' + player.name + '</span> joined the lobby.';
+
+			// console.log( player.last_online_time );
+			//if player.last_online_time est moins grande que 5 min pas envoyer d'activité & pas en enreigstrer
+			
+
 			return game_model.add_activity( socket.game_token, activity );
 		})
 		.then(is_activity_added => {
@@ -62,26 +81,26 @@ function connect_player( socket ){
 			console.log( error );
 		})
 }
-function disconnect( socket ){
-	let activity = {};
 
-	game_model.update_activity_status( socket.game_token, socket.player_id, 'offline'  )
+function disconnect( socket ){
+	cron_helper.is_there_a_cron_active( socket.player_id )
+		.then(is_cron_active => {
+			if( is_cron_active ){
+				throw({message: 'cron already active'});
+			}else{
+				 return game_model.update_activity_status( socket.game_token, socket.player_id, 'inactive'  );
+			}
+		})
 		.then(is_activity_status_updated => {
-			return game_model.get_a_player( socket.game_token, socket.player_id );
+			return cron_helper.convert_date_to_cron( moment().add(2, 'm') );
+			broadcast('update-player-status', socket.game_token, {player_id: socket.player_id, status: 'inactive'})
 		})
-		.then(player => {
-			activity.author_id = socket.player_id;
-			activity.content = '<span>' + player.name + '</span> left the lobby.';
-			return game_model.add_activity( socket.game_token, activity );
-		})
-		.then(is_activity_added => {
-			activity.status = 'new';
-			broadcast('update-player-status', socket.game_token, {player_id: socket.player_id, status: 'offline'})
-			broadcast('new-activity', socket.game_token, activity)
+		.then(cron_date => {
+			return cron_helper.launch_cron( socket.player_id, cron_date );
 		})
 		.catch( error => {
-			// disconnect someone who does not exsit on the database anymore
-			// console.log( error );
+			// disconnect someone who does not exist on the database anymore
+			console.log( error );
 		})
 }
 
@@ -105,6 +124,6 @@ function broadcast(route, game_token, payload){
 }
 
 module.exports={
-	init_socket_io: init_socket_io,
-	broadcast: broadcast
-};
+	'init_socket_io': init_socket_io,
+	'broadcast': broadcast,
+}

@@ -10,7 +10,7 @@ var game = new mongoose.Schema({
 			name: {type: String},
 			creation_date: {type: Date, default: () => moment()},
 			status: {type: String, default: 'offline'}, //[ "online", "inactive", "offline"]
-			last_online_time: {type: Date, default: () => moment()},
+			last_online_time: {type: Date},
 			rank: {type: String, default: 'player'}, //[ "administrator", "player"]
 			game_detail: {
 				status: {type: String, default: 'alive'}, //[ "alive", "sick", "dead"]

@@ -58,12 +58,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	init_socket_io(){
 		let observable = new Observable(observer => {
 			this.socket = io.connect( environment.api_url );
-			this.socket.on('handshake', (payload) => { this.handshake(payload); });
-			this.socket.on('update-player-status', (payload) => { this.update_player_status(payload); });
-			this.socket.on('new-activity', (activity) => { this.new_activity( activity ); });
-			this.socket.on('update-player', (player) => { this.update_player( player ); });
-			this.socket.on('leave-game', (payload) => { this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
-			return () => { this.socket.disconnect(); }; 
+			this.socket.on('handshake', (payload) => { observer.next(payload); this.handshake(payload); });
+			this.socket.on('update-player-status', (payload) => { observer.next(payload); this.update_player_status(payload); });
+			this.socket.on('new-activity', (activity) => { observer.next(activity); this.new_activity( activity ); });
+			this.socket.on('update-player', (player) => { observer.next(player); this.update_player( player ); });
+			this.socket.on('leave-game', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
+			return () => { this.socket.disconnect(); console.log('disconnect'); }; 
 		})
 		return observable;
 	}

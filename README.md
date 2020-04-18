@@ -28,4 +28,4 @@ A way to play board game online to play during confinement.
 	- [x] display activities from backend
 - [ ] Meilleur deconnexion
 - [ ] Amelioration des status en online & offline
-- [ ] Bug when sometime chat send doesn't go anywhere
+- [ ] Bug when sometime chat send doesn't go anywhere -> id in socket.player_id = undefined

@@ -53,7 +53,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="action_content">
+			<div class="action_content" *ngIf="current_player.rank == 'administrator'">
 				<div class="inner_group">
 					<div class="input_group">
 						<input type="text" value="{{share_link}}">
