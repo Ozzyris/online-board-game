@@ -11,8 +11,7 @@ router.use(bodyParser.json());
 // HELPERS
 const token_manager = require('../helpers/token_manager'),
 	  activity_helper = require('../helpers/activity_helper'),
-	  littlebirds = require('../helpers/littlebirds'),
-	  cron_helper = require('../helpers/cron_helper');
+	  littlebirds = require('../helpers/littlebirds');
 
 	router.get('/ping', function (req, res) {
 		res.status(200).json({message: 'pong'});
@@ -32,8 +31,6 @@ const token_manager = require('../helpers/token_manager'),
 			}else{
 				game_model.add_activity( game.game_token, activity )
 					.then(is_activity_added => {
-		
-						console.log( is_activity_added );
 						res.status(200).json( game.game_token );
 					})
 					.catch( error => {
@@ -99,8 +96,10 @@ const token_manager = require('../helpers/token_manager'),
 	});
 
 	router.post('/remove-player', function (req, res) {
+		let message = 'left the lobby.'
 		if( req.body.kicked_out == true ){ // If the player as been kicked out by the admin then emit the kicked out screen
 			littlebirds.broadcast('leave-game', req.body.player_id, {});
+			message = 'was kicked out of the lobby.'
 		}
 
 		let activity = {};
@@ -108,7 +107,7 @@ const token_manager = require('../helpers/token_manager'),
 		game_model.get_a_player( req.body.game_token, req.body.player_id )
 			.then(player => {
 				activity.author_id = req.body.player_id,
-				activity.content = '<span>' + player.name + '</span> left the lobby.'
+				activity.content = '<span>' + player.name + '</span> ' + message
 
 				return game_model.remove_player( req.body.game_token, req.body.player_id )
 			})
@@ -141,7 +140,7 @@ const token_manager = require('../helpers/token_manager'),
 	});
 
 	router.get('/get-cron-running', function (req, res) {
-		cron_helper.all_active_cron()
+		littlebirds.all_active_cron()
 			.then(all_active_cron => {
 				res.status(200).json( all_active_cron );
 			})

@@ -26,6 +26,10 @@ A way to play board game online to play during confinement.
 - [x] Activity
 	- [x] display activites from socket io
 	- [x] display activities from backend
-- [ ] Meilleur deconnexion
-- [ ] Amelioration des status en online & offline
-- [ ] Bug when sometime chat send doesn't go anywhere -> id in socket.player_id = undefined
+- [x] Meilleur deconnexion
+- [x] Amelioration des status en online & offline
+- [x] Bug when sometime chat send doesn't go anywhere -> id in socket.player_id = undefined
+
+- [ ] Active user count
+- [ ] Shuffle the cards
+- [ ] Move to next page

@@ -5,7 +5,7 @@ var Promise = require('bluebird'),
 
 
 // HELPERS
-const activity_helper = require('../helpers/activity_helper');
+const littlebirds = require('../helpers/littlebirds');
 
 // VARS
 var cron_manager = new CronJobManager();
@@ -17,26 +17,24 @@ function convert_date_to_cron( date ){
 	})
 }
 
-function launch_cron( player_id, cron_date, game_token ){
+function launch_cron( player_id, cron_date, socket ){
 	return new Promise((resolve, reject)=>{
 		if( player_id == undefined ){
 			reject({message: 'player_id is undefined'});
 		}else{
-			cron_manager.add(player_id, cron_date, () => { go_offline(); }, { timeZone:"Europe/Paris", start:true, onComplete: () => {console.log("cron stopped")}});
+			cron_manager.add(player_id, cron_date, () => { littlebirds.go_offline( socket ) }, { timeZone:"Europe/Paris", start:true });
 			resolve( true );
-			//activity_helper.go_offline();
 		}
 	})
 }
 
-function go_offline(){
-	console.log('alex');
-}
-
 function stop_cron( player_id ){
-	return new Promise((resolve, reject)=>{
-		cron_manager.stop( player_id );
-		resolve( true );
+	return new Promise((resolve, reject)=>{		
+		if( cron_manager.exists( player_id ) ){
+			resolve(cron_manager.stop( player_id ));
+		}else{
+			resolve( true );
+		}
 	})
 }
 
