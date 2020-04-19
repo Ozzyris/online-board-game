@@ -62,6 +62,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			this.socket.on('update-player-status', (payload) => { observer.next(payload); this.update_player_status(payload); });
 			this.socket.on('new-activity', (activity) => { observer.next(activity); this.new_activity( activity ); });
 			this.socket.on('update-player', (player) => { observer.next(player); this.update_player( player ); });
+			this.socket.on('update-player-last-online-time', (player) => { observer.next(player); this.update_player_last_online_time( player ); });
 			this.socket.on('leave-game', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
 			return () => { this.socket.disconnect(); console.log('disconnect'); }; 
 		})
@@ -70,7 +71,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
 	handshake( message ){
 		this.toaster_service.launch_toast({ message: message.content });
-		this.get_last_50_activities();
 	}
 	get_last_50_activities(){
 		this.activityApi_service.get_last_50_activities({ game_token: this.game_token })
@@ -110,6 +110,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			}
 		}
 	}
+	update_player_last_online_time( payload ){
+		console.log('update_player_last_online_time');
+		console.log(payload);
+	}
 	init_lobby(){
 		return new Promise((resolve, reject)=>{
 			this.get_elem_from_storage( 'player_id' )
@@ -138,6 +142,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 				}else{
 					this.players_details = players_details;
 					this.init_current_player( players_details);
+					this.get_last_50_activities();
 				}
 			})
 	}

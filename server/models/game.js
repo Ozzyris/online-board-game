@@ -91,7 +91,7 @@ game.statics.get_all_players = function( game_token ){
 					resolve( game.players );
 				}
 				else{
-					resolve( undefined );
+					resolve( [] );
 				}
 			})
 	})
@@ -155,15 +155,15 @@ game.statics.update_activity_status = function(game_token, player_id, status){
 	})
 };
 
-game.statics.update_socket_id = function(game_token, player_id, soket_id){
+game.statics.update_last_online_time = function(game_token, player_id, date){
 	return new Promise((resolve, reject) => {
 		game.updateOne({ game_token: game_token, 'players._id': player_id }, {
 			$set: { 
-				"players.$.socket_id" : soket_id,
+				"players.$.last_online_time" : date,
 			}
 		}).exec()
-		.then ( is_status_updated => {
-			resolve( is_status_updated );
+		.then ( is_last_online_time_updated => {
+			resolve( is_last_online_time_updated );
 		})
 	})
 };

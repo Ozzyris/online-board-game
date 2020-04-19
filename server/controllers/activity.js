@@ -11,22 +11,34 @@ router.use(bodyParser.json());
 // HELPERS
 const token_manager = require('../helpers/token_manager'),
 	  activity_helper = require('../helpers/activity_helper'),
-	  littlebirds = require('../helpers/littlebirds');
+	  littlebirds = require('../helpers/littlebirds'),
+	  cron_helper = require('../helpers/cron_helper');
 
 	router.get('/ping', function (req, res) {
 		res.status(200).json({message: 'pong'});
 	});
 
 	router.get('/create-lobby', function (req, res) {
-		let game = {
-			 game_token: token_manager.create_code()
-		}
+		let activity = {
+				content: 'The <span>lobby</span> was created.'
+			},
+			game = {
+				game_token: token_manager.create_code()
+			};
 
 		game_model(game).save(function(error, result) {
 			if(error) {
 				return res.status(400).json(error);
 			}else{
-				res.status(200).json( game.game_token );
+				game_model.add_activity( game.game_token, activity )
+					.then(is_activity_added => {
+		
+						console.log( is_activity_added );
+						res.status(200).json( game.game_token );
+					})
+					.catch( error => {
+						res.status(401).json( error );
+					});
 			}
 		});
 	});
@@ -43,10 +55,12 @@ const token_manager = require('../helpers/token_manager'),
 	})
 
 	router.post('/add-player', function (req, res) {
-		let player = {
-			name: req.body.player_name,
-			rank: 'player'
-		};
+		let activity = {},
+			player = {
+				name: req.body.player_name,
+				rank: 'player'
+			
+			};
 
 		game_model.get_all_players( req.body.game_token )
 			.then(players => {
@@ -56,7 +70,7 @@ const token_manager = require('../helpers/token_manager'),
 				return activity_helper.check_if_name_unique(players, player.name);
 			})
 			.then(is_name_unique => {
-				if( is_name_unique == true ){
+				if( is_name_unique ){
 					return game_model.add_player( req.body.game_token, player )
 				}else{
 					throw { message: 'This name is already taken.' }
@@ -66,10 +80,20 @@ const token_manager = require('../helpers/token_manager'),
 				return game_model.get_all_players( req.body.game_token )
 			})
 			.then(players => {
-				res.status(200).json({ player_id: players[(players.length - 1)]._id });
-				littlebirds.broadcast('update-player', req.body.game_token, {type:'add-player', player_details: players[(players.length - 1)]})
+				player = players[(players.length - 1)];
+				activity.author_id = player._id;
+				activity.content = '<span>' + player.name + '</span> joined the lobby.';
+				littlebirds.broadcast('update-player', req.body.game_token, {type:'add-player', player_details: player})
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				res.status(200).json({ player_id: player._id });
+
 			})
 			.catch( error => {
+				console.log(error);
 				res.status(401).json( error );
 			})
 	});
@@ -113,6 +137,13 @@ const token_manager = require('../helpers/token_manager'),
 		game_model.get_last_activities( req.body.game_token, 50 )
 			.then(last_50_activities => {
 				res.status(200).json( last_50_activities );
+			})
+	});
+
+	router.get('/get-cron-running', function (req, res) {
+		cron_helper.all_active_cron()
+			.then(all_active_cron => {
+				res.status(200).json( all_active_cron );
 			})
 	});
 
