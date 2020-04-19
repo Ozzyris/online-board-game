@@ -62,7 +62,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			this.socket.on('update-player-status', (payload) => { observer.next(payload); this.update_player_status(payload); });
 			this.socket.on('new-activity', (activity) => { observer.next(activity); this.new_activity( activity ); });
 			this.socket.on('update-player', (player) => { observer.next(player); this.update_player( player ); });
-			this.socket.on('update-player-last-online-time', (player) => { observer.next(player); this.update_player_last_online_time( player ); });
+			this.socket.on('update-player-last-online-time', (payload) => { observer.next(payload); this.update_player_last_online_time( payload ); });
 			this.socket.on('leave-game', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
 			return () => { this.socket.disconnect(); console.log('disconnect'); }; 
 		})
@@ -71,6 +71,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
 	handshake( message ){
 		this.toaster_service.launch_toast({ message: message.content });
+		this.socket.emit('reconnect-player', {'game_token': this.game_token, 'player_id': this.current_player.player_id});
 	}
 	get_last_50_activities(){
 		this.activityApi_service.get_last_50_activities({ game_token: this.game_token })
@@ -111,8 +112,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		}
 	}
 	update_player_last_online_time( payload ){
-		console.log('update_player_last_online_time');
-		console.log(payload);
+		for (var i = this.players_details.length - 1; i >= 0; i--) {
+			if( this.players_details[i]._id == payload.player_id ){
+				this.players_details[i].last_online_time = payload.last_online_time;
+			}
+		}
 	}
 	init_lobby(){
 		return new Promise((resolve, reject)=>{
