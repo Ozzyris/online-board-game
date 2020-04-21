@@ -28,6 +28,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	leave_confirmation_subscription: Subscription;
 	current_player: any = {}
 	players_details: any = [];
+	player_online: any = {
+		total: [],
+		online: []
+	}
 
 	activities: any = [];
 	activity_subscription = new Subject<any>();
@@ -73,6 +77,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		this.toaster_service.launch_toast({ message: message.content });
 		this.socket.emit('reconnect-player', {'game_token': this.game_token, 'player_id': this.current_player.player_id});
 	}
+
 	get_last_50_activities(){
 		this.activityApi_service.get_last_50_activities({ game_token: this.game_token })
 			.subscribe( last_50_activities => {
@@ -81,16 +86,24 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	}
 
 	update_player_status( payload ){
+		if( payload.status == 'online'){
+			this.add_player_to_the_online_count(payload.player_id, 'online');
+		}
+		if( payload.status == 'inactive' || payload.status == 'offline'){
+			this.remove_player_to_the_online_count(payload.player_id, 'online');
+		}
 		for (var i = this.players_details.length - 1; i >= 0; i--) {
 			if( this.players_details[i]._id == payload.player_id ){
 				this.players_details[i].status = payload.status;
 			}
 		}
 	}
+
 	new_activity( activity ){
 		this.activities.unshift( activity );
 		this.denewsify_activity( activity.timestamp );
 	}
+
 	denewsify_activity(timestamp){
 		setTimeout(()=>{
 			for (var i = this.activities.length - 1; i >= 0; i--) {
@@ -100,10 +113,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			}
 		},30000);
 	}
+
 	update_player( payload ){
 		if(payload.type == 'add-player'){
+			this.add_player_to_the_online_count(payload.player_details._id, 'total');
 			this.players_details.push(payload.player_details);
 		}else if(payload.type == 'remove-player'){
+			this.remove_player_to_the_online_count(payload.player_id, 'total');
+			this.remove_player_to_the_online_count(payload.player_id, 'online');
 			for (var i = this.players_details.length - 1; i >= 0; i--) {
 				if( this.players_details[i]._id == payload.player_id ){
 					this.players_details.splice(i, 1);
@@ -111,6 +128,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			}
 		}
 	}
+
 	update_player_last_online_time( payload ){
 		for (var i = this.players_details.length - 1; i >= 0; i--) {
 			if( this.players_details[i]._id == payload.player_id ){
@@ -118,6 +136,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			}
 		}
 	}
+
 	init_lobby(){
 		return new Promise((resolve, reject)=>{
 			this.get_elem_from_storage( 'player_id' )
@@ -145,10 +164,18 @@ export class LobbyComponent implements OnInit, OnDestroy {
 					this.router.navigate(['/home', 'game-dont-exist']);
 				}else{
 					this.players_details = players_details;
-					this.init_current_player( players_details);
+					this.init_player_number();
+					this.init_current_player( players_details );
 					this.get_last_50_activities();
 				}
 			})
+	}
+
+	init_player_number(){
+		for (var i = this.players_details.length - 1; i >= 0; i--) {
+			if(this.players_details[i].status == 'online') this.add_player_to_the_online_count(this.players_details[i]._id, 'online');
+			this.add_player_to_the_online_count(this.players_details[i]._id, 'total');
+		}
 	}
 
 	init_current_player(players_details){
@@ -198,7 +225,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	kick_out_player( player_id, player_name ){
 		this.modalName_service.open_modal({ modal_id: 'alert', status: 'open', title: 'Are you sure to kick out ' + player_name + ' ?', content: 'As administrator of this game, kicking out ' + player_name + ' will force him/her out of the game for good.'});
 
-
 		this.leave_confirmation_subscription = this.modalName_service.get_leave_confirmation()
 			.subscribe( confirmation_to_leave=> {
 				this.activityApi_service.remove_player({ game_token: this.game_token, player_id: player_id, kicked_out: true })
@@ -237,5 +263,19 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		
 		this.socket.emit('send-message', {content: this.chat_input});
 		this.chat_input = undefined;
+	}
+
+	add_player_to_the_online_count( player_id , count){
+		let index = this.player_online[count].indexOf( player_id );
+		if (index == -1) {
+			this.player_online[count].push( player_id );
+		}
+	}
+
+	remove_player_to_the_online_count( player_id , count){
+		let index = this.player_online[count].indexOf( player_id );
+		if (index > -1) {
+			this.player_online[count].splice(index, 1);
+		}
 	}
 }

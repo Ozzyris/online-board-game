@@ -101,8 +101,6 @@ function connect_player( socket ){
 function reconnect_player( socket ){
 	console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 
-	// console.log( currentSockets[socket.id] ); //if it's undefined broadcast an alert on the user pagz
-
 	let updated_online_time = moment();
 
 	game_model.update_last_online_time( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, updated_online_time )
@@ -228,6 +226,18 @@ function all_active_cron(){
 		resolve( `all active cron ${cron_manager}`);
 	})
 }
+
+// function object_size( object ){
+// 	let size = 0,
+// 		key;
+
+// 	for (key in object) {
+// 		if (object.hasOwnProperty(key)){
+// 			size++;
+// 		} 
+// 	}
+// 	return size;
+// }
 
 module.exports={
 	'init_socket_io': init_socket_io,

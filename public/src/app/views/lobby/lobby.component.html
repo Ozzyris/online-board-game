@@ -36,7 +36,7 @@
 		<div class="right_bar">
 			<div class="players_content">
 				<div class="players_header">
-					<h4>Joueur <span>(0/7 online)</span></h4>
+					<h4>Joueur <span>({{player_online.online.length}}/{{player_online.total.length}} online)</span></h4>
 				</div>
 				<div class="players_body">
 					<ul>
@@ -59,7 +59,7 @@
 						<input type="text" value="{{share_link}}">
 						<a class="input_button" (click)="copy_to_clipboard()">Copy</a>
 					</div>
-					<a class="button inactive" [routerLink]="['/board']">Lancer la partie</a>
+					<a class="button" [ngClass]="{'inactive': player_online.total.length < 3}" [routerLink]="['/board']">Lancer la partie</a>
 				</div>
 			</div>
 		</div>

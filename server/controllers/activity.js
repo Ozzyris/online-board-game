@@ -10,7 +10,6 @@ router.use(bodyParser.json());
 
 // HELPERS
 const token_manager = require('../helpers/token_manager'),
-	  activity_helper = require('../helpers/activity_helper'),
 	  littlebirds = require('../helpers/littlebirds');
 
 	router.get('/ping', function (req, res) {
@@ -64,7 +63,7 @@ const token_manager = require('../helpers/token_manager'),
 				if( players.length == 0 ){
 					player.rank = 'administrator';
 				}
-				return activity_helper.check_if_name_unique(players, player.name);
+				return check_if_name_unique(players, player.name);
 			})
 			.then(is_name_unique => {
 				if( is_name_unique ){
@@ -145,6 +144,19 @@ const token_manager = require('../helpers/token_manager'),
 				res.status(200).json( all_active_cron );
 			})
 	});
+
+	function check_if_name_unique( players, player_name ){
+		return new Promise((resolve, reject)=>{
+			let is_name_unique = true;
+	
+			for (var i = players.length - 1; i >= 0; i--) {
+				if( players[i].name.toLowerCase() == player_name.toLowerCase() ){
+					is_name_unique = false;
+				}
+			}
+			resolve( is_name_unique );
+		})
+	}
 
 module.exports = {
 	"activity" : router

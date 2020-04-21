@@ -7,6 +7,7 @@ A way to play board game online to play during confinement.
 > Board : TO BE DONE
 
 ### Todo
+##### Lobby
 - [x] New player dosen't display their name
 - [x] Remove player
 - [x] If player removed how to get info for the message "user as left the lobby"
@@ -29,7 +30,27 @@ A way to play board game online to play during confinement.
 - [x] Meilleur deconnexion
 - [x] Amelioration des status en online & offline
 - [x] Bug when sometime chat send doesn't go anywhere -> id in socket.player_id = undefined
+- [x] Active user count
+- [ ] Afficher un message avec cta pour recharger la page si je suis offline.
 
-- [ ] Active user count
-- [ ] Shuffle the cards
+- [ ] Shuffle the water cards
+- [ ] Shuffle the action cards
+- [ ] Shuffle player order
+- [ ] Init water & food
+
 - [ ] Move to next page
+
+#### Board
+
+- [ ] Display player card
+
+- [ ] Start turn
+- [ ] End turn
+
+- [ ] Last turn
+
+- [ ] Action Pick up wood
+- [ ] Action Pick up water
+- [ ] Action Pick up food
+- [ ] Action Pick up card
+- [ ] Action vote
