@@ -2,11 +2,14 @@
 A way to play board game online to play during confinement.
 
 ### Status
-> Home : DONE
-> Lobby : WORK IN PRO
-> Board : TO BE DONE
+> >Home : DONE
+>
+> >Lobby : WORK IN PRO
+>
+> >Board : TO BE DONE
 
 ### Todo
+
 ##### Lobby
 - [x] New player dosen't display their name
 - [x] Remove player
