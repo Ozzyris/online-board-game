@@ -4,7 +4,7 @@ A way to play board game online to play during confinement.
 ### Status
 > >Home : DONE
 >
-> >Lobby : WORK IN PRO
+> >Lobby : WORK IN PROGRESS
 >
 > >Board : TO BE DONE
 
