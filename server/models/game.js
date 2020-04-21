@@ -21,9 +21,9 @@ var game = new mongoose.Schema({
 						position: {type: Number},
 						illustration: {type: String},
 						visibility: {type: String, default: 'hidden'}, //[ "visiblie", "hidden"]
-						usage_number: {type: String, default: '1'}, //[ "0", "1", "infinity"]
-						usage_left: {type: String, default: '1'}, //[ "0", 1", "infinity"]
-						game_set: {type: String, default: 'base_game'}, //[ "base_game", extention_1"]
+						usage_number: {type: String}, //[ "0", "1", "infinity"]
+						usage_left: {type: String}, //[ "0", 1", "infinity"]
+						game_set: {type: String,}, //[ "base_game", extention_1"]
 						function: {type: String},
 					}
 				],
@@ -37,11 +37,11 @@ var game = new mongoose.Schema({
 		},
 	],
 	game_states : {
-		water_level: {type: Number},
-		food_level: {type: Number},
-		wood_level: {type: Number},
-		raft_level: {type: Number},
-		dead_level: {type: Number},
+		water_level: {type: Number, default: 0},
+		food_level: {type: Number, default: 0},
+		wood_level: {type: Number, default: 0},
+		raft_level: {type: Number, default: 0},
+		dead_level: {type: Number, default: 0},
 	},
 	action_cards: {
 		cards: [
@@ -50,9 +50,9 @@ var game = new mongoose.Schema({
 				position: {type: Number},
 				illustration: {type: String},
 				visibility: {type: String, default: 'hidden'}, //[ "visiblie", "hidden"]
-				usage_number: {type: String, default: '1'}, //[ "0", "1", "infinity"]
-				usage_left: {type: String, default: '1'}, //[ "0", 1", "infinity"]
-				game_set: {type: String, default: 'base_game'}, //[ "base_game", extention_1"]
+				usage_number: {type: String}, //[ "0", "1", "infinity"]
+				usage_left: {type: String}, //[ "0", 1", "infinity"]
+				game_set: {type: String}, //[ "base_game", extention_1"]
 				function: {type: String},
 			}
 		]
@@ -111,6 +111,17 @@ game.statics.get_a_player = function(game_token, player_id){
 					reject( undefined );
 				}
 			})
+	})
+};
+
+game.statics.update_all_players = function( game_token, players ){
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token }, {
+			'players': players
+		}).exec()
+		.then( are_players_updated => {
+		    resolve( are_players_updated );
+		})
 	})
 };
 
@@ -181,6 +192,18 @@ game.statics.add_activity = function(game_token, payload){
 	})
 };
 
+game.statics.update_rations = function(game_token, payload){
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token }, {
+			'game_states.water_level': payload.water,
+			'game_states.food_level': payload.food
+		}).exec()
+		.then (is_activity_added => {
+			resolve( is_activity_added );
+		})
+	})
+};
+
 game.statics.remove_game = function(game_token){
 	return new Promise((resolve, reject) => {
 		game.deleteOne({ game_token: game_token }, {}).exec()
@@ -207,6 +230,28 @@ game.statics.get_last_activities = function(game_token, count){
 					reject( undefined );
 				}
 			})
+	})
+};
+
+game.statics.update_water_cards = function(game_token, water_cards){
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token }, {
+			'water_cards.cards': water_cards
+		}).exec()
+		.then (are_water_cards_updated => {
+			resolve( are_water_cards_updated );
+		})
+	})
+};
+
+game.statics.update_action_cards = function(game_token, action_cards){
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token }, {
+			'action_cards.cards': action_cards
+		}).exec()
+		.then (are_action_cards_updated => {
+			resolve( are_action_cards_updated );
+		})
 	})
 };
 

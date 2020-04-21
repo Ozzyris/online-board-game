@@ -281,9 +281,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	}
 
 	launch_game(){
-		console.log(this.player_online.total.length);
 		if( this.player_online.total.length > 2 ){
-			console.log('launch');
 			this.gameApi_service.launch_game({ game_token: this.game_token })
 				.subscribe( is_game_launched => {
 					console.log( is_game_launched );

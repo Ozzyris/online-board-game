@@ -1,11 +1,425 @@
 [
 	{
 		"name": "allumettes",
-		"position": "",
 		"illustration": "allumettes.jpg",
-		"visibility": "hidden",
 		"usage_number": "1",
 		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "anti-venin",
+		"illustration": "anti_venin.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "baromètre",
+		"illustration": "barometre.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "boule de cristal",
+		"illustration": "boule_de_cristal.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "bouteille d'eau",
+		"illustration": "bouteille_d_eau.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "brosse a wc",
+		"illustration": "brosse_a_wc.jpg",
+		"usage_number": "0",
+		"usage_left": "0",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cafe",
+		"illustration": "cafe.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "canne à pêche",
+		"illustration": "canne_a_peche.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cartouche",
+		"illustration": "cartouche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cartouche",
+		"illustration": "cartouche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cartouche",
+		"illustration": "cartouche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cartouche",
+		"illustration": "cartouche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cartouche",
+		"illustration": "cartouche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "cartouche",
+		"illustration": "cartouche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "clef de voiture de luxe",
+		"illustration": "clef_de_voiture_de_luxe.jpg",
+		"usage_number": "0",
+		"usage_left": "0",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "conque",
+		"illustration": "conque.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "eau croupie",
+		"illustration": "eau_croupie.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "gourde",
+		"illustration": "gourde.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "gourdin",
+		"illustration": "gourdin.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "hache",
+		"illustration": "hache.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "jeu de société quoridor",
+		"illustration": "jeu_de_societe_quoridor.jpg",
+		"usage_number": "0",
+		"usage_left": "0",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "kit bbq cannibale",
+		"illustration": "kit_bbq_cannibale.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "lampe torche",
+		"illustration": "lampe_torche.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "longue vue",
+		"illustration": "longue_vue.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "moulin à légumes",
+		"illustration": "moulin_a_legumes.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "noix de coco",
+		"illustration": "noix_de_coco.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "pendule",
+		"illustration": "pendule.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "planche de bois",
+		"illustration": "planche_de_bois.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "plaque de tôle",
+		"illustration": "plaque_de_tole.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "plaque de tôle",
+		"illustration": "plaque_de_tole.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "poisson pourri",
+		"illustration": "poisson_pourri.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "poupée vaudou",
+		"illustration": "poupee_vaudou.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "réveil matin",
+		"illustration": "reveil_matin.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "revolver",
+		"illustration": "revolver.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "revolver",
+		"illustration": "revolver.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "revolver",
+		"illustration": "revolver.jpg",
+		"usage_number": "infinity",
+		"usage_left": "infinity",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sandwich",
+		"illustration": "sandwich.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "sardines",
+		"illustration": "sardines.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "somnifères",
+		"illustration": "somniferes.jpg",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "ticket de loterie gagnant",
+		"illustration": "ticket_de_loterie_gagnant.jpg",
+		"usage_number": "0",
+		"usage_left": "0",
+		"game_set": "base_game",
+		"function": ""
+	},
+	{
+		"name": "vieux slip",
+		"illustration": "vieux_slip.jpg",
+		"usage_number": "0",
+		"usage_left": "0",
 		"game_set": "base_game",
 		"function": ""
 	}

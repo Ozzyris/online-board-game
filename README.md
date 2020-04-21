@@ -36,10 +36,10 @@ A way to play board game online to play during confinement.
 - [x] Active user count
 - [ ] Afficher un message avec cta pour recharger la page si je suis offline.
 
-- [ ] Shuffle the water cards
-- [ ] Shuffle the action cards
-- [ ] Shuffle player order
-- [ ] Init water & food
+- [x] Shuffle the water cards
+- [x] Shuffle the action cards
+- [x] Shuffle player order
+- [x] Init water & food
 
 - [ ] Move to next page
 

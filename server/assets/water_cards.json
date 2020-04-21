@@ -1,19 +1,19 @@
 {
 	"base_carte":[
 		{
-			"name": "water_O",
+			"name": "water_0",
 			"position": "",
 			"illustration": "water_0.jpg",
 			"water_level": 0
 		},
 		{
-			"name": "water_O",
+			"name": "water_0",
 			"position": "",
 			"illustration": "water_0.jpg",
 			"water_level": 0
 		},
 		{
-			"name": "water_O",
+			"name": "water_0",
 			"position": "",
 			"illustration": "water_0.jpg",
 			"water_level": 0
@@ -59,9 +59,15 @@
 			"position": "",
 			"illustration": "water_3.jpg",
 			"water_level": 3
+		},
+		{
+			"name": "water_3",
+			"position": "",
+			"illustration": "water_3.jpg",
+			"water_level": 3
 		}
 	], 
-	"storm_carte": {
+	"storm_card": {
 		"name": "storm",
 		"position": "",
 		"illustration": "ouragan.jpg",
