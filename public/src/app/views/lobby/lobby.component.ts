@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 
 //Services
 import { ActivityApiService } from '../../services/activity_api/activity_api.service';
+import { GameApiService } from '../../services/game_api/game-api.service';
 import { ModalNameService } from '../../services/modals/modal_name/modal-name.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 
@@ -17,7 +18,7 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 	selector: 'app-lobby',
 	templateUrl: './lobby.component.html',
 	styleUrls: ['./lobby.component.scss'],
-	providers: [ActivityApiService]
+	providers: [ActivityApiService, GameApiService]
 })
 
 export class LobbyComponent implements OnInit, OnDestroy {
@@ -43,7 +44,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	private socket;
 
 
-	constructor( public activityApi_service: ActivityApiService, public modalName_service: ModalNameService, public toaster_service: ToasterService, private route: ActivatedRoute, private router: Router ){}
+	constructor( public activityApi_service: ActivityApiService, public gameApi_service: GameApiService, public modalName_service: ModalNameService, public toaster_service: ToasterService, private route: ActivatedRoute, private router: Router ){}
 	ngOnInit(){
 		this.route.params.subscribe( params => {
 			this.game_token = params.game_token;
@@ -276,6 +277,20 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		let index = this.player_online[count].indexOf( player_id );
 		if (index > -1) {
 			this.player_online[count].splice(index, 1);
+		}
+	}
+
+	launch_game(){
+		console.log(this.player_online.total.length);
+		if( this.player_online.total.length > 2 ){
+			console.log('launch');
+			this.gameApi_service.launch_game({ game_token: this.game_token })
+				.subscribe( is_game_launched => {
+					console.log( is_game_launched );
+					// this.router.navigate(['/board']);
+				}, error => {
+					console.log( error );
+				})
 		}
 	}
 }

@@ -1,0 +1,12 @@
+[
+	{
+		"name": "allumettes",
+		"position": "",
+		"illustration": "allumettes.jpg",
+		"visibility": "hidden",
+		"usage_number": "1",
+		"usage_left": "1",
+		"game_set": "base_game",
+		"function": ""
+	}
+]

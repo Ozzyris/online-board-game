@@ -1,0 +1,70 @@
+{
+	"base_carte":[
+		{
+			"name": "water_O",
+			"position": "",
+			"illustration": "water_0.jpg",
+			"water_level": 0
+		},
+		{
+			"name": "water_O",
+			"position": "",
+			"illustration": "water_0.jpg",
+			"water_level": 0
+		},
+		{
+			"name": "water_O",
+			"position": "",
+			"illustration": "water_0.jpg",
+			"water_level": 0
+		},
+		{
+			"name": "water_1",
+			"position": "",
+			"illustration": "water_1.jpg",
+			"water_level": 1
+		},
+		{
+			"name": "water_1",
+			"position": "",
+			"illustration": "water_1.jpg",
+			"water_level": 1
+		},
+		{
+			"name": "water_1",
+			"position": "",
+			"illustration": "water_1.jpg",
+			"water_level": 1
+		},
+		{
+			"name": "water_2",
+			"position": "",
+			"illustration": "water_2.jpg",
+			"water_level": 2
+		},
+		{
+			"name": "water_2",
+			"position": "",
+			"illustration": "water_2.jpg",
+			"water_level": 2
+		},
+		{
+			"name": "water_2",
+			"position": "",
+			"illustration": "water_2.jpg",
+			"water_level": 2
+		},
+		{
+			"name": "water_3",
+			"position": "",
+			"illustration": "water_3.jpg",
+			"water_level": 3
+		}
+	], 
+	"storm_carte": {
+		"name": "storm",
+		"position": "",
+		"illustration": "ouragan.jpg",
+		"water_level": 2
+	}
+}

@@ -106,6 +106,10 @@ function reconnect_player( socket ){
 	game_model.update_last_online_time( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, updated_online_time )
 		.then(is_last_online_time_updated => {
 			broadcast('update-player-last-online-time', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, last_online_time: updated_online_time});
+			return game_model.update_activity_status( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, 'online'  );
+		})
+		.then(is_player_reconnected => {
+			broadcast('update-player-status', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, status: 'online'});
 		})
 		.catch( error => {
 			console.log( error );

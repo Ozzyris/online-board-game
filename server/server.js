@@ -35,7 +35,7 @@ app.use(morgan('dev'));
 
 // ROUTES
 app.use('/activity', require('./controllers/activity').activity);
-// app.use('/game', require('./controllers/game').game);
+app.use('/game', require('./controllers/game').game);
 
 // CONFIGURATION
 server.listen(config.port);

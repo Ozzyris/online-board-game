@@ -59,7 +59,7 @@
 						<input type="text" value="{{share_link}}">
 						<a class="input_button" (click)="copy_to_clipboard()">Copy</a>
 					</div>
-					<a class="button" [ngClass]="{'inactive': player_online.total.length < 3}" [routerLink]="['/board']">Lancer la partie</a>
+					<a class="button" (click)="launch_game()" [ngClass]="{'inactive': player_online.total.length < 3}">Lancer la partie</a>
 				</div>
 			</div>
 		</div>
