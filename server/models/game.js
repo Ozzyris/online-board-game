@@ -192,11 +192,14 @@ game.statics.add_activity = function(game_token, payload){
 	})
 };
 
-game.statics.update_rations = function(game_token, payload){
+game.statics.update_game_states = function(game_token, payload){
 	return new Promise((resolve, reject) => {
 		game.updateOne({ game_token: game_token }, {
-			'game_states.water_level': payload.water,
-			'game_states.food_level': payload.food
+			'game_states.water_level': payload.water_level,
+			'game_states.food_level': payload.food_level,
+			'game_states.wood_level': payload.wood_level,
+			'game_states.raft_level': payload.raft_level,
+			'game_states.dead_level': payload.dead_level
 		}).exec()
 		.then (is_activity_added => {
 			resolve( is_activity_added );
@@ -219,9 +222,9 @@ game.statics.get_last_activities = function(game_token, count){
 				{ game_token: game_token },
 				{ activities:
 					[
-     					{ $sort: { timestamp: -1 } },
-    					{ $slice: count }
-   					]
+						{ $sort: { timestamp: -1 } },
+						{ $slice: count }
+					]
 				}).exec()
 			.then(game => {
 				if( game ){
@@ -252,6 +255,20 @@ game.statics.update_action_cards = function(game_token, action_cards){
 		.then (are_action_cards_updated => {
 			resolve( are_action_cards_updated );
 		})
+	})
+};
+
+game.statics.get_game_states = function( game_token ){
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					resolve( game.game_states );
+				}
+				else{
+					resolve( [] );
+				}
+			})
 	})
 };
 

@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, Observable, forkJoin, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription, Observable, Subject } from 'rxjs';
 
 //Socket.io
 import * as io from 'socket.io-client';
@@ -21,7 +20,7 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 	providers: [ActivityApiService, GameApiService]
 })
 
-export class LobbyComponent implements OnInit, OnDestroy {
+export class LobbyComponent implements OnInit {
 	//Activity
 	game_token: string;
 	share_link: string;
@@ -33,11 +32,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		total: [],
 		online: []
 	}
-
 	activities: any = [];
-	activity_subscription = new Subject<any>();
 
-	//chat
+	//Chat
 	chat_input: string;
 
 	//Socket.io
@@ -58,7 +55,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
 		this.init_socket_io().subscribe();
 	}
-	ngOnDestroy(){}
 
 	init_socket_io(){
 		let observable = new Observable(observer => {
@@ -69,7 +65,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 			this.socket.on('update-player', (player) => { observer.next(player); this.update_player( player ); });
 			this.socket.on('update-player-last-online-time', (payload) => { observer.next(payload); this.update_player_last_online_time( payload ); });
 			this.socket.on('leave-game', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
-			return () => { this.socket.disconnect(); console.log('disconnect'); }; 
+			this.socket.on('launch-game', (payload) => { observer.next(payload); this.router.navigate(['/board', this.game_token]); });
+			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
 	}
@@ -190,7 +187,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	}
 
 	get_elem_from_storage( elem_name ): Promise<any>{
-		//player_id | game_token
 		return new Promise((resolve, reject)=>{
 			resolve( localStorage.getItem( elem_name ) );
 		})
@@ -284,8 +280,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 		if( this.player_online.total.length > 2 ){
 			this.gameApi_service.launch_game({ game_token: this.game_token })
 				.subscribe( is_game_launched => {
-					console.log( is_game_launched );
-					// this.router.navigate(['/board']);
+					console.log(is_game_launched);
 				}, error => {
 					console.log( error );
 				})

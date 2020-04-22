@@ -40,12 +40,20 @@ A way to play board game online to play during confinement.
 - [x] Shuffle the action cards
 - [x] Shuffle player order
 - [x] Init water & food
+- [x] Order player by name
+- [x] Move to next page
 
-- [ ] Move to next page
+- [ ] Que ce passe t'il quand j'arrive sur le lobby et qu'un jeux à déjà commencé? 
 
 #### Board
 
-- [ ] Display player card
+- [x] Init board game
+- [ ] Add admin action on the chat.
+	- [x] Add the admin action logic
+	- [x] Add the admin action admin security
+	- [ ] Add the admin action cheetset on the menu
+
+- [ ] Display player's card
 
 - [ ] Start turn
 - [ ] End turn

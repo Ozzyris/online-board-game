@@ -24,6 +24,13 @@ const littlebirds = require('../helpers/littlebirds'),
 			all_player,
 			activity = {
 				status: 'new',
+			},
+			game_states = {
+				water_level: 0,
+				food_level: 0,
+				wood_level: 0,
+				raft_level: 0,
+				dead_level: 0,
 			};
 
 		game_helper.shuffle_water_cards( water_cards )
@@ -52,12 +59,14 @@ const littlebirds = require('../helpers/littlebirds'),
 				return game_model.update_all_players( req.body.game_token, players );
 			})
 			.then(are_players_updated => {
-				return game_helper.manage_ration_level( all_player.length );
+				return game_helper.manage_game_states_level( all_player.length );
 			})
-			.then(rations => {
-				return game_model.update_rations( req.body.game_token, rations );
+			.then(new_game_states => {
+				game_states.food_level = new_game_states.food_level;
+				game_states.water_level = new_game_states.food_level;
+				return game_model.update_game_states( req.body.game_token, game_states );
 			})
-			.then(are_rations_updated => {
+			.then(are_game_states_updated => {
 				activity.content = 'The game will start <span>3 secondes</span>';
 				activity.timestamp = moment();
 				littlebirds.broadcast( 'new-activity', req.body.game_token, activity );
@@ -72,6 +81,9 @@ const littlebirds = require('../helpers/littlebirds'),
 					activity.timestamp = moment(),
 					littlebirds.broadcast( 'new-activity', req.body.game_token, activity );
 				}, 4000);
+				setTimeout(function(){
+					littlebirds.broadcast( 'launch-game', req.body.game_token, {} );
+				}, 6000);
 
 				res.status(200).json({message: 'pong'});
 			})
@@ -80,6 +92,17 @@ const littlebirds = require('../helpers/littlebirds'),
 				res.status(401).json( error );
 			})		
 	});
+
+	router.post('/get-game-states', function (req, res) {
+		game_model.get_game_states( req.body.game_token )
+			.then(game_states => {
+				res.status(200).json(game_states);
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	})
 
 module.exports = {
 	"game" : router

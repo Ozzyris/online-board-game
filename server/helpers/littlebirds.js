@@ -166,7 +166,6 @@ function send_message( socket, message ){
 	let activity = {}, 
 		updated_online_time = moment();
 
-
 	game_model.update_last_online_time( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, updated_online_time )
 		.then(is_last_online_time_updated => {
 			broadcast('update-player-last-online-time', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, last_online_time: updated_online_time});
@@ -175,7 +174,15 @@ function send_message( socket, message ){
 		.then(player => {
 			activity.author_id = player._id;
 			activity.content = '<span>' + player.name + '</span>says: ' + message.content;
-			return game_model.add_activity( currentSockets[socket.id].game_token, activity );
+			return test_for_admin_command( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, message.content, player.rank );
+		})
+		.then(is_admin_command => {
+			if(is_admin_command){
+				throw { message: 'admin command'}
+			}else{
+				return game_model.add_activity( currentSockets[socket.id].game_token, activity );
+
+			}
 		})
 		.then(is_activity_added => {
 			activity.status = 'new';
@@ -186,8 +193,9 @@ function send_message( socket, message ){
 		})
 }
 
-function broadcast(route, game_token, payload){
-	global_io.in( game_token ).emit( route, payload );
+function broadcast(route, room_id, payload){
+	// console.log(route, game_token, payload);
+	global_io.in( room_id ).emit( route, payload );
 }
 
 //CRON
@@ -229,6 +237,81 @@ function all_active_cron(){
 	return new Promise((resolve, reject)=>{
 		resolve( `all active cron ${cron_manager}`);
 	})
+}
+
+function test_for_admin_command( game_token, player_id, content, rank ){
+	return new Promise((resolve, reject)=>{
+		console.log( game_token, content, rank );
+		if( content.slice(0, 8) == "/admin: " && rank == "administrator"){
+			resolve(true);
+			switch( content.slice(8, content.length) ){
+				case 'add water':
+					manage_game_states(game_token, 'water', 'add', 1);
+					break;
+				case 'remove water':
+					manage_game_states(game_token, 'water', 'remove', 1);
+					break;
+				case 'add food':
+					manage_game_states(game_token, 'food', 'add', 1);
+					break;
+				case 'remove food':
+					manage_game_states(game_token, 'food', 'remove', 1);
+					break;
+				case 'add wood':
+					manage_game_states(game_token, 'wood', 'add', 1);
+					break;
+				case 'remove wood':
+					manage_game_states(game_token, 'wood', 'remove', 1);
+					break;
+				case 'add raft':
+					manage_game_states(game_token, 'raft', 'add', 1);
+					break;
+				case 'remove raft':
+					manage_game_states(game_token, 'raft', 'remove', 1);
+					break;
+				default:
+					broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
+					break;
+			}
+		}else{
+			if(rank != "administrator"){
+				broadcast('new-toast', player_id, {content: 'You need to be administrator for this command.'});
+			}
+			resolve(false);
+		}
+		
+	})
+}
+
+function manage_game_states(game_token, type, action, nb){
+	let activity = {};
+
+	game_model.get_game_states( game_token )
+		.then(game_states => {
+			type_id = type + '_level';
+
+			if(action == 'add'){
+				activity.content = nb + ' unit of <span>' + type + '</span>was added';
+				game_states[type_id] = game_states[type_id] + nb;
+			}
+			if(action == 'remove'){
+				activity.content = nb + ' unit of <span>' + type + '</span>was removed';
+				game_states[type_id] = game_states[type_id] - nb;
+			}
+
+			broadcast('update-game-states', game_token, game_states);
+			return game_model.update_game_states( game_token, game_states );
+		})
+		.then(are_game_states_updated => {
+			return game_model.add_activity( game_token, activity );
+		})
+		.then(is_activity_added => {
+			activity.status = 'new';
+			broadcast('new-activity', game_token, activity);
+		})
+		.catch( error => {
+			console.log(error);
+		})	
 }
 
 // function object_size( object ){

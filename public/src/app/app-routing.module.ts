@@ -12,7 +12,7 @@ const routes: Routes = [
 	{ path: 'home/:info', component: HomeComponent, data: { title: 'Illegal Galerapagos' } },
 	{ path: 'home', component: HomeComponent, data: { title: 'Illegal Galerapagos' } },
 	{ path: 'lobby/:game_token', component: LobbyComponent, data: { title: 'Lobby' } },
-	{ path: 'board', component: BoardComponent, data: { title: 'Board' } },
+	{ path: 'board/:game_token', component: BoardComponent, data: { title: 'Board' } },
 	{ path: '**', redirectTo: 'home' },
 ];
 

@@ -50,6 +50,34 @@ section.board{
 					float: right;
 					margin-right: 32px;
 					line-height: 20px;
+					text-transform: lowercase;
+
+					&:first-letter{
+						text-transform: capitalize
+					}
+					span.icon{
+						font-family: 'font_awesome';
+						font-size: 10px;
+						color: gold;
+						font-weight: 900;
+						margin: -10px 4px 0 4px; 
+						position: relative;
+						cursor: pointer;
+
+						&:hover:after{
+							content: 'Administrator';
+							font-family: 'baloo_thambi';
+							font-weight: 400;
+							font-size: 10px;
+							background-color: #191919;
+							padding: 2px 8px;
+							color: white;
+							border-radius: 2px;
+							position: absolute;
+							top: -6px;
+							left: 15px;
+						}
+					}
 				}
 				a.link{
 					float: right;
@@ -121,6 +149,7 @@ section.board{
 
 								&.water{
 									&:after{
+										z-index: 1;
 										position: absolute;
 										top: -12px;
 										right: -50px;
@@ -137,6 +166,7 @@ section.board{
 										background-color: #4CB1F7;
 									}
 									&:before{
+										z-index: 1;
 										content: '';
           								border-top: 10px solid transparent;
 										border-left: 0;
@@ -147,9 +177,14 @@ section.board{
 										top: -2px;
 										right: -20px;
 									}
+
+									&:hover:after, &:hover:before{
+										z-index: 100;
+									}
 								}
 								&.food{
 									&:after{
+										z-index: 1;
 										position: absolute;
 										top: -12px;
 										right: -50px;
@@ -166,6 +201,7 @@ section.board{
 										background-color: #C14738;
 									}
 									&:before{
+										z-index: 1;
 										content: '';
           								border-top: 10px solid transparent;
 										border-left: 0;
@@ -175,6 +211,9 @@ section.board{
 										position: absolute;
 										top: -2px;
 										right: -20px;
+									}
+									&:hover:after, &:hover:before{
+										z-index: 100;
 									}
 								}
 								&.water.food{
@@ -241,7 +280,7 @@ section.board{
 										font-size: 14px;
 										font-weight: 400;
 
-										span{
+										&::ng-deep span{
 											font-size: 14px;
 											font-weight: 800;
 											margin-right: 3px;
@@ -329,13 +368,10 @@ section.board{
 
 								span.icon{
 									font-family: 'font_awesome';
-									font-weight: 800;
 									margin-left: 5px;
 									color: #333333;
-
-									&.light{
-										font-weight: 400;
-									}
+									font-weight: 400;
+									
 									&.bold{
 										font-weight: 800;
 									}
@@ -417,7 +453,8 @@ section.board{
 										transition: all 200ms;
 										cursor: pointer;
 										margin-right: 3px;
-
+										text-transform: capitalize;
+										
 										&:hover{
 											text-decoration: underline;
 										}

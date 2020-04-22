@@ -24,6 +24,7 @@ import { ModalPlayerDirective } from './directives/modal_player/modal_player.dir
 import { ModalBannedDirective } from './directives/modal_banned/modal_banned.directive';
 import { ModalAlertDirective } from './directives/modal_alert/modal_alert.directive';
 import { ToasterDirective } from './directives/toaster/toaster.directive';
+import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
 
 @NgModule({
 	declarations: [
@@ -37,7 +38,8 @@ import { ToasterDirective } from './directives/toaster/toaster.directive';
 		ModalBannedDirective,
 		ModalAlertDirective,
 		ToasterDirective,
-		SortByDatePipe
+		SortByDatePipe,
+		SortbyPipe
 	],
 	imports: [
 		BrowserModule,

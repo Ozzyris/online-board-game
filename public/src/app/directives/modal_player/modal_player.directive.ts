@@ -11,7 +11,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 
 export class ModalPlayerDirective implements OnInit, OnDestroy{
-	is_modal_active: Boolean = true;
+	is_modal_active: Boolean = false;
 	// modal_subscription: Subscription;
 
 	constructor(){}

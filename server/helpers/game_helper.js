@@ -1,5 +1,7 @@
 // PACKAGES
 
+// MODELS
+
 function shuffle_water_cards( water_cards ){
 	return new Promise((resolve, reject)=>{
 		let shuffled_water_card = shuffle_array( water_cards.base_carte );
@@ -53,42 +55,42 @@ function shuffle_player_order( players ){
 	})
 }
 
-function manage_ration_level( player_number ){
+function manage_game_states_level( player_number ){
 	return new Promise((resolve, reject)=>{
 		let ration_level = {
-			food: 0,
-			water: 0
+			food_level: 0,
+			water_level: 0
 		};
 		switch( player_number ){
 			case 3:
-				ration_level.food = 5; ration_level.water = 6;
+				ration_level.food_level = 5; ration_level.water_level = 6;
 				break;
 			case 4:
-				ration_level.food = 7; ration_level.water = 8;
+				ration_level.food_level = 7; ration_level.water_level = 8;
 				break;
 			case 5:
-				ration_level.food = 8; ration_level.water = 10;
+				ration_level.food_level = 8; ration_level.water_level = 10;
 				break;
 			case 6:
-				ration_level.food = 10; ration_level.water = 12;
+				ration_level.food_level = 10; ration_level.water_level = 12;
 				break;
 			case 7:
-				ration_level.food = 12; ration_level.water = 14;
+				ration_level.food_level = 12; ration_level.water_level = 14;
 				break;
 			case 8:
-				ration_level.food = 13; ration_level.water = 16;
+				ration_level.food_level = 13; ration_level.water_level = 16;
 				break;
 			case 9:
-				ration_level.food = 15; ration_level.water = 18;
+				ration_level.food_level = 15; ration_level.water_level = 18;
 				break;
 			case 10:
-				ration_level.food = 16; ration_level.water = 20;
+				ration_level.food_level = 16; ration_level.water_level = 20;
 				break;
 			case 11:
-				ration_level.food = 18; ration_level.water = 22;
+				ration_level.food_level = 18; ration_level.water_level = 22;
 				break;
 			case 12:
-				ration_level.food = 20; ration_level.water = 24;
+				ration_level.food_level = 20; ration_level.water_level = 24;
 				break;
 		}
 		resolve( ration_level );
@@ -111,5 +113,5 @@ module.exports={
 	'shuffle_water_cards': shuffle_water_cards,
 	'shuffle_action_cards': shuffle_action_cards,
 	'shuffle_player_order': shuffle_player_order,
-	'manage_ration_level': manage_ration_level,
+	'manage_game_states_level': manage_game_states_level,
 }
