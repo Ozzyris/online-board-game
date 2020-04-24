@@ -34,6 +34,11 @@ export class BoardComponent implements OnInit {
 	turns: any = Array(37).fill(1).map((x,i)=>i).reverse();
 	raft_spot: any;
 	wood_stock = Array(5).fill(1).map((x,i)=>i);
+	current_water_card: any = {
+		name: 'water',
+		illustration: 'water_back.jpg',
+		water_level: null
+	}
 
 	//Chat
 	chat_input: string = "/admin: add water";
@@ -65,7 +70,8 @@ export class BoardComponent implements OnInit {
 			this.socket.on('update-player-last-online-time', (payload) => { observer.next(payload); this.update_player_last_online_time( payload ); });
 			//game
 			this.socket.on('update-game-states', (game_states) => { observer.next(game_states); this.update_game_states( game_states ); });
-			this.socket.on('new-toast', (payload) => { console.log(payload); observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
+			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
+			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -111,6 +117,10 @@ export class BoardComponent implements OnInit {
 				this.players_details[i].last_online_time = payload.last_online_time;
 			}
 		}
+	}
+
+	update_water_card( water_card ){
+		this.current_water_card = water_card;
 	}
 
 	init_board(){

@@ -1,67 +1,67 @@
 {
 	"base_carte":[
 		{
-			"name": "water_0",
+			"name": "bright sun",
 			"position": "",
 			"illustration": "water_0.jpg",
 			"water_level": 0
 		},
 		{
-			"name": "water_0",
+			"name": "bright sun",
 			"position": "",
 			"illustration": "water_0.jpg",
 			"water_level": 0
 		},
 		{
-			"name": "water_0",
+			"name": "bright sun",
 			"position": "",
 			"illustration": "water_0.jpg",
 			"water_level": 0
 		},
 		{
-			"name": "water_1",
+			"name": "light rain",
 			"position": "",
 			"illustration": "water_1.jpg",
 			"water_level": 1
 		},
 		{
-			"name": "water_1",
+			"name": "light rain",
 			"position": "",
 			"illustration": "water_1.jpg",
 			"water_level": 1
 		},
 		{
-			"name": "water_1",
+			"name": "light rain",
 			"position": "",
 			"illustration": "water_1.jpg",
 			"water_level": 1
 		},
 		{
-			"name": "water_2",
+			"name": "moderate rain",
 			"position": "",
 			"illustration": "water_2.jpg",
 			"water_level": 2
 		},
 		{
-			"name": "water_2",
+			"name": "moderate rain",
 			"position": "",
 			"illustration": "water_2.jpg",
 			"water_level": 2
 		},
 		{
-			"name": "water_2",
+			"name": "moderate rain",
 			"position": "",
 			"illustration": "water_2.jpg",
 			"water_level": 2
 		},
 		{
-			"name": "water_3",
+			"name": "heavy rain",
 			"position": "",
 			"illustration": "water_3.jpg",
 			"water_level": 3
 		},
 		{
-			"name": "water_3",
+			"name": "heavy rain",
 			"position": "",
 			"illustration": "water_3.jpg",
 			"water_level": 3

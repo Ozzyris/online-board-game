@@ -26,6 +26,7 @@ const littlebirds = require('../helpers/littlebirds'),
 				status: 'new',
 			},
 			game_states = {
+				turn: 0,
 				water_level: 0,
 				food_level: 0,
 				wood_level: 0,
@@ -102,6 +103,26 @@ const littlebirds = require('../helpers/littlebirds'),
 				console.log(error);
 				res.status(401).json( error );
 			})
+	})
+
+	router.post('/get-water', function (req, res) {
+		//Get user detail
+		// see if he has bonus
+		// Get game states
+		// Get current water card
+		// Update game states
+		// broadcast activity
+		// update turn
+		// broadcast activity
+
+		// game_model.get_game_states( req.body.game_token )
+		// 	.then(game_states => {
+				res.status(200).json('alex');
+		// 	})
+		// 	.catch( error => {
+		// 		console.log(error);
+		// 		res.status(401).json( error );
+		// 	})
 	})
 
 module.exports = {

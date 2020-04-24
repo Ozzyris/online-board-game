@@ -37,6 +37,7 @@ var game = new mongoose.Schema({
 		},
 	],
 	game_states : {
+		turn: {type: Number, default: 0},
 		water_level: {type: Number, default: 0},
 		food_level: {type: Number, default: 0},
 		wood_level: {type: Number, default: 0},
@@ -97,6 +98,7 @@ game.statics.get_all_players = function( game_token ){
 	})
 };
 
+
 game.statics.get_a_player = function(game_token, player_id){
 	return new Promise((resolve, reject) => {
 		game.findOne({game_token: game_token}, {}).exec()
@@ -114,6 +116,22 @@ game.statics.get_a_player = function(game_token, player_id){
 	})
 };
 
+game.statics.get_next_player = function(game_token, position){
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					for (var i = game.players.length - 1; i >= 0; i--) {
+						if( game.players[i].game_detail.position == position){
+							resolve( game.players[i] );
+						}
+					}
+				}else{
+					reject( undefined );
+				}
+			})
+	})
+};
 game.statics.update_all_players = function( game_token, players ){
 	return new Promise((resolve, reject) => {
 		game.updateOne({ game_token: game_token }, {
@@ -244,6 +262,23 @@ game.statics.update_water_cards = function(game_token, water_cards){
 		.then (are_water_cards_updated => {
 			resolve( are_water_cards_updated );
 		})
+	})
+};
+
+game.statics.get_a_water_card = function(game_token, position){
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					for (var i = game.water_cards.cards.length - 1; i >= 0; i--) {
+						if( game.water_cards.cards[i].position == position){
+							resolve( game.water_cards.cards[i] );
+						}
+					}
+				}else{
+					reject( undefined );
+				}
+			})
 	})
 };
 

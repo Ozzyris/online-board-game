@@ -194,7 +194,7 @@ function send_message( socket, message ){
 }
 
 function broadcast(route, room_id, payload){
-	// console.log(route, game_token, payload);
+	// console.log(route, room_id, payload);
 	global_io.in( room_id ).emit( route, payload );
 }
 
@@ -269,6 +269,9 @@ function test_for_admin_command( game_token, player_id, content, rank ){
 				case 'remove raft':
 					manage_game_states(game_token, 'raft', 'remove', 1);
 					break;
+				case 'start turn':
+					start_turn( game_token );
+					break;
 				default:
 					broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
 					break;
@@ -312,6 +315,25 @@ function manage_game_states(game_token, type, action, nb){
 		.catch( error => {
 			console.log(error);
 		})	
+}
+
+function start_turn( game_token ){
+	let activity = {};
+
+	game_model.get_a_water_card( game_token, 0 )
+		.then(water_card => {
+			broadcast('new-water-card', game_token, water_card);
+			return game_model.get_next_player( game_token, 0 );
+		})
+		.then(player => {
+			activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
+			broadcast('new-toast', player._id, {content: "It's your turn to play!"});
+			return game_model.add_activity( game_token, activity );
+		})
+		.then(is_activity_added => {
+			activity.status = 'new';
+			broadcast('new-activity', game_token, activity);
+		})
 }
 
 // function object_size( object ){
