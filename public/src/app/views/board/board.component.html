@@ -91,10 +91,10 @@
 			</div>
 			<div class="action_content">
 				<div class="inner_group">
-					<a class="button"><span class="icon"></span>Chercher de l'eau</a>
-					<a class="button"><span class="icon"></span>Chercher de la nourriture</a>
-					<a class="button"><span class="icon"></span>Chercher du bois</a>
-					<a class="button"><span class="icon"></span>Fouiller l'épave</a>
+					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }"><span class="icon"></span>Chercher de l'eau</a>
+					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
+					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher du bois</a>
+					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Fouiller l'épave</a>
 				</div>
 			</div>
 		</div>

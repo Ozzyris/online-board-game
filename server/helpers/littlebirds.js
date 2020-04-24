@@ -328,11 +328,11 @@ function start_turn( game_token ){
 		.then(player => {
 			activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
 			broadcast('new-toast', player._id, {content: "It's your turn to play!"});
+			broadcast('current_player', game_token, {player_id: player._id});
 			return game_model.add_activity( game_token, activity );
 		})
 		.then(is_activity_added => {
 			activity.status = 'new';
-			broadcast('new-activity', game_token, activity);
 		})
 }
 

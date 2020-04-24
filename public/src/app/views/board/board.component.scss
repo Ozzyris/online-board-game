@@ -509,12 +509,9 @@ section.board{
 						text-align: center;
 						user-select: none;
 
-						span.icon{
-							font-family: 'font_awesome';
-							font-weight: 800;
-							padding-right: 10px;
+						&:hover{
+							background-color: lighten(rgb(95, 170, 239), 10%);
 						}
-	
 						&.inactive{
 							background-color: rgb(220, 220, 220);
 							cursor: not-allowed;
@@ -523,9 +520,12 @@ section.board{
 								background-color: rgb(220, 220, 220);
 							}
 						}
-						&:hover{
-							background-color: lighten(rgb(95, 170, 239), 10%);
+						span.icon{
+							font-family: 'font_awesome';
+							font-weight: 800;
+							padding-right: 10px;
 						}
+	
 					}
 				}
 			}

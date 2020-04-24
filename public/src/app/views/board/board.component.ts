@@ -38,7 +38,8 @@ export class BoardComponent implements OnInit {
 		name: 'water',
 		illustration: 'water_back.jpg',
 		water_level: null
-	}
+	};
+	active_player: string;
 
 	//Chat
 	chat_input: string = "/admin: add water";
@@ -72,6 +73,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('update-game-states', (game_states) => { observer.next(game_states); this.update_game_states( game_states ); });
 			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
+			this.socket.on('current_player', (payload) => { observer.next(payload); this.current_player_io( payload );  });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -121,6 +123,11 @@ export class BoardComponent implements OnInit {
 
 	update_water_card( water_card ){
 		this.current_water_card = water_card;
+	}
+
+	current_player_io( payload ){
+		console.log(payload)
+		this.active_player = payload.player_id;
 	}
 
 	init_board(){
@@ -217,5 +224,9 @@ export class BoardComponent implements OnInit {
 		
 		this.socket.emit('send-message', {content: this.chat_input});
 		this.chat_input = undefined;
+	}
+
+	get_water(){
+
 	}
 }
