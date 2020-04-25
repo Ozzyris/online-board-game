@@ -23,7 +23,6 @@ export class ModalCardDirective implements OnInit, OnDestroy{
 					this.is_modal_active = true;
 					this.card_info = modal_info.payload;
 
-					console.log( this.card_info );
 				}else if( modal_info.modal_id == 'card' && modal_info.status == 'close' ){
 					this.is_modal_active = false;
 				}

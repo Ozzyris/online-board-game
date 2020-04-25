@@ -43,7 +43,7 @@ export class BoardComponent implements OnInit {
 	active_player: string;
 
 	//Chat
-	chat_input: string = "/admin: add water";
+	chat_input: string = "/admin: start turn";
 
 	//Socket.io
 	private socket;
@@ -76,6 +76,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
 			this.socket.on('current_player', (payload) => { observer.next(payload); this.current_player_io( payload );  });
 			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload});   });
+			this.socket.on('update_player_cards', (payload) => { observer.next(payload); this.update_player_cards( payload ); });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -129,6 +130,14 @@ export class BoardComponent implements OnInit {
 
 	current_player_io( payload ){
 		this.active_player = payload.player_id;
+	}
+
+	update_player_cards( payload ){
+		for (var i = this.players_details.length - 1; i >= 0; i--) {
+			if( this.players_details[i]._id == payload.player_id ){
+				this.players_details[i].game_detail.cards = payload.cards;
+			}
+		}
 	}
 
 	init_board(){
@@ -224,7 +233,7 @@ export class BoardComponent implements OnInit {
 		}
 		
 		this.socket.emit('send-message', {content: this.chat_input});
-		this.chat_input = undefined;
+		this.chat_input = '/admin: start turn';
 	}
 
 	get_water(){

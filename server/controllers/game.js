@@ -109,7 +109,7 @@ const littlebirds = require('../helpers/littlebirds'),
 		let multiplicateur = 1,
 			game_states = {},
 			activity = {},
-			current_player;
+			current_player = {};
 
 		game_model.get_a_player( req.body.game_token, req.body.player_id )
 			.then(player => {
@@ -219,27 +219,58 @@ const littlebirds = require('../helpers/littlebirds'),
 	})
 
 	router.post('/get-card', function (req, res) {
-		let new_card = {};
+		let new_card = {},
+			current_player = {},
+			activity = {},
+			game_states = {};
 
 		game_model.get_next_action_card( req.body.game_token )
 			.then(action_card => {
 				new_card = action_card;
-				console.log( action_card );
 				return game_model.get_a_player( req.body.game_token, req.body.player_id );
 			})
 			.then(player => {
+				current_player = player;
+				current_player.game_detail.cards.push(new_card);
 				littlebirds.broadcast('new-action-card', player._id, new_card);
+				littlebirds.broadcast('update_player_cards', req.body.game_token, {player_id: req.body.player_id, cards: current_player.game_detail.cards});
+				return game_model.update_player_cards( req.body.game_token, req.body.player_id, current_player.game_detail.cards );
 			})
-		// Get next card of the draft
-		// -> Emit new card to our player
-		// Add this card to our player
-		// -> Broadcast new updated player to the room
-		// -> Add activity
-		// Delete this card from the draft
-		// Launch next turn
+			.then(are_cards_updated => {
+				activity.content = '<span>' + current_player.name + '</span> got a card from the rack';
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
 
-		res.status(200).json({content: 'player got card'});
-
+				return game_model.delete_last_action_card( req.body.game_token );
+			})
+			.then(is_action_card_deleted => {
+				return game_model.get_game_states( req.body.game_token );
+			})
+			.then(temp_game_states => {
+				game_states = temp_game_states;
+				game_states.turn ++;
+				return game_model.update_game_states( req.body.game_token, game_states );
+			})
+			.then(are_game_states_updated => {
+				return game_model.get_next_player( req.body.game_token, game_states.turn );
+			})
+			.then(player => {
+				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
+				delete activity.status; 
+				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
+				littlebirds.broadcast('current_player', req.body.game_token, {player_id: player._id});
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				setTimeout(function(){
+					littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				}, 1000);
+				res.status(200).json({content: 'player got card'});
+			})
 	})
 
 module.exports = {
