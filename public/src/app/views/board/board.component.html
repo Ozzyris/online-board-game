@@ -91,7 +91,7 @@
 			</div>
 			<div class="action_content">
 				<div class="inner_group">
-					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }"><span class="icon"></span>Chercher de l'eau</a>
+					<a class="button" (click)="get_water()" [ngClass]="{'inactive': current_player.player_id != active_player }"><span class="icon"></span>Chercher de l'eau</a>
 					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
 					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher du bois</a>
 					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Fouiller l'épave</a>

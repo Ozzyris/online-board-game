@@ -126,7 +126,6 @@ export class BoardComponent implements OnInit {
 	}
 
 	current_player_io( payload ){
-		console.log(payload)
 		this.active_player = payload.player_id;
 	}
 
@@ -227,6 +226,11 @@ export class BoardComponent implements OnInit {
 	}
 
 	get_water(){
-
+		if( this.current_player.player_id == this.active_player ){
+			this.gameApi_service.get_water({ game_token: this.game_token, player_id: this.current_player.player_id })
+				.subscribe( does_player_got_water => {
+					console.log(does_player_got_water)
+				});
+		}
 	}
 }

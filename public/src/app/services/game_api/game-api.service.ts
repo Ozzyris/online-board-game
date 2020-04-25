@@ -28,4 +28,9 @@ export class GameApiService {
 		let url = this.base_url + 'get-game-states';
 		return this.http.post(url, payload, this.httpOptions);
 	}
+
+	get_water( payload ): Observable<any>{
+		let url = this.base_url + 'get-water';
+		return this.http.post(url, payload, this.httpOptions);
+	}
 }

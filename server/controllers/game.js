@@ -106,23 +106,55 @@ const littlebirds = require('../helpers/littlebirds'),
 	})
 
 	router.post('/get-water', function (req, res) {
-		//Get user detail
-		// see if he has bonus
-		// Get game states
-		// Get current water card
-		// Update game states
-		// broadcast activity
-		// update turn
-		// broadcast activity
+		let multiplicateur = 1,
+			game_states = {},
+			activity = {},
+			current_player;
 
-		// game_model.get_game_states( req.body.game_token )
-		// 	.then(game_states => {
-				res.status(200).json('alex');
-		// 	})
-		// 	.catch( error => {
-		// 		console.log(error);
-		// 		res.status(401).json( error );
-		// 	})
+		game_model.get_a_player( req.body.game_token, req.body.player_id )
+			.then(player => {
+				current_player = player;
+				if( player.game_detail.bonus.square_water ){ multiplicateur = 2}
+				return game_model.get_game_states( req.body.game_token );
+			})
+			.then(temp_game_states => {
+				game_states = temp_game_states;
+				game_model.get_a_water_card( req.body.game_token, 0 )
+				return game_model.get_a_water_card( req.body.game_token, game_states.turn );
+			})
+			.then(water_card => {
+				game_states.water_level = game_states.water_level + (water_card.water_level * multiplicateur);
+				game_states.turn ++;
+				activity.content = '<span>' + current_player.name + '</span> found ' + (water_card.water_level * multiplicateur) + ' unit(s) of water.';
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				littlebirds.broadcast('update-game-states', req.body.game_token, game_states);
+				return game_model.update_game_states( req.body.game_token, game_states );
+			})
+			.then(are_game_states_updated => {
+				return game_model.get_next_player( req.body.game_token, game_states.turn );
+			})
+			.then(player => {
+				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
+				delete activity.status; 
+				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
+				littlebirds.broadcast('current_player', req.body.game_token, {player_id: player._id});
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				setTimeout(function(){
+					littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				}, 1000);
+				res.status(200).json({content: 'player got water'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
 	})
 
 module.exports = {
