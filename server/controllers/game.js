@@ -157,6 +157,91 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 	})
 
+	router.post('/get-food', function (req, res) {
+		let fish_array = [1, 1, 1, 2, 2, 3],
+			random_fish_balls = [],
+			current_player,
+			game_states = {},
+			activity = {};
+
+		game_model.get_a_player( req.body.game_token, req.body.player_id )
+			.then(player => {
+				current_player = player;
+				random_fish_balls.push(fish_array[Math.floor(Math.random() * fish_array.length)]);
+				
+				if( player.game_detail.bonus.square_food ){
+					fish_array.splice(fish_array.indexOf(random_fish_balls[0]), 1);
+					random_fish_balls.push(fish_array[Math.floor(Math.random() * fish_array.length)]);
+				}
+				return game_model.get_game_states( req.body.game_token );
+			})
+			.then(temp_game_states => {
+				game_states = temp_game_states;
+				let food_total = 0,
+					food_nb_string = '';
+				for (var i = random_fish_balls.length - 1; i >= 0; i--) {
+					game_states.food_level = game_states.food_level + random_fish_balls[i];
+					food_nb_string += ' ' + random_fish_balls[i] + ' +';
+					food_total += random_fish_balls[i];
+				}
+				food_nb_string = food_nb_string.substring(0, (food_nb_string.length - 2));
+				activity.content = '<span>' + current_player.name + '</span> found ' + food_total + ' unit(s) of food (' + food_nb_string + ' )';
+				game_states.turn ++;
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				littlebirds.broadcast('update-game-states', req.body.game_token, game_states);
+				return game_model.update_game_states( req.body.game_token, game_states );
+			})
+			.then(are_game_states_updated => {
+				return game_model.get_next_player( req.body.game_token, game_states.turn );
+			})
+			.then(player => {
+				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
+				delete activity.status; 
+				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
+				littlebirds.broadcast('current_player', req.body.game_token, {player_id: player._id});
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				setTimeout(function(){
+					littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				}, 1000);
+				res.status(200).json({content: 'player got food'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	})
+
+	router.post('/get-card', function (req, res) {
+		let new_card = {};
+
+		game_model.get_next_action_card( req.body.game_token )
+			.then(action_card => {
+				new_card = action_card;
+				console.log( action_card );
+				return game_model.get_a_player( req.body.game_token, req.body.player_id );
+			})
+			.then(player => {
+				littlebirds.broadcast('new-action-card', player._id, new_card);
+			})
+		// Get next card of the draft
+		// -> Emit new card to our player
+		// Add this card to our player
+		// -> Broadcast new updated player to the room
+		// -> Add activity
+		// Delete this card from the draft
+		// Launch next turn
+
+		res.status(200).json({content: 'player got card'});
+
+	})
+
 module.exports = {
 	"game" : router
 };

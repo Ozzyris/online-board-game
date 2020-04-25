@@ -1,0 +1,91 @@
+// =============================================================================
+// IMPORT
+// =============================================================================
+@import "../../../assets/styles/ui_mixines";
+
+section.modal_card{
+	position: fixed;
+	z-index: 100;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0,0,0,0.8);
+
+	div.modal{
+		@include container_sizing( 300px );
+		background-color: #fff;
+		box-shadow: 0px 0px 6px rgba(0,0,0,.5);
+		min-height: 200px;
+		margin-top: 10% ;
+		border-radius: 5px;
+
+		div.header{
+			border-radius: 5px 5px 0 0;
+			width: 100%;
+			height: auto;
+			border-bottom: 1px solid #F2F2F2;
+
+			h4{
+				font-size: 16px;
+				line-height: 50px;
+				padding: 0 0 0 24px;
+				margin: 0;
+				color: #191919;
+				font-style: 14px;
+			}
+		}
+		div.body{
+			width: calc(100% - 48px);
+			height: auto;
+			padding: 24px;
+			overflow: auto;
+
+			img{
+				display: block;
+				width: 100%;
+				margin: 0 auto;
+				border-radius: 20px;
+			}
+			p{
+				text-align: center;
+				margin-top: 10px;
+			}
+
+		}
+		div.footer{
+			border-radius: 0 0 5px 5px;
+			width: 100%;
+			height: auto;
+			border-top: 1px solid #F2F2F2;
+			overflow: auto;
+
+			a.button{
+				float: right;
+				padding: 8px 12px;
+				background-color: rgb(95, 170, 239);
+				border-radius: 3px;
+				line-height: 25px;
+				margin: 16px 8px 16px 0;
+				color: white;
+				cursor: pointer;
+				transition: all 200ms;
+
+				&:hover{
+					background-color: lighten(rgb(95, 170, 239), 10%);
+				}
+				&:first-child{
+					margin-right: 24px;
+				}
+				&.cancel{
+					background-color: #F2F2F2;
+					color: #191919;
+
+					&:hover{
+						background-color: lighten(#F2F2F2, 10%);
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,15 @@
+<section class="modal_card" *ngIf="is_modal_active">
+	<div class="modal">
+		<div class="header">
+			<h4>You found this in the rack!</h4>
+		</div>
+		<div class="body">
+			<img src="../../../assets/images/galerapagos/{{card_info.illustration}}">
+			<p>{{card_info.name}}</p>
+		</div>
+		<div class="footer">
+			<a class="button" >Show to other players</a>
+			<a class="button cancel" (click)="is_modal_active = false">Close</a>
+		</div>
+	</div>
+</section>

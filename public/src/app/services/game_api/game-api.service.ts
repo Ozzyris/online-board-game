@@ -33,4 +33,14 @@ export class GameApiService {
 		let url = this.base_url + 'get-water';
 		return this.http.post(url, payload, this.httpOptions);
 	}
+
+	get_food( payload ): Observable<any>{
+		let url = this.base_url + 'get-food';
+		return this.http.post(url, payload, this.httpOptions);
+	}
+
+	get_card( payload ): Observable<any>{
+		let url = this.base_url + 'get-card';
+		return this.http.post(url, payload, this.httpOptions);
+	}
 }

@@ -23,6 +23,7 @@ import { ModalNameDirective } from './directives/modal_name/modal_name.directive
 import { ModalPlayerDirective } from './directives/modal_player/modal_player.directive';
 import { ModalBannedDirective } from './directives/modal_banned/modal_banned.directive';
 import { ModalAlertDirective } from './directives/modal_alert/modal_alert.directive';
+import { ModalCardDirective } from './directives/modal_card/modal_card.directive';
 import { ToasterDirective } from './directives/toaster/toaster.directive';
 import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
 
@@ -37,6 +38,7 @@ import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
 		ModalPlayerDirective,
 		ModalBannedDirective,
 		ModalAlertDirective,
+		ModalCardDirective,
 		ToasterDirective,
 		SortByDatePipe,
 		SortbyPipe

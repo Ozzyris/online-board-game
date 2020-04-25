@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment';
 import { ActivityApiService } from '../../services/activity_api/activity_api.service';
 import { GameApiService } from '../../services/game_api/game-api.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
+import { ModalNameService } from '../../services/modals/modal_name/modal-name.service';
 
 @Component({
 	selector: 'app-board',
@@ -47,7 +48,7 @@ export class BoardComponent implements OnInit {
 	//Socket.io
 	private socket;
 
-	constructor( public activityApi_service: ActivityApiService, public gameApi_service: GameApiService, public toaster_service: ToasterService, private route: ActivatedRoute, private router: Router ){}
+	constructor( public activityApi_service: ActivityApiService, public gameApi_service: GameApiService, public toaster_service: ToasterService, public modalName_service: ModalNameService, private route: ActivatedRoute, private router: Router ){}
 	ngOnInit(){
 		this.route.params.subscribe( params => {
 			this.game_token = params.game_token;
@@ -74,6 +75,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
 			this.socket.on('current_player', (payload) => { observer.next(payload); this.current_player_io( payload );  });
+			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload});   });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -230,6 +232,23 @@ export class BoardComponent implements OnInit {
 			this.gameApi_service.get_water({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_water => {
 					console.log(does_player_got_water)
+				});
+		}
+	}
+
+	get_food(){
+		if( this.current_player.player_id == this.active_player ){
+			this.gameApi_service.get_food({ game_token: this.game_token, player_id: this.current_player.player_id })
+				.subscribe( does_player_got_food => {
+					console.log(does_player_got_food)
+				});
+		}
+	}
+	get_card(){
+		if( this.current_player.player_id == this.active_player ){
+			this.gameApi_service.get_card({ game_token: this.game_token, player_id: this.current_player.player_id })
+				.subscribe( does_player_got_card => {
+					console.log(does_player_got_card)
 				});
 		}
 	}

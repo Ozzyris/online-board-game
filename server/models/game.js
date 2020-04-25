@@ -282,6 +282,19 @@ game.statics.get_a_water_card = function(game_token, position){
 	})
 };
 
+game.statics.get_next_action_card = function( game_token ){
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					resolve( game.action_cards.cards[game.action_cards.cards.length - 1] )
+				}else{
+					reject( undefined );
+				}
+			})
+	})
+};
+
 game.statics.update_action_cards = function(game_token, action_cards){
 	return new Promise((resolve, reject) => {
 		game.updateOne({ game_token: game_token }, {

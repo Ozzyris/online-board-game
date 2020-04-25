@@ -1,5 +1,6 @@
 <toaster></toaster>
 <modal-player></modal-player>
+<modal-card></modal-card>
 
 <section class="board">
 	<div class="top_bar">
@@ -76,6 +77,7 @@
 									<span class="small">{{player_details.last_online_time | amTimeAgo }}</span>
 								</p>
 								<ul  class="cards">
+									<li class="card" *ngIf="player_details._id == active_player" ><img src="./../../assets/images/galerapagos/premier_joueur.jpg"></li>
 									<li *ngFor="let cards of player_details.game_detail.cards" class="card">
 										<img *ngIf="cards.visibility != 'hidden'" [src]="'./../../assets/images/galerapagos/' + cards.illustration">
 										<img *ngIf="cards.visibility == 'hidden'" [src]="'./../../assets/images/galerapagos/back.jpg'">
@@ -92,9 +94,9 @@
 			<div class="action_content">
 				<div class="inner_group">
 					<a class="button" (click)="get_water()" [ngClass]="{'inactive': current_player.player_id != active_player }"><span class="icon"></span>Chercher de l'eau</a>
-					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
+					<a class="button" (click)="get_food()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
 					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher du bois</a>
-					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Fouiller l'épave</a>
+					<a class="button" (click)="get_card()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Fouiller l'épave</a>
 				</div>
 			</div>
 		</div>
