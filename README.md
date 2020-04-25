@@ -61,7 +61,7 @@ A way to play board game online to play during confinement.
 - [ ] Last turn
 
 - [ ] Action Pick up wood
-- [ ] Action Pick up water
-- [ ] Action Pick up food
-- [ ] Action Pick up card
+- [x] Action Pick up water
+- [x] Action Pick up food
+- [x] Action Pick up card
 - [ ] Action vote

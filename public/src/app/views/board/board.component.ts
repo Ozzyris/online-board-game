@@ -240,7 +240,7 @@ export class BoardComponent implements OnInit {
 		if( this.current_player.player_id == this.active_player ){
 			this.gameApi_service.get_water({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_water => {
-					console.log(does_player_got_water)
+					console.log(does_player_got_water);
 				});
 		}
 	}
@@ -249,7 +249,7 @@ export class BoardComponent implements OnInit {
 		if( this.current_player.player_id == this.active_player ){
 			this.gameApi_service.get_food({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_food => {
-					console.log(does_player_got_food)
+					console.log(does_player_got_food);
 				});
 		}
 	}
@@ -257,8 +257,18 @@ export class BoardComponent implements OnInit {
 		if( this.current_player.player_id == this.active_player ){
 			this.gameApi_service.get_card({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_card => {
-					console.log(does_player_got_card)
+					console.log(does_player_got_card);
 				});
+		}
+	}
+	get_wood(){
+		if( this.current_player.player_id == this.active_player ){
+
+			
+			// this.gameApi_service.get_card({ game_token: this.game_token, player_id: this.current_player.player_id })
+			// 	.subscribe( does_player_got_card => {
+			// 		console.log(does_player_got_card);
+			// 	});
 		}
 	}
 }
