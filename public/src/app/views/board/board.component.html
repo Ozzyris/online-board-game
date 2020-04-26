@@ -1,6 +1,7 @@
 <toaster></toaster>
 <modal-player></modal-player>
 <modal-card></modal-card>
+<modal-wood></modal-wood>
 
 <section class="board">
 	<div class="top_bar">
@@ -71,8 +72,8 @@
 							<span class="indicator" [ngClass]="player_details.status"></span>
 							<div class="content">
 								<p>
-									<span *ngIf="player_details.game_detail.status == 'sick'"class="icon"> </span>
-									<span *ngIf="player_details.game_detail.status == 'dead'" class="icon"> </span>
+									<span *ngIf="player_details.game_detail.status == 'dead'"class="icon dead"> </span>
+									<span *ngIf="player_details.game_detail.status == 'sick'" class="icon sick"> </span>
 									<a class="user">{{player_details.name}}</a>
 									<span class="small">{{player_details.last_online_time | amTimeAgo }}</span>
 								</p>
@@ -84,9 +85,6 @@
 									</li>
 								</ul>
 							</div>
-<!-- 							<div class="action" *ngIf="current_player.rank == 'administrator' && player_details.rank != 'administrator'">
-								<a class="link" (click)="kick_out_player( player_details._id, player_details.name)" ></a>
-							</div> -->
 						</li>
 					</ul>
 				</div>
@@ -95,7 +93,7 @@
 				<div class="inner_group">
 					<a class="button" (click)="get_water()" [ngClass]="{'inactive': current_player.player_id != active_player }"><span class="icon"></span>Chercher de l'eau</a>
 					<a class="button" (click)="get_food()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
-					<a class="button" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher du bois</a>
+					<a class="button" (click)="get_wood()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher du bois</a>
 					<a class="button" (click)="get_card()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Fouiller l'épave</a>
 				</div>
 			</div>

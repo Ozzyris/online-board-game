@@ -210,6 +210,20 @@ game.statics.update_player_cards = function(game_token, player_id, cards){
 	})
 };
 
+
+game.statics.update_player_game_status = function(game_token, player_id, status){
+	return new Promise((resolve, reject) => {
+		game.updateOne({ game_token: game_token, 'players._id': player_id }, {
+			$set: { 
+				"players.$.game_detail.status" : status,
+			}
+		}).exec()
+		.then ( is_game_status_updated => {
+			resolve( is_game_status_updated );
+		})
+	})
+};
+
 game.statics.add_activity = function(game_token, payload){
 	return new Promise((resolve, reject) => {
 		game.updateOne({ game_token: game_token }, {

@@ -1,0 +1,43 @@
+<section class="modal_wood" *ngIf="is_modal_active">
+	<div class="modal">
+		<div class="header">
+			<h4>How much more wood do you want?</h4>
+		</div>
+		<div class="body">
+			<div class="illustration" >
+				<img src="../../assets/images/femme-bois.png" alt="">
+			</div>
+			<div class="inner_container">
+				<div class="input_container">
+					<input name="radiobox" type="radio" id="check_0" [value]="0" [(ngModel)]="nb_of_more_wood" checked>
+					<label for="check_0" >Don't pick more wood</label>
+				</div>
+				<div class="input_container">
+					<input name="radiobox" type="radio" id="check_1" [value]="1" [(ngModel)]="nb_of_more_wood">
+					<label for="check_1" >Pick 1 more wood</label>
+				</div>
+				<div class="input_container">
+					<input name="radiobox" type="radio" id="check_2" [value]="2" [(ngModel)]="nb_of_more_wood">
+					<label for="check_2" >Pick 2 more wood</label>
+				</div>
+				<div class="input_container">
+					<input name="radiobox" type="radio" id="check_3" [value]="3" [(ngModel)]="nb_of_more_wood">
+					<label for="check_3" >Pick 3 more wood</label>
+				</div>
+				<div class="input_container">
+					<input name="radiobox" type="radio" id="check_4" [value]="4" [(ngModel)]="nb_of_more_wood">
+					<label for="check_4" >Pick 4 more wood</label>
+				</div>
+				<div class="input_container">
+					<input name="radiobox" type="radio" id="check_5" [value]="5" [(ngModel)]="nb_of_more_wood">
+					<label for="check_5" >Pick 5 more wood</label>
+				</div>
+				<p>Each time you increase your chance to get bitten by a snake</p>
+			</div>
+		</div>
+		<div class="footer">
+			<a class="button" (click)="get_wood()">Get some Wood</a>
+			<a class="button cancel" (click)="is_modal_active = false">Close</a>
+		</div>
+	</div>
+</section>

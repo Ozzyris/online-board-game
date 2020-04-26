@@ -41,6 +41,7 @@ export class BoardComponent implements OnInit {
 		water_level: null
 	};
 	active_player: string;
+	nb_of_more_wood: Subscription;
 
 	//Chat
 	chat_input: string = "/admin: start turn";
@@ -75,8 +76,9 @@ export class BoardComponent implements OnInit {
 			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
 			this.socket.on('current_player', (payload) => { observer.next(payload); this.current_player_io( payload );  });
-			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload});   });
+			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload}); });
 			this.socket.on('update_player_cards', (payload) => { observer.next(payload); this.update_player_cards( payload ); });
+			this.socket.on('update_player_game_status', (payload) => { observer.next(payload); this.update_player_game_status( payload ); });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -136,6 +138,14 @@ export class BoardComponent implements OnInit {
 		for (var i = this.players_details.length - 1; i >= 0; i--) {
 			if( this.players_details[i]._id == payload.player_id ){
 				this.players_details[i].game_detail.cards = payload.cards;
+			}
+		}
+	}
+
+	update_player_game_status( payload ){
+		for (var i = this.players_details.length - 1; i >= 0; i--) {
+			if( this.players_details[i]._id == payload.player_id ){
+				this.players_details[i].game_detail.status = payload.status;
 			}
 		}
 	}
@@ -263,12 +273,16 @@ export class BoardComponent implements OnInit {
 	}
 	get_wood(){
 		if( this.current_player.player_id == this.active_player ){
-
 			
-			// this.gameApi_service.get_card({ game_token: this.game_token, player_id: this.current_player.player_id })
-			// 	.subscribe( does_player_got_card => {
-			// 		console.log(does_player_got_card);
-			// 	});
+			this.modalName_service.open_modal({ modal_id: 'wood', status: 'open'});
+			this.nb_of_more_wood = this.modalName_service.get_nb_of_more_wood()
+				.subscribe( nb_of_more_wood => {
+					this.gameApi_service.get_wood({ game_token: this.game_token, player_id: this.current_player.player_id, more_wood: nb_of_more_wood })
+						.subscribe( does_player_got_wood => {
+							console.log(does_player_got_wood);
+						});
+					this.nb_of_more_wood.unsubscribe();
+				});
 		}
 	}
 }

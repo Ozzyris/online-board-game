@@ -10,6 +10,7 @@ export class ModalNameService {
 	private is_modal_name_open = new Subject<any>();
 	public player_id = new Subject<any>();
 	public leave_confirmation = new Subject<any>();
+	public nb_of_more_wood = new Subject<any>();
 
 	constructor(){}
 
@@ -27,5 +28,8 @@ export class ModalNameService {
 	}
 	get_leave_confirmation(): Observable<any> {
 		return this.leave_confirmation;
+	}
+	get_nb_of_more_wood(): Observable<any> {
+		return this.nb_of_more_wood;
 	}
 }

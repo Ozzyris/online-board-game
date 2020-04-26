@@ -43,4 +43,9 @@ export class GameApiService {
 		let url = this.base_url + 'get-card';
 		return this.http.post(url, payload, this.httpOptions);
 	}
+
+	get_wood( payload ): Observable<any>{
+		let url = this.base_url + 'get-wood';
+		return this.http.post(url, payload, this.httpOptions);
+	}
 }

@@ -271,6 +271,93 @@ const littlebirds = require('../helpers/littlebirds'),
 				}, 1000);
 				res.status(200).json({content: 'player got card'});
 			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	})
+
+	router.post('/get-wood', function (req, res) {
+		let wood_array = [0, 0, 0, 0, 0, 1],
+			random_wood_array = [],
+			is_player_bitten_by_a_snake = false,
+			current_player,
+			snake_card = {
+				name: "Sick",
+				illustration: "maladie.jpg"
+			},
+			activity = {},
+			game_states = {};
+
+		for (var i = 0; i < req.body.more_wood; i++) {
+			random_wood_array.push(wood_array[Math.floor(Math.random() * wood_array.length)]);
+			wood_array.splice(wood_array.indexOf(random_wood_array[i]), 1);
+		}
+
+		is_player_bitten_by_a_snake = random_wood_array.includes(1);
+
+		game_model.get_a_player( req.body.game_token, req.body.player_id )
+			.then(player => {
+				current_player = player;
+
+				if( is_player_bitten_by_a_snake ){
+					littlebirds.broadcast('new-action-card', player._id, snake_card);
+					littlebirds.broadcast('update_player_game_status', req.body.game_token, {player_id: req.body.player_id, status: 'sick'});
+					activity.content = '<span>' + current_player.name + '</span> found 1 unit of wood but got bitten by a snake!';
+					return game_model.update_player_game_status( req.body.game_token, req.body.player_id, 'sick' );
+				}else{
+					activity.content = '<span>' + current_player.name + '</span> found ' + (random_wood_array.length + 1) + ' unit of wood and avoid the snakes!';
+				}
+			})
+			.then(is_game_status_updated => {
+				console.log(is_game_status_updated);
+
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+
+				return game_model.get_game_states( req.body.game_token );
+			})
+			.then(temp_game_states => {
+				game_states = temp_game_states;
+				game_states.turn ++;
+				if( is_player_bitten_by_a_snake ){
+					game_states.wood_level ++;
+				}else{
+					game_states.wood_level = game_states.wood_level + (random_wood_array.length + 1);
+				}
+				littlebirds.broadcast('update-game-states', req.body.game_token, game_states);
+				return game_model.update_game_states( req.body.game_token, game_states );
+			})
+			.then(are_game_states_updated => {
+				return game_model.get_next_player( req.body.game_token, game_states.turn );
+			})
+			.then(player => {
+				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
+				delete activity.status; 
+				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
+				littlebirds.broadcast('current_player', req.body.game_token, {player_id: player._id});
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				setTimeout(function(){
+					littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				}, 1000);
+				res.status(200).json({content: 'player got card'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+
+			// [ ] - Check for player mutliplicator
+			// [ ] - Update the raft status in function of the level of wood
+			
+
+		res.status(200).json({content: 'player got wood'});
 	})
 
 module.exports = {
