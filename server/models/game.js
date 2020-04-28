@@ -240,11 +240,7 @@ game.statics.add_activity = function(game_token, payload){
 game.statics.update_game_states = function(game_token, payload){
 	return new Promise((resolve, reject) => {
 		game.updateOne({ game_token: game_token }, {
-			'game_states.water_level': payload.water_level,
-			'game_states.food_level': payload.food_level,
-			'game_states.wood_level': payload.wood_level,
-			'game_states.raft_level': payload.raft_level,
-			'game_states.dead_level': payload.dead_level
+			'game_states': payload,
 		}).exec()
 		.then (is_activity_added => {
 			resolve( is_activity_added );
