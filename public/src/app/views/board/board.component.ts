@@ -214,12 +214,18 @@ export class BoardComponent implements OnInit {
 	get_game_states(){
 		this.gameApi_service.get_game_states({ game_token: this.game_token })
 			.subscribe( game_states => {
+				console.log( game_states );
+				this.define_who_play( game_states.turn );
 				this.game_states = game_states;
 			});
 	}
 
 	update_game_states( game_states ){
 		this.game_states = game_states;
+	}
+
+	define_who_play( turn ){
+		console.log( turn );
 	}
 
 	add_player_to_the_online_count( player_id , count){

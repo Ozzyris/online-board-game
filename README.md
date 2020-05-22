@@ -55,13 +55,15 @@ A way to play board game online to play during confinement.
 
 - [ ] Display player's card
 
-- [ ] Start turn
+- [x] Start turn
+- [ ] Recovery player's turn
 - [ ] End turn
 
 - [ ] Last turn
 
-- [ ] Action Pick up wood
+- [x] Action Pick up wood
 - [x] Action Pick up water
 - [x] Action Pick up food
 - [x] Action Pick up card
 - [ ] Action vote
+

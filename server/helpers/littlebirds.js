@@ -272,6 +272,9 @@ function test_for_admin_command( game_token, player_id, content, rank ){
 				case 'start turn':
 					start_turn( game_token );
 					break;
+				case 'reset turn':
+					reset_turn( game_token );
+					break;
 				default:
 					broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
 					break;
@@ -336,17 +339,28 @@ function start_turn( game_token ){
 		})
 }
 
-// function object_size( object ){
-// 	let size = 0,
-// 		key;
+function reset_turn( game_token ){
+	let activity = {};
 
-// 	for (key in object) {
-// 		if (object.hasOwnProperty(key)){
-// 			size++;
-// 		} 
-// 	}
-// 	return size;
-// }
+	game_model.get_game_states( game_token )
+		.then(game_states => {
+			game_states.turn = 0;
+
+			broadcast('update-game-states', game_token, game_states);
+			return game_model.update_game_states( game_token, game_states );
+		})
+		.then(are_game_states_updated => {
+			activity.content = 'The game turn has been <span>reseted</span>';
+			return game_model.add_activity( game_token, activity );
+		})
+		.then(is_activity_added => {
+			activity.status = 'new';
+			broadcast('new-activity', game_token, activity);
+		})
+		.catch( error => {
+			console.log(error);
+		})	
+}
 
 module.exports={
 	'init_socket_io': init_socket_io,
