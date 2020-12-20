@@ -43,7 +43,13 @@ A way to play board game online to play during confinement.
 - [x] Order player by name
 - [x] Move to next page
 
-- [ ] Que ce passe t'il quand j'arrive sur le lobby et qu'un jeux à déjà commencé? 
+- [ ] What does happen if I arrived in the lobby when a game has already stared?
+- [ ] The lobby is created after the first user is added to the lobby.
+- [ ] The number of current player is not accurate
+- [ ] The order of the lobby chat is inverted
+- [ ] I cannot send a message by pressing entre
+- [ ] There is no explaination about why I cannot start the game.
+- [ ] Enter the room by pressing Enter with your name
 
 #### Board
 
@@ -67,3 +73,5 @@ A way to play board game online to play during confinement.
 - [x] Action Pick up card
 - [ ] Action vote
 
+
+- [ ] Add X elems of water by typing "Add 5 water"

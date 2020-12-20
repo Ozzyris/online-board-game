@@ -37,7 +37,7 @@
 							</ul>
 						</div>
 						<div class="chatbox">
-							<input type="text" placeholder="You may speak here" [(ngModel)]="chat_input">
+							<input type="text" placeholder="You may speak here" (keyup.enter)="send_chat()" [(ngModel)]="chat_input">
 							<a class="button" (click)="send_chat()"><span></span>send</a>
 						</div>
 					</div>
