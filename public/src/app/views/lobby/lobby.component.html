@@ -55,10 +55,12 @@
 			</div>
 			<div class="action_content" *ngIf="current_player.rank == 'administrator'">
 				<div class="inner_group">
+					<p>Share game</p>
 					<div class="input_group">
 						<input type="text" value="{{share_link}}">
 						<a class="input_button" (click)="copy_to_clipboard()">Copy</a>
 					</div>
+					<p class="warning" [hidden]="player_online.total.length > 2" ><span class="icon"></span>You need at least 3 players to start game.</p>
 					<a class="button" (click)="launch_game()" [ngClass]="{'inactive': player_online.total.length < 3}">Lancer la partie</a>
 				</div>
 			</div>

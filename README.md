@@ -48,7 +48,7 @@ A way to play board game online to play during confinement.
 - [ ] The number of current player is not accurate
 - [x] The order of the lobby chat is inverted
 - [x] I cannot send a message by pressing enter
-- [ ] There is no explaination about why I cannot start the game.
+- [x] There is no explaination about why I cannot start the game.
 - [x] Enter the room by pressing Enter with your name
 - [x] Can click twice on the launch game
 - [x] Have the right url in the sharing block
