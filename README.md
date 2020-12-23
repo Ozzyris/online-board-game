@@ -45,7 +45,7 @@ A way to play board game online to play during confinement.
 
 - [ ] What does happen if I arrived in the lobby when a game has already stared?
 - [x] The lobby is created after the first user is added to the lobby.
-- [ ] The number of current player is not accurate
+- [x] The number of current player is not accurate
 - [x] The order of the lobby chat is inverted
 - [x] I cannot send a message by pressing enter
 - [x] There is no explaination about why I cannot start the game.

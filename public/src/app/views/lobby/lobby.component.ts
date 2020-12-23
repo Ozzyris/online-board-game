@@ -57,6 +57,25 @@ export class LobbyComponent implements OnInit {
 		this.init_socket_io().subscribe();
 	}
 
+	init_lobby(){
+		return new Promise((resolve, reject)=>{
+			this.get_elem_from_storage( 'player_id' )
+				.then( player_id => {
+					if( player_id == null ){
+						this.modalName_service.open_modal({game_token: this.game_token, modal_id: 'name', status: 'open'});
+						this.player_id_subscription = this.modalName_service.get_player_id()
+							.subscribe( player_id_from_back => {
+								resolve( player_id_from_back );
+								this.player_id_subscription.unsubscribe();
+							});
+					}else{
+						resolve( player_id );
+					}
+					
+			})
+		})	
+	}
+
 	init_socket_io(){
 		let observable = new Observable(observer => {
 			this.socket = io.connect( environment.api_url );
@@ -134,25 +153,6 @@ export class LobbyComponent implements OnInit {
 				this.players_details[i].last_online_time = payload.last_online_time;
 			}
 		}
-	}
-
-	init_lobby(){
-		return new Promise((resolve, reject)=>{
-			this.get_elem_from_storage( 'player_id' )
-				.then( player_id => {
-					if( player_id == null ){
-						this.modalName_service.open_modal({game_token: this.game_token, modal_id: 'name', status: 'open'});
-						this.player_id_subscription = this.modalName_service.get_player_id()
-							.subscribe( player_id_from_back => {
-								resolve( player_id_from_back );
-								this.player_id_subscription.unsubscribe();
-							});
-					}else{
-						resolve( player_id );
-					}
-					
-			})
-		})	
 	}
 
 	get_all_players_details(){
@@ -263,14 +263,14 @@ export class LobbyComponent implements OnInit {
 		this.chat_input = undefined;
 	}
 
-	add_player_to_the_online_count( player_id , count){
+	add_player_to_the_online_count(player_id , count){
 		let index = this.player_online[count].indexOf( player_id );
-		if (index == -1) {
+		if (index == -1 && player_id != undefined) {
 			this.player_online[count].push( player_id );
 		}
 	}
 
-	remove_player_to_the_online_count( player_id , count){
+	remove_player_to_the_online_count(player_id , count){
 		let index = this.player_online[count].indexOf( player_id );
 		if (index > -1) {
 			this.player_online[count].splice(index, 1);

@@ -233,7 +233,7 @@ export class BoardComponent implements OnInit {
 
 	add_player_to_the_online_count( player_id , count){
 		let index = this.player_online[count].indexOf( player_id );
-		if (index == -1) {
+		if (index == -1 && player_id != undefined) {
 			this.player_online[count].push( player_id );
 		}
 	}
