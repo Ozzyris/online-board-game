@@ -44,12 +44,14 @@ A way to play board game online to play during confinement.
 - [x] Move to next page
 
 - [ ] What does happen if I arrived in the lobby when a game has already stared?
-- [ ] The lobby is created after the first user is added to the lobby.
+- [x] The lobby is created after the first user is added to the lobby.
 - [ ] The number of current player is not accurate
-- [ ] The order of the lobby chat is inverted
-- [ ] I cannot send a message by pressing entre
+- [x] The order of the lobby chat is inverted
+- [x] I cannot send a message by pressing enter
 - [ ] There is no explaination about why I cannot start the game.
-- [ ] Enter the room by pressing Enter with your name
+- [x] Enter the room by pressing Enter with your name
+- [x] Can click twice on the launch game
+- [x] Have the right url in the sharing block
 
 #### Board
 

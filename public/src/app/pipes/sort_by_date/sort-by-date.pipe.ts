@@ -10,7 +10,7 @@ export class SortByDatePipe implements PipeTransform {
 			return [];
 		}
 
-		const sortedValues = value.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+		const sortedValues = value.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 		return sortedValues;
 	}
 }

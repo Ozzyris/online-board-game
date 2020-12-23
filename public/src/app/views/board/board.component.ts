@@ -44,7 +44,7 @@ export class BoardComponent implements OnInit {
 	nb_of_more_wood: Subscription;
 
 	//Chat
-	chat_input: string = "/admin: start turn";
+	chat_input: string = "";
 
 	//Socket.io
 	private socket;
@@ -104,7 +104,7 @@ export class BoardComponent implements OnInit {
 	}
 
 	new_activity( activity ){
-		this.activities.unshift( activity );
+		this.activities.push( activity );
 		this.denewsify_activity( activity.timestamp );
 	}
 

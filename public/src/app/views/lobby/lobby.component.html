@@ -20,8 +20,8 @@
 		<div class="body">
 			<div class="inner_container">
 				<div class="activities">
-					<ul>
-						<li *ngFor="let activity of activities | sortByDate" [ngClass]="{'new': activity.status == 'new'}">
+					<ul #activities_scroll_group>
+						<li *ngFor="let activity of activities | sortByDate" [ngClass]="{'new': activity.status == 'new', 'own': activity.author_id == current_player.player_id}" class="new">
 							<p class="text" [innerHtml]="activity.content" ></p>
 							<p class="time" [innerHtml]="activity.timestamp | amTimeAgo"></p>
 						</li>

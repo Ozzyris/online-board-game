@@ -33,6 +33,7 @@ export class LobbyComponent implements OnInit {
 		online: []
 	}
 	activities: any = [];
+	is_game_launch_game: boolean = false;
 
 	//Chat
 	chat_input: string;
@@ -45,7 +46,7 @@ export class LobbyComponent implements OnInit {
 	ngOnInit(){
 		this.route.params.subscribe( params => {
 			this.game_token = params.game_token;
-			this.share_link = "http://192.168.0.11:4200/lobby/" + this.game_token;
+			this.share_link = environment.public_url + "lobby/" + this.game_token;
 			this.init_lobby()
 				.then( player_id => {
 					this.current_player.player_id = player_id;
@@ -98,7 +99,7 @@ export class LobbyComponent implements OnInit {
 	}
 
 	new_activity( activity ){
-		this.activities.unshift( activity );
+		this.activities.push( activity );
 		this.denewsify_activity( activity.timestamp );
 	}
 
@@ -277,12 +278,15 @@ export class LobbyComponent implements OnInit {
 	}
 
 	launch_game(){
-		if( this.player_online.total.length > 2 ){
+		if( this.player_online.total.length > 2 && !this.is_game_launch_game){
+			this.is_game_launch_game = true;
 			this.gameApi_service.launch_game({ game_token: this.game_token })
 				.subscribe( is_game_launched => {
 					console.log(is_game_launched);
+					this.is_game_launch_game = false;
 				}, error => {
 					console.log( error );
+					this.is_game_launch_game = false;
 				})
 		}
 	}

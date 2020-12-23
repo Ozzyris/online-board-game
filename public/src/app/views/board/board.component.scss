@@ -251,6 +251,8 @@ section.board{
 							height: calc(100% - 62px);
 							border-top-right-radius: 9px;
 							border-top-left-radius: 9px;
+							display: flex;
+  						flex-direction: column-reverse;
 
 							ul{
 								padding: 24px;
@@ -261,19 +263,29 @@ section.board{
 									position: relative;
 
 									&.new{
-										p{
+										p.text{
 											color: #F2A413;
+
+											&:before{
+												content: '';
+												width: 5px;
+												height: 5px;
+												display: inline-block;
+												background-color: #F2A413;
+												border-radius: 50%;
+												position: relative;
+												margin-right: 4px;
+												margin-bottom: 1px;
+											}
 										}
-										&:after{
-											content: '';
-											width: 5px;
-											height: 5px;
-											display: block;
-											background-color: #F2A413;
-											border-radius: 50%;
-											position: absolute;
-											top: 4px;
-											left: -10px;
+									}
+									&.own{
+										p.text{
+											text-align: right;
+										}
+										p.time{
+											text-align: right;
+											padding-right: 6px;
 										}
 									}
 									p.text{

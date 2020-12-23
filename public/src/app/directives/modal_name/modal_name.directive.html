@@ -6,7 +6,7 @@
 		<div class="body">
 			<div class="input-group" >
 				<label>Enter your name</label>
-				<input type="text" [(ngModel)]="input_player_name">
+				<input type="text" (keyup.enter)="add_player()" [(ngModel)]="input_player_name">
 				<p class="info" *ngIf="info_player_name"><span class="icon"></span>{{info_player_name}}</p>
 			</div>
 		</div>
