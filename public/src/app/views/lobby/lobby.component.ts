@@ -278,15 +278,12 @@ export class LobbyComponent implements OnInit {
 	}
 
 	launch_game(){
-		if( this.player_online.total.length > 2 && !this.is_game_launch_game){
+		if( this.player_online.total.length > 2 && this.is_game_launch_game == false){
 			this.is_game_launch_game = true;
 			this.gameApi_service.launch_game({ game_token: this.game_token })
 				.subscribe( is_game_launched => {
-					console.log(is_game_launched);
-					this.is_game_launch_game = false;
 				}, error => {
 					console.log( error );
-					this.is_game_launch_game = false;
 				})
 		}
 	}

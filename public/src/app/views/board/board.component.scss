@@ -252,7 +252,7 @@ section.board{
 							border-top-right-radius: 9px;
 							border-top-left-radius: 9px;
 							display: flex;
-  						flex-direction: column-reverse;
+  							flex-direction: column-reverse;
 
 							ul{
 								padding: 24px;
@@ -312,6 +312,7 @@ section.board{
 							margin: 0px 12px;
 							padding: 4px 0;
 							overflow: auto;
+							position: relative;
 
 							input{
 								width: calc(100% - 96px);
@@ -319,6 +320,19 @@ section.board{
 								border: none;
 								padding: 9px 0px 8px 16px;
 								border-bottom-left-radius: 9px;
+							}
+							span.admin_cheetset{
+								font-family: 'font_awesome';
+								font-weight: 800;
+								position: absolute;
+								top: 12px;
+								right: 90px;
+								cursor: pointer;
+								transition: all 200ms;
+
+								&:hover{
+									color: rgb(95, 170, 239);
+								}
 							}
 							a.button{
 								background-color: rgb(95, 170, 239);;

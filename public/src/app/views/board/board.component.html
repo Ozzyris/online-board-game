@@ -1,7 +1,8 @@
-<toaster></toaster>
-<modal-player></modal-player>
+<modal-admin-cheetset></modal-admin-cheetset>
 <modal-card></modal-card>
+<modal-player></modal-player>
 <modal-wood></modal-wood>
+<toaster></toaster>
 
 <section class="board">
 	<div class="top_bar">
@@ -38,6 +39,7 @@
 						</div>
 						<div class="chatbox">
 							<input type="text" placeholder="You may speak here" (keyup.enter)="send_chat()" [(ngModel)]="chat_input">
+							<span class="admin_cheetset" title="Admin Cheetset" *ngIf="current_player.rank == 'administrator'" (click)="modalName_service.open_modal({ modal_id: 'admin_cheetset', status: 'open'})"></span>
 							<a class="button" (click)="send_chat()"><span></span>send</a>
 						</div>
 					</div>

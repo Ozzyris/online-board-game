@@ -19,11 +19,12 @@ import { SanitizerPipe } from './pipes/sanitizer/sanitizer.pipe';
 import { SortByDatePipe } from './pipes/sort_by_date/sort-by-date.pipe';
 
 //DIRECTIVES
+import { ModalAdminCheetsetDirective } from './directives/modal_admin_cheetset/modal_admin_cheetset.directive';
+import { ModalAlertDirective } from './directives/modal_alert/modal_alert.directive';
+import { ModalBannedDirective } from './directives/modal_banned/modal_banned.directive';
+import { ModalCardDirective } from './directives/modal_card/modal_card.directive';
 import { ModalNameDirective } from './directives/modal_name/modal_name.directive';
 import { ModalPlayerDirective } from './directives/modal_player/modal_player.directive';
-import { ModalBannedDirective } from './directives/modal_banned/modal_banned.directive';
-import { ModalAlertDirective } from './directives/modal_alert/modal_alert.directive';
-import { ModalCardDirective } from './directives/modal_card/modal_card.directive';
 import { ModalWoodDirective } from './directives/modal_wood/modal_wood.directive';
 import { ToasterDirective } from './directives/toaster/toaster.directive';
 import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
@@ -35,11 +36,12 @@ import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
 		LobbyComponent,
 		BoardComponent,
 		SanitizerPipe,
+		ModalAdminCheetsetDirective,
+		ModalAlertDirective,
+		ModalBannedDirective,
+		ModalCardDirective,
 		ModalNameDirective,
 		ModalPlayerDirective,
-		ModalBannedDirective,
-		ModalAlertDirective,
-		ModalCardDirective,
 		ModalWoodDirective,
 		ToasterDirective,
 		SortByDatePipe,
