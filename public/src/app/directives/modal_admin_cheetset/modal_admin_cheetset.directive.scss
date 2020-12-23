@@ -17,7 +17,7 @@ section.game_id{
 		background-color: #fff;
 		box-shadow: 0px 0px 6px rgba(0,0,0,.5);
 		min-height: 200px;
-		margin-top: 15% ;
+		margin-top: 5% ;
 		border-radius: 5px;
 
 		div.header{
@@ -40,17 +40,26 @@ section.game_id{
 			height: auto;
 			padding: 42px 24px;
 
-			div.illustration{
-				width: 100%;
-			
-				img{
-					width: 100%;
-				}
-				p{
-					font-size: 14px;
-					margin-top: -30px;
-					text-align: center;
-					color: white;
+			ul{
+				li{
+					margin: 12px 0;
+					padding-bottom: 12px;
+					border-bottom: 1px solid #f2F2F2;
+					overflow: auto;
+					p{
+						float: left;
+					}
+					span.icon{
+						font-family: 'font_awesome';
+						float: right;
+						cursor: pointer;
+						transition: hover;
+
+						&:hover{
+							color: rgb(95, 170, 239);
+							font-weight: 800;
+						}
+					}
 				}
 			}
 		}

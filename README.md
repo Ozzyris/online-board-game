@@ -56,10 +56,10 @@ A way to play board game online to play during confinement.
 #### Board
 
 - [x] Init board game
-- [ ] Add admin action on the chat.
+- [x] Add admin action on the chat.
 	- [x] Add the admin action logic
 	- [x] Add the admin action admin security
-	- [ ] Add the admin action cheetset on the menu
+	- [x] Add the admin action cheetset on the menu
 
 - [ ] Display player's card
 
