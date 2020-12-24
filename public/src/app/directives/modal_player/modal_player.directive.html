@@ -1,25 +1,14 @@
 <section class="modal_player" *ngIf="is_modal_active">
 	<div class="modal">
 		<div class="header">
-			<h4>Profile of Ozzyris</h4>
+			<h4>Profile of {{player_details.name}}</h4>
 		</div>
 		<div class="body">
 			<ul>
-				<li><img src="../../../assets/images/galerapagos/premier_joueur.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/anti_venin.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/balle-dum-dum.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/barometre.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/bocal-a-poisson.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/bouee.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/boule_de_cristal.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/bouteille_d_eau.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/brosse_a_wc.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/cafe.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/cagette.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/canne_a_peche.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/cartouche.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/chat.jpg"></li>
-				<li><img src="../../../assets/images/galerapagos/clef_de_voiture_de_luxe.jpg"></li>
+				<li *ngIf="player_details._id == active_player" ><img src="./../../assets/images/galerapagos/premier_joueur.jpg"></li>
+				<li *ngFor="let cards of player_details.game_detail.cards">
+					<img *ngIf="cards.visibility != 'hidden' || current_player_id == player_details._id" [src]="'./../../assets/images/galerapagos/' + cards.illustration">
+					<img *ngIf="cards.visibility == 'hidden' && current_player_id != player_details._id" [src]="'./../../assets/images/galerapagos/back.jpg'">
 			</ul>
 		</div>
 		<div class="footer">

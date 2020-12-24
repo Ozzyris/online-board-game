@@ -60,11 +60,13 @@ A way to play board game online to play during confinement.
 	- [x] Add the admin action logic
 	- [x] Add the admin action admin security
 	- [x] Add the admin action cheetset on the menu
+	- [x] Admin command need to be done twice.
 
-- [ ] Display player's card
+- [X] Display player's card
+	- [ ] let the user show some card!
 
 - [x] Start turn
-- [ ] Recovery player's turn
+- [ ] Recovery player's turn (When page reload page, the turn should be the same)
 - [ ] End turn
 
 - [ ] Last turn

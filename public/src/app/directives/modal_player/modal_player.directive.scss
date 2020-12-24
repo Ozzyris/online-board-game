@@ -46,14 +46,18 @@ section.modal_player{
 			ul{
 				overflow: auto;
 				padding: 42px 0;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: flex-start;
+				align-items: flex-start;
+				align-content: space-between;
 
 				li{
-					float: left;
-					margin-left: 10px;
-					margin-top:10px;
+					margin: 10px 0 0 10px;
 
 					img{
-						height: 150px;
+						height: 230px;
 						border-radius: 6px;
 					}
 				}

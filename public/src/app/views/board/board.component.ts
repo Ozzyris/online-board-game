@@ -224,8 +224,8 @@ export class BoardComponent implements OnInit {
 	}
 
 	define_who_play( turn ){
-		console.log( turn );
-		console.log( turn/3 );
+		// console.log( turn );
+		// console.log( turn/3 );
 
 		// if( turn > 2 ) I was working here
 
@@ -252,7 +252,7 @@ export class BoardComponent implements OnInit {
 		}
 		
 		this.socket.emit('send-message', {content: this.chat_input});
-		this.chat_input = '/admin: start turn';
+		this.chat_input = '';
 	}
 
 	get_water(){
