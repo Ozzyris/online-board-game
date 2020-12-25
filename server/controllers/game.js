@@ -467,6 +467,23 @@ function get_vote(){
 
 }
 
+function delete_old_game(){
+	game_model.get_all_games()
+			.then(games => {
+				console.log(games.length);
+				for (var i = games.length - 1; i >= 0; i--) {
+
+					console.log(moment().subtract(24, 'hours'), games[i].creation_date);
+
+					console.log( moment(games[i].creation_date).isAfter( moment().subtract(24, 'hours') ) );
+
+					// console.log( games[i].creation_date );
+					// if( games[i].creation_date  ){}
+				}
+			})
+}
+delete_old_game();
+
 module.exports = {
 	"game" : router
 };

@@ -98,6 +98,20 @@ game.statics.get_all_players = function( game_token ){
 	})
 };
 
+game.statics.get_all_games = function(){
+	return new Promise((resolve, reject) => {
+		game.find({}, {}).exec()
+			.then(games => {
+				if( games ){
+					resolve( games );
+				}
+				else{
+					resolve([]);
+				}
+			})
+	})
+};
+
 
 game.statics.get_a_player = function(game_token, player_id){
 	return new Promise((resolve, reject) => {
