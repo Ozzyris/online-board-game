@@ -403,6 +403,46 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 	})
 
+	router.post('/update-card-visibility', function (req, res) {
+		let activity = {};
+		let card_to_update = {
+			player_id: req.body.player_id,
+			card_id: req.body.card_id,
+			card_visibility: req.body.card_visibility
+		}
+
+		game_model.get_a_player( req.body.game_token, req.body.player_id )
+			.then(player => {
+				let card_name;
+
+				for (var i = player.game_detail.cards.length - 1; i >= 0; i--) {
+					if(player.game_detail.cards[i]._id == req.body.card_id){
+						player.game_detail.cards[i].visibility = req.body.card_visibility;
+						card_name = player.game_detail.cards[i].name;
+					}
+				}
+
+				if(req.body.card_visibility == 'visible'){
+					activity.content = '<span>' + player.name + '</span> show one of his card: ' + card_name;
+				}else{
+					activity.content = '<span>' + player.name + '</span> hide one of his card: ' + card_name;
+				}
+				return game_model.update_player_cards( req.body.game_token, req.body.player_id, player.game_detail.cards );
+			})
+			.then(are_cards_updated => {
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				littlebirds.broadcast('update-card-visibility', req.body.game_token, card_to_update );
+				res.status(200).json({content: 'card visibility was updated'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	});
 
 
 function test_if_next_turn( game_token ){

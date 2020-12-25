@@ -48,4 +48,9 @@ export class GameApiService {
 		let url = this.base_url + 'get-wood';
 		return this.http.post(url, payload, this.httpOptions);
 	}
+
+	update_card_visibility( payload ): Observable<any>{
+		let url = this.base_url + 'update-card-visibility';
+		return this.http.post(url, payload, this.httpOptions);
+	}
 }

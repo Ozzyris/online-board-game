@@ -79,6 +79,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload}); });
 			this.socket.on('update_player_cards', (payload) => { observer.next(payload); this.update_player_cards( payload ); });
 			this.socket.on('update_player_game_status', (payload) => { observer.next(payload); this.update_player_game_status( payload ); });
+			this.socket.on('update-card-visibility', (payload) => { observer.next(payload); this.update_card_visibility( payload ); });
 			return () => { this.socket.disconnect(); }; 
 		})
 		return observable;
@@ -221,6 +222,18 @@ export class BoardComponent implements OnInit {
 
 	update_game_states( game_states ){
 		this.game_states = game_states;
+	}
+
+	update_card_visibility( card_details ){
+		for (var i = this.players_details.length - 1; i >= 0; i--) {
+			if( this.players_details[i]._id == card_details.player_id ){
+				for (var j = this.players_details[i].game_detail.cards.length - 1; j >= 0; j--) {
+					if( this.players_details[i].game_detail.cards[j]._id == card_details.card_id ){
+						this.players_details[i].game_detail.cards[j].visibility = card_details.card_visibility;
+					}
+				}
+			}
+		}
 	}
 
 	define_who_play( turn ){

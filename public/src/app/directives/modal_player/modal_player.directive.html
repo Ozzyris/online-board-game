@@ -9,6 +9,12 @@
 				<li *ngFor="let cards of player_details.game_detail.cards">
 					<img *ngIf="cards.visibility != 'hidden' || current_player_id == player_details._id" [src]="'./../../assets/images/galerapagos/' + cards.illustration">
 					<img *ngIf="cards.visibility == 'hidden' && current_player_id != player_details._id" [src]="'./../../assets/images/galerapagos/back.jpg'">
+					<div class="label" *ngIf="current_player_id == player_details._id">
+						<span class="status">{{cards.visibility}}</span>
+						<span *ngIf="cards.visibility == 'hidden'" class="action" (click)="update_card_visibility( current_player_id, cards)" ></span>
+						<span *ngIf="cards.visibility != 'hidden'" class="action" (click)="update_card_visibility( current_player_id, cards)" ></span>
+					</div>
+				</li>
 			</ul>
 		</div>
 		<div class="footer">

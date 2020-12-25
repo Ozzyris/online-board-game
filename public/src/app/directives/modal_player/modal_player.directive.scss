@@ -53,12 +53,42 @@ section.modal_player{
 				align-items: flex-start;
 				align-content: space-between;
 
+
 				li{
 					margin: 10px 0 0 10px;
+					position: relative;
 
 					img{
 						height: 230px;
 						border-radius: 6px;
+					}
+					div.label{
+						background-color: rgba(#000000, .5);
+						overflow: auto;
+						position: absolute;
+						bottom: 0;
+						left: 0;
+						right: 0;
+						padding: 4px 8px;
+
+						span.status{
+							float: left;
+							color: white;
+						}
+						span.action{
+							float: right;
+							color: white;
+							font-family: 'font_awesome';
+							font-weight: 800;
+							cursor: pointer;
+							transition: all 200ms;
+							color: lighten(rgb(95, 170, 239), 25%);
+
+
+							&:hover{
+								color: #ffffff;
+							}
+						}
 					}
 				}
 			}

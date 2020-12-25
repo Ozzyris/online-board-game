@@ -63,7 +63,7 @@ A way to play board game online to play during confinement.
 	- [x] Admin command need to be done twice.
 
 - [X] Display player's card
-	- [ ] let the user show some card!
+	- [x] let the user show some card!
 
 - [x] Start turn
 - [ ] Recovery player's turn (When page reload page, the turn should be the same)
