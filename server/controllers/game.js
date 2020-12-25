@@ -470,11 +470,10 @@ function delete_old_game(){
 		.then(games => {
 			for (var i = games.length - 1; i >= 0; i--) {
 				if( moment( games[i].creation_date).isAfter( moment().subtract(24, 'hours')) == false ){
-					return game_model.delete_old_game( games[i].game_token );
+					game_model.delete_old_game( games[i].game_token );
 				}
 			}
 		})
-		.then(is_game_deleted => {})
 }
 
 module.exports = {
