@@ -86,6 +86,7 @@ const littlebirds = require('../helpers/littlebirds'),
 					littlebirds.broadcast( 'launch-game', req.body.game_token, {} );
 				}, 6000);
 
+				delete_old_game(); // here we check is there is any game older than 24h and delete it.
 				res.status(200).json({message: 'pong'});
 			})
 			.catch( error => {
@@ -138,9 +139,6 @@ const littlebirds = require('../helpers/littlebirds'),
 				return game_model.get_next_player( req.body.game_token, game_states.turn );
 			})
 			.then(player => {
-
-
-
 				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
 				delete activity.status; 
 				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
@@ -469,20 +467,15 @@ function get_vote(){
 
 function delete_old_game(){
 	game_model.get_all_games()
-			.then(games => {
-				console.log(games.length);
-				for (var i = games.length - 1; i >= 0; i--) {
-
-					console.log(moment().subtract(24, 'hours'), games[i].creation_date);
-
-					console.log( moment(games[i].creation_date).isAfter( moment().subtract(24, 'hours') ) );
-
-					// console.log( games[i].creation_date );
-					// if( games[i].creation_date  ){}
+		.then(games => {
+			for (var i = games.length - 1; i >= 0; i--) {
+				if( moment( games[i].creation_date).isAfter( moment().subtract(24, 'hours')) == false ){
+					return game_model.delete_old_game( games[i].game_token );
 				}
-			})
+			}
+		})
+		.then(is_game_deleted => {})
 }
-delete_old_game();
 
 module.exports = {
 	"game" : router

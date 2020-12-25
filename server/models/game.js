@@ -343,7 +343,6 @@ game.statics.delete_last_action_card = function( game_token ){
 			resolve( is_player_removed );
 		})
 	})
-
 };
 
 game.statics.update_action_cards = function(game_token, action_cards){
@@ -369,6 +368,16 @@ game.statics.get_game_states = function( game_token ){
 				}
 			})
 	})
+};
+
+game.statics.delete_old_game = function( game_token ){
+	return new Promise((resolve, reject) => {
+		game.deleteOne( { game_token: game_token }).exec()
+		.then( is_game_removed => {
+			resolve( is_game_removed );
+		})
+	})
+
 };
 
 var game = mongoose.DB.model('game', game);
