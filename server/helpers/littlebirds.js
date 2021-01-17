@@ -321,21 +321,38 @@ function manage_game_states(game_token, type, action, nb){
 }
 
 function start_turn( game_token ){
-	let activity = {};
+	let activity = {},
+		player_details,
+		water_card_details;
 
 	game_model.get_a_water_card( game_token, 0 )
 		.then(water_card => {
-			broadcast('new-water-card', game_token, water_card);
+			water_card_details = water_card;
+			return game_model.update_current_water_card( game_token, water_card_details );
+		})
+		.then( is_current_water_card_updated => {
+			broadcast('new-water-card', game_token, water_card_details);
 			return game_model.get_next_player( game_token, 0 );
 		})
 		.then(player => {
-			activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
-			broadcast('new-toast', player._id, {content: "It's your turn to play!"});
-			broadcast('current_player', game_token, {player_id: player._id});
+			player_details = player;
+			return game_model.get_game_states( game_token );
+		})
+		.then(game_states => {
+			game_states.active_player = player_details._id;
+			return game_model.update_game_states( game_token, game_states );
+		})
+		.then(are_game_states_updated => {
+			activity.content = 'It\'s <span>' + player_details.name + '</span>turn to play.';
+			broadcast('new-toast', player_details._id, {content: "It's your turn to play!"});
+			broadcast('active_player', game_token, {player_id: player_details._id});
 			return game_model.add_activity( game_token, activity );
 		})
 		.then(is_activity_added => {
 			activity.status = 'new';
+		})
+		.catch( error => {
+			console.log(error);
 		})
 }
 

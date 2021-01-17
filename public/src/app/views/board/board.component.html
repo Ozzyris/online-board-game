@@ -76,11 +76,11 @@
 								<p>
 									<span *ngIf="player_details.game_detail.status == 'dead'"class="icon dead"> </span>
 									<span *ngIf="player_details.game_detail.status == 'sick'" class="icon sick"> </span>
-									<a class="user" (click)="modalName_service.open_modal({ modal_id: 'modal-player', status: 'open', 'active_player': active_player, player_details: player_details, 'current_player_id': current_player.player_id, 'game_token': game_token})" >{{player_details.name}}</a>
+									<a class="user" (click)="modalName_service.open_modal({ modal_id: 'modal-player', status: 'open', 'current_player': game_states.active_player, player_details: player_details, 'current_player_id': current_player.player_id, 'game_token': game_token})" >{{player_details.name}}</a>
 									<span class="small">{{player_details.last_online_time | amTimeAgo }}</span>
 								</p>
 								<ul  class="cards">
-									<li class="card" *ngIf="player_details._id == active_player" ><img src="./../../assets/images/galerapagos/premier_joueur.jpg"></li>
+									<li class="card" *ngIf="player_details._id == game_states.active_player" ><img src="./../../assets/images/galerapagos/premier_joueur.jpg"></li>
 									<li *ngFor="let cards of player_details.game_detail.cards" class="card">
 										<img *ngIf="cards.visibility != 'hidden' || current_player.player_id == player_details._id" [src]="'./../../assets/images/galerapagos/' + cards.illustration">
 										<img *ngIf="cards.visibility == 'hidden' && current_player.player_id != player_details._id" [src]="'./../../assets/images/galerapagos/back.jpg'">
@@ -93,10 +93,10 @@
 			</div>
 			<div class="action_content">
 				<div class="inner_group">
-					<a class="button" (click)="get_water()" [ngClass]="{'inactive': current_player.player_id != active_player }"><span class="icon"></span>Chercher de l'eau</a>
-					<a class="button" (click)="get_food()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
-					<a class="button" (click)="get_wood()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Chercher du bois</a>
-					<a class="button" (click)="get_card()" [ngClass]="{'inactive': current_player.player_id != active_player }" ><span class="icon"></span>Fouiller l'épave</a>
+					<a class="button" (click)="get_water()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }"><span class="icon"></span>Chercher de l'eau</a>
+					<a class="button" (click)="get_food()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
+					<a class="button" (click)="get_wood()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }" ><span class="icon"></span>Chercher du bois</a>
+					<a class="button" (click)="get_card()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }" ><span class="icon"></span>Fouiller l'épave</a>
 				</div>
 			</div>
 		</div>

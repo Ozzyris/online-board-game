@@ -40,7 +40,6 @@ export class BoardComponent implements OnInit {
 		illustration: 'water_back.jpg',
 		water_level: null
 	};
-	active_player: string;
 	nb_of_more_wood: Subscription;
 
 	//Chat
@@ -57,7 +56,8 @@ export class BoardComponent implements OnInit {
 			this.init_board()
 				.then( player_id => {
 					this.current_player.player_id = player_id;
-					this.get_all_players_details(); 
+					this.get_all_players_details();
+					this.get_current_water_card();
 				})
 		})
 
@@ -75,7 +75,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('update-game-states', (game_states) => { observer.next(game_states); this.update_game_states( game_states ); });
 			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
-			this.socket.on('current_player', (payload) => { observer.next(payload); this.current_player_io( payload );  });
+			this.socket.on('active_player', (payload) => { observer.next(payload); this.active_player_update( payload );  });
 			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload}); });
 			this.socket.on('update_player_cards', (payload) => { observer.next(payload); this.update_player_cards( payload ); });
 			this.socket.on('update_player_game_status', (payload) => { observer.next(payload); this.update_player_game_status( payload ); });
@@ -127,12 +127,19 @@ export class BoardComponent implements OnInit {
 		}
 	}
 
+	get_current_water_card(){
+		this.gameApi_service.get_current_water_card({ game_token: this.game_token })
+			.subscribe( current_water_card => {
+				this.update_water_card( current_water_card );
+			});
+	}
+
 	update_water_card( water_card ){
 		this.current_water_card = water_card;
 	}
 
-	current_player_io( payload ){
-		this.active_player = payload.player_id;
+	active_player_update( payload ){
+		this.game_states.active_player = payload.player_id;
 	}
 
 	update_player_cards( payload ){
@@ -215,7 +222,6 @@ export class BoardComponent implements OnInit {
 	get_game_states(){
 		this.gameApi_service.get_game_states({ game_token: this.game_token })
 			.subscribe( game_states => {
-				this.define_who_play( game_states.turn );
 				this.game_states = game_states;
 			});
 	}
@@ -234,14 +240,6 @@ export class BoardComponent implements OnInit {
 				}
 			}
 		}
-	}
-
-	define_who_play( turn ){
-		// console.log( turn );
-		// console.log( turn/3 );
-
-		// if( turn > 2 ) I was working here
-
 	}
 
 	add_player_to_the_online_count( player_id , count){
@@ -269,7 +267,7 @@ export class BoardComponent implements OnInit {
 	}
 
 	get_water(){
-		if( this.current_player.player_id == this.active_player ){
+		if( this.current_player.player_id == this.game_states.active_player ){
 			this.gameApi_service.get_water({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_water => {
 					console.log(does_player_got_water);
@@ -278,7 +276,7 @@ export class BoardComponent implements OnInit {
 	}
 
 	get_food(){
-		if( this.current_player.player_id == this.active_player ){
+		if( this.current_player.player_id == this.game_states.active_player ){
 			this.gameApi_service.get_food({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_food => {
 					console.log(does_player_got_food);
@@ -286,7 +284,7 @@ export class BoardComponent implements OnInit {
 		}
 	}
 	get_card(){
-		if( this.current_player.player_id == this.active_player ){
+		if( this.current_player.player_id == this.game_states.active_player ){
 			this.gameApi_service.get_card({ game_token: this.game_token, player_id: this.current_player.player_id })
 				.subscribe( does_player_got_card => {
 					console.log(does_player_got_card);
@@ -294,7 +292,7 @@ export class BoardComponent implements OnInit {
 		}
 	}
 	get_wood(){
-		if( this.current_player.player_id == this.active_player ){
+		if( this.current_player.player_id == this.game_states.active_player ){
 			
 			this.modalName_service.open_modal({ modal_id: 'wood', status: 'open'});
 			this.nb_of_more_wood = this.modalName_service.get_nb_of_more_wood()

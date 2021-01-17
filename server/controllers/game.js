@@ -106,57 +106,114 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 	})
 
-	router.post('/get-water', function (req, res) {
-		let multiplicateur = 1,
-			game_states = {},
-			activity = {},
-			current_player = {};
-
-		game_model.get_a_player( req.body.game_token, req.body.player_id )
-			.then(player => {
-				current_player = player;
-				if( player.game_detail.bonus.square_water ){ multiplicateur = 2}
-				return game_model.get_game_states( req.body.game_token );
-			})
-			.then(temp_game_states => {
-				game_states = temp_game_states;
-				game_model.get_a_water_card( req.body.game_token, 0 )
-				return game_model.get_a_water_card( req.body.game_token, game_states.turn );
-			})
+	router.post('/get-current-water-card', function (req, res) {
+		game_model.get_current_water_card( req.body.game_token )
 			.then(water_card => {
-				game_states.water_level = game_states.water_level + (water_card.water_level * multiplicateur);
-				game_states.turn ++;
-				activity.content = '<span>' + current_player.name + '</span> found ' + (water_card.water_level * multiplicateur) + ' unit(s) of water.';
-				return game_model.add_activity( req.body.game_token, activity );
-			})
-			.then(is_activity_added => {
-				activity.status = 'new';
-				littlebirds.broadcast('new-activity', req.body.game_token, activity);
-				littlebirds.broadcast('update-game-states', req.body.game_token, game_states);
-				return game_model.update_game_states( req.body.game_token, game_states );
-			})
-			.then(are_game_states_updated => {
-				return game_model.get_next_player( req.body.game_token, game_states.turn );
-			})
-			.then(player => {
-				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
-				delete activity.status; 
-				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
-				littlebirds.broadcast('current_player', req.body.game_token, {player_id: player._id});
-				return game_model.add_activity( req.body.game_token, activity );
-			})
-			.then(is_activity_added => {
-				activity.status = 'new';
-				setTimeout(function(){
-					littlebirds.broadcast('new-activity', req.body.game_token, activity);
-				}, 1000);
-				res.status(200).json({content: 'player got water'});
+				res.status(200).json(water_card);
 			})
 			.catch( error => {
 				console.log(error);
 				res.status(401).json( error );
 			})
 	})
+
+	router.post('/get-water', function (req, res) {
+		let current_player,
+		    multiplicateur = 1,
+			current_water_card;
+			current_game_states,
+			activity = {},
+
+		game_model.get_a_player( req.body.game_token, req.body.player_id ) // Check if the current player has a water multiplicator 
+			.then(player => {
+				current_player = player;
+				if( player.game_detail.bonus.square_water ){ multiplicateur = 2 }
+				return game_model.get_current_water_card( req.body.game_token );
+			})
+			.then(water_card => { // Get the current water state
+				console.log(current_water_card);
+				current_water_card = water_card
+				return game_model.get_game_states( req.body.game_token );
+			})
+			.then(game_states => { // Get the current games state
+				console.log( game_states );
+				current_game_states = game_states;
+
+				// update game states
+				current_game_states.water_level = current_game_states.water_level + (current_water_card.water_level * multiplicateur);
+				current_game_states.turn ++;
+
+				// create activity content
+				activity.content = '<span>' + current_player.name + '</span> found ' + (current_water_card.water_level * multiplicateur) + ' unit(s) of water.';
+
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				//broadcast activity
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				littlebirds.broadcast('update-game-states', req.body.game_token, current_game_states);
+
+				next_turn( req.body.game_token, current_game_states );
+				res.status(200).json({content: 'player got water'});
+			})
+						.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	})
+
+	function next_turn( game_token, current_game_states ){
+		let is_next_round,
+			activity,
+			next_player;
+
+		game_model.get_all_players( game_token )
+			.then( players => {
+				console.log( players.length );
+				console.log( game_token.turn / players.length );
+				console.log( Number.isInteger( game_token.turn / players.length ) );
+
+				is_next_round = Number.isInteger( game_token.turn / players.length );
+
+				if( is_next_round ){
+					// update water
+				}
+				return game_model.get_next_player( game_token, current_game_states.turn );
+			})
+			.then(next_player => {
+				current_game_states.active_player = next_player._id;
+
+				activity.content = 'It\'s <span>' + next_player.name + '</span>turn to play.';
+				littlebirds.broadcast('new-toast', next_player._id, {content: "It's your turn to play!"});
+				littlebirds.broadcast('current_player', game_token, {player_id: next_player._id});
+
+				return game_model.add_activity( game_token, activity );
+			})
+			.then(is_activity_added => {
+				console.log( is_activity_added );
+				return game_model.update_game_states( game_token, current_game_states );
+			})
+			.then(are_game_states_updated => {
+				activity.status = 'new';
+				setTimeout(function(){
+					littlebirds.broadcast('new-activity', game_token, activity);
+				}, 1000);
+				res.status(200).json({content: 'Next turn over'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	}
+
+	function next_round(){
+		// Get next water card
+		// If water < players launch vote
+		// else Substract water
+		// If food < players launch vote
+		// else Substract food
+	}
 
 	router.post('/get-food', function (req, res) {
 		let fish_array = [1, 1, 1, 2, 2, 3],
@@ -441,21 +498,6 @@ const littlebirds = require('../helpers/littlebirds'),
 				res.status(401).json( error );
 			})
 	});
-
-
-function test_if_next_turn( game_token ){
-	return new Promise((resolve, reject)=>{
-		//Get all player
-		//Check if players.length / game.turn = 1
-		// resolve false
-		// update game turn to 0
-		// Update water card
-		// Remove water  - players.length water and food
-
-		// if any == 0 -> Vote
-		//resolve true
-	})
-}
 
 function launch_vote(){
 	//broadcast to every ppl the time to vote + the number of voter to do
