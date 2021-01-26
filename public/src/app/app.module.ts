@@ -50,10 +50,10 @@ import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-    	FormsModule,
-    	MomentModule,
-    	HttpClientModule,
-   		HttpClientJsonpModule,
+		FormsModule,
+		MomentModule,
+		HttpClientModule,
+		HttpClientJsonpModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent]
