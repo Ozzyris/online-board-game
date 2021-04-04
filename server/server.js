@@ -4,7 +4,7 @@ const express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io')(server, { 
         cors: {
-            origin: "http://localhost:4200",
+            origin: "http://192.168.86.120:4200",
             methods: ["GET", "POST"],
         },
         "close timeout": 300,
@@ -30,9 +30,6 @@ app.use(function(req, res, next) {
 });
 
 //SOCKET.IO
-// io.set('origins', '*:*');
-// app.set('socketio', io);
-
 littlebirds.init_socket_io( io );
 
 // MORGAN LOGGING THE CALLS

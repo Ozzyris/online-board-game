@@ -37,6 +37,8 @@ export class LobbyComponent implements OnInit {
 
 	//Chat
 	chat_input: string;
+	tab_active: boolean;
+	unread_notification: number = 0;
 
 	//Socket.io
 	private socket;
@@ -122,6 +124,16 @@ export class LobbyComponent implements OnInit {
 	new_activity( activity ){
 		this.activities.push( activity );
 		this.denewsify_activity( activity.timestamp );
+		if( this.tab_active == false ){
+			this.unread_notification ++;
+			if( this.unread_notification == 1){
+				document.title = this.unread_notification + ' new activity - ☠️ Illegal - Gallerapagos ☠️';
+			}
+			else{
+				document.title = this.unread_notification + ' new activities - ☠️ Illegal - Gallerapagos ☠️';
+			}
+			
+		}
 	}
 
 	denewsify_activity(timestamp){
@@ -169,6 +181,7 @@ export class LobbyComponent implements OnInit {
 					this.init_player_number();
 					this.init_current_player( players_details );
 					this.get_last_50_activities();
+					this.check_tab_visibility();
 				}
 			})
 	}
@@ -289,5 +302,17 @@ export class LobbyComponent implements OnInit {
 					console.log( error );
 				})
 		}
+	}
+
+	check_tab_visibility(){
+		document.addEventListener( "visibilitychange" , () => { 
+			if (document.hidden) { 
+				this.tab_active = false;
+			}else{
+				this.tab_active = true;
+				this.unread_notification = 0;
+				document.title = '☠️ Illegal - Gallerapagos ☠️';
+			}
+		});
 	}
 }
