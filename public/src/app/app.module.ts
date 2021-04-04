@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
 //EXTERNAL PACKAGE
-import { MomentModule } from 'angular2-moment';
+import { MomentModule } from 'ngx-moment';
 
 //VIEWS
 import { AppComponent } from './app.component';

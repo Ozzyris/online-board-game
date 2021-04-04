@@ -7,10 +7,45 @@
 // =============================================================================
 // FONTS
 // =============================================================================
-@include font-face(font_awesome, './assets/fonts/font_awesome/fa-light-300', 300, normal, eot woff ttf svg); 
-@include font-face(font_awesome, './assets/fonts/font_awesome/fa-solid-900', 900, normal, eot woff ttf svg); 
-@include font-face(baloo_thambi, './assets/fonts/baloo_thambi/bold/baloothambi_bold', 800, normal, ttf);
-@include font-face(baloo_thambi, './assets/fonts/baloo_thambi/regular/baloothambi_regular', 400, normal, ttf);
+@font-face {
+    font-family: "font_awesome";
+    font-weight: 300;
+    text-decoration: normal;
+    src: url("assets/fonts/font_awesome/fa-light-300.eot") format("eot"),
+         url("assets/fonts/font_awesome/fa-light-300.woff") format("woff"),
+         url("assets/fonts/font_awesome/fa-light-300.ttf") format("ttf"),
+         url("assets/fonts/font_awesome/fa-light-300.svg") format("svg");
+}
+@font-face {
+    font-family: "font_awesome";
+    font-weight: 900;
+    text-decoration: normal;
+    src: url("assets/fonts/font_awesome/fa-solid-900.eot") format("eot"),
+         url("assets/fonts/font_awesome/fa-solid-900.woff") format("woff"),
+         url("assets/fonts/font_awesome/fa-solid-900.ttf") format("ttf"),
+         url("assets/fonts/font_awesome/fa-solid-900.svg") format("svg");
+}
+@font-face {
+    font-family: "baloo_thambi";
+    font-weight: 400;
+    text-decoration: normal;
+    src: url("/assets/fonts/baloo_thambi/regular/baloothambi_regular.woff2") format("woff2"),
+         url("/assets/fonts/baloo_thambi/regular/baloothambi_regular.woff") format("woff"),
+         url("/assets/fonts/baloo_thambi/regular/baloothambi_regular.eot") format("eot"),
+         url("/assets/fonts/baloo_thambi/regular/baloothambi_regular.ttf") format("ttf"),
+         url("/assets/fonts/baloo_thambi/regular/baloothambi_regular.svg") format("svg");
+}
+@font-face {
+    font-family: "baloo_thambi";
+    font-weight: 800;
+    text-decoration: normal;
+    src: url("assets/fonts/baloo_thambi/bold/baloothambi_bold.woff2") format("woff2"),
+         url("assets/fonts/baloo_thambi/bold/baloothambi_bold.woff") format("woff"),
+         url("assets/fonts/baloo_thambi/bold/baloothambi_bold.eot") format("eot"),
+         url("assets/fonts/baloo_thambi/bold/baloothambi_bold.ttf") format("ttf"),
+         url("assets/fonts/baloo_thambi/bold/baloothambi_bold.svg") format("svg");
+    
+}
 
 // =============================================================================
 // RESET CSS

@@ -3,9 +3,13 @@ const express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io')(server, { 
+        cors: {
+            origin: "http://localhost:4200",
+            methods: ["GET", "POST"],
+        },
         "close timeout": 300,
         "heartbeat timeout": 300,
-        "heartbeat interval": 15
+        "heartbeat interval": 15,
     }),
     config = require('./config'),    
     morgan = require('morgan');
@@ -26,8 +30,9 @@ app.use(function(req, res, next) {
 });
 
 //SOCKET.IO
-io.set('origins', '*:*');
-app.set('socketio', io);
+// io.set('origins', '*:*');
+// app.set('socketio', io);
+
 littlebirds.init_socket_io( io );
 
 // MORGAN LOGGING THE CALLS

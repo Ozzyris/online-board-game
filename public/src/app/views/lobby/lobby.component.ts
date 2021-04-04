@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs';
 
 //Socket.io
-import * as io from 'socket.io-client';
+import { io } from "socket.io-client";
 import { environment } from '../../../environments/environment';
 
 //Services
@@ -80,7 +80,7 @@ export class LobbyComponent implements OnInit {
 
 	init_socket_io(){
 		let observable = new Observable(observer => {
-			this.socket = io.connect( environment.api_url );
+			this.socket = io( environment.api_url );
 			this.socket.on('handshake', (payload) => { observer.next(payload); this.handshake(payload); });
 			this.socket.on('update-player-status', (payload) => { observer.next(payload); this.update_player_status(payload); });
 			this.socket.on('new-activity', (activity) => { observer.next(activity); this.new_activity( activity ); });
