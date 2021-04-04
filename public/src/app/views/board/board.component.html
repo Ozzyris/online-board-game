@@ -70,7 +70,7 @@
 				</div>
 				<div class="players_body">
 					<ul>
-						<li *ngFor="let player_details of players_details | sortBy:'player_details.game_detail.position'">
+						<li *ngFor="let player_details of players_details | sortByOrder">
 							<span class="indicator" [ngClass]="player_details.status"></span>
 							<div class="content">
 								<p>

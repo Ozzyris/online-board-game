@@ -27,7 +27,8 @@ import { ModalNameDirective } from './directives/modal_name/modal_name.directive
 import { ModalPlayerDirective } from './directives/modal_player/modal_player.directive';
 import { ModalWoodDirective } from './directives/modal_wood/modal_wood.directive';
 import { ToasterDirective } from './directives/toaster/toaster.directive';
-import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
+import { SortbyNamePipe } from './pipes/sort_by_name/sort-by-name.pipe';
+import { SortByOrderPipe } from './pipes/sort_by_order/sort-by-order.pipe';
 
 @NgModule({
 	declarations: [
@@ -45,7 +46,8 @@ import { SortbyPipe } from './pipes/sort_by/sort-by.pipe';
 		ModalWoodDirective,
 		ToasterDirective,
 		SortByDatePipe,
-		SortbyPipe
+		SortbyNamePipe,
+		SortByOrderPipe
 	],
 	imports: [
 		BrowserModule,

@@ -130,6 +130,7 @@ export class BoardComponent implements OnInit {
 	get_current_water_card(){
 		this.gameApi_service.get_current_water_card({ game_token: this.game_token })
 			.subscribe( current_water_card => {
+				console.log(current_water_card);
 				this.update_water_card( current_water_card );
 			});
 	}

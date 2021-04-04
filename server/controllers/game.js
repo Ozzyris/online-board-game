@@ -107,6 +107,7 @@ const littlebirds = require('../helpers/littlebirds'),
 	})
 
 	router.post('/get-current-water-card', function (req, res) {
+		console.log(req.body.game_token );
 		game_model.get_current_water_card( req.body.game_token )
 			.then(water_card => {
 				res.status(200).json(water_card);

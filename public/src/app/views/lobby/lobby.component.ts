@@ -41,6 +41,8 @@ export class LobbyComponent implements OnInit {
 	//Socket.io
 	private socket;
 
+	//pipe
+	pipe_updater: any; //Force the pipe to re-rendre when new element is added.
 
 	constructor( public activityApi_service: ActivityApiService, public gameApi_service: GameApiService, public modalName_service: ModalNameService, public toaster_service: ToasterService, private route: ActivatedRoute, private router: Router ){}
 	ngOnInit(){
@@ -136,6 +138,7 @@ export class LobbyComponent implements OnInit {
 		if(payload.type == 'add-player'){
 			this.add_player_to_the_online_count(payload.player_details._id, 'total');
 			this.players_details.push(payload.player_details);
+			this.pipe_updater = new Date();
 		}else if(payload.type == 'remove-player'){
 			this.remove_player_to_the_online_count(payload.player_id, 'total');
 			this.remove_player_to_the_online_count(payload.player_id, 'online');

@@ -42,7 +42,7 @@
 				</div>
 				<div class="players_body">
 					<ul>
-						<li *ngFor="let player_details of players_details | sortBy:'name':current_player.name">
+						<li *ngFor="let player_details of players_details | sortByName:current_player.name:pipe_updater">
 							<span class="indicator" [ngClass]="player_details.status"></span>
 							<div class="content">
 								<p>{{player_details.name}}</p>

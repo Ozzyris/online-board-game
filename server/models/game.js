@@ -63,7 +63,7 @@ var game = new mongoose.Schema({
 		current_card: {
 			name: {type: String},
 			position: {type: Number},
-			illustration: {type: String},
+			illustration: {type: String, default: 'water_back.jpg'},
 			water_level: {type: Number}
 		},
 		cards: [
