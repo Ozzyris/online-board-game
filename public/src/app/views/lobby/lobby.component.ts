@@ -51,14 +51,30 @@ export class LobbyComponent implements OnInit {
 		this.route.params.subscribe( params => {
 			this.game_token = params.game_token;
 			this.share_link = environment.public_url + "lobby/" + this.game_token;
-			this.init_lobby()
-				.then( player_id => {
-					this.current_player.player_id = player_id;
-					this.get_all_players_details(); 
-				})
+			this.check_game_started()
+			.then( game_status => {
+				if( game_status == "started"){
+					this.router.navigate(['/home', 'game-dont-exist']);
+				}else{
+					return this.init_lobby();
+				}
+			})
+			.then( player_id => {
+				this.current_player.player_id = player_id;
+				this.get_all_players_details(); 
+			})
 		})
 
 		this.init_socket_io().subscribe();
+	}
+
+	check_game_started(){
+		return new Promise((resolve, reject)=>{
+			this.activityApi_service.get_game_status({ game_token: this.game_token })
+				.subscribe( game_status => {
+					resolve( game_status );
+				});
+		})
 	}
 
 	init_lobby(){
@@ -173,7 +189,7 @@ export class LobbyComponent implements OnInit {
 	get_all_players_details(){
 		this.activityApi_service.get_all_players_details({ game_token: this.game_token })
 			.subscribe( players_details => {
-				if( players_details == null ){
+				if( players_details == null || players_details.length == 0){
 					localStorage.clear();
 					this.router.navigate(['/home', 'game-dont-exist']);
 				}else{

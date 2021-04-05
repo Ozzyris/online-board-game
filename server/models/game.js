@@ -113,7 +113,6 @@ game.statics.get_all_games = function(){
 	})
 };
 
-
 game.statics.get_a_player = function(game_token, player_id){
 	return new Promise((resolve, reject) => {
 		game.findOne({game_token: game_token}, {}).exec()
@@ -341,6 +340,20 @@ game.statics.get_next_action_card = function( game_token ){
 			.then(game => {
 				if( game ){
 					resolve( game.action_cards.cards[game.action_cards.cards.length - 1] )
+				}else{
+					reject( undefined );
+				}
+			})
+	})
+};
+
+game.statics.get_all_action_cards = function( game_token ){
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					console.log( game.action_cards.cards.length )
+					resolve( game.action_cards.cards.length )
 				}else{
 					reject( undefined );
 				}

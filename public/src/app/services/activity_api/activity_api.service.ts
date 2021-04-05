@@ -19,6 +19,11 @@ export class ActivityApiService {
 		};
 	}
 
+	get_game_status( payload ){
+		let url = this.base_url + 'get-game-status';
+		return this.http.post(url, payload, this.httpOptions);
+	}
+
 	create_lobby(){
 		let url = this.base_url + 'create-lobby';
 		return this.http.get(url, this.httpOptions);

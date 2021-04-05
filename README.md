@@ -30,6 +30,7 @@ A way to play board game online to play during confinement.
 - [x] Activity
 	- [x] display activites from socket io
 	- [x] display activities from backend
+	- [x] update tab name with unread notification number.
 - [x] Meilleur deconnexion
 - [x] Amelioration des status en online & offline
 - [x] Bug when sometime chat send doesn't go anywhere -> id in socket.player_id = undefined
@@ -43,7 +44,6 @@ A way to play board game online to play during confinement.
 - [x] Order player by name
 - [x] Move to next page
 
-- [ ] What does happen if I arrived in the lobby when a game has already stared?
 - [x] The lobby is created after the first user is added to the lobby.
 - [x] The number of current player is not accurate
 - [x] The order of the lobby chat is inverted
@@ -52,6 +52,9 @@ A way to play board game online to play during confinement.
 - [x] Enter the room by pressing Enter with your name
 - [x] Can click twice on the launch game
 - [x] Have the right url in the sharing block
+
+- [x] What does happen if I arrived in the lobby when a game has already stared?
+- [x] Redirect the user toward a 404 is the lobby have a wrond id
 
 #### Board
 

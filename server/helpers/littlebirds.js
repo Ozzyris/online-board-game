@@ -99,7 +99,7 @@ function connect_player( socket ){
 }
 
 function reconnect_player( socket ){
-	console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 
 	let updated_online_time = moment();
 
@@ -133,7 +133,7 @@ function disconnect( socket ){
 }
 
 function go_offline( socket ){
-	console.log('go_offline', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('go_offline', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 
 	let activity = {};
 
@@ -161,7 +161,7 @@ function go_offline( socket ){
 }
 
 function send_message( socket, message ){
-	console.log('send_message', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('send_message', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 
 	let activity = {}, 
 		updated_online_time = moment();
@@ -241,7 +241,6 @@ function all_active_cron(){
 
 function test_for_admin_command( game_token, player_id, content, rank ){
 	return new Promise((resolve, reject)=>{
-		console.log( game_token, content, rank );
 		if( content.slice(0, 8) == "/admin: " && rank == "administrator"){
 			resolve(true);
 			switch( content.slice(8, content.length) ){

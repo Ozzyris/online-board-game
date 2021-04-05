@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 //Services
 import { ActivityApiService } from '../../services/activity_api/activity_api.service';
-import { ToasterService } from '../../services/toaster/toaster.service';
+import { ModalNameService } from '../../services/modals/modal_name/modal-name.service';
+
 
 
 @Component({
@@ -15,12 +16,12 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 
 export class HomeComponent implements OnInit {
 
-	constructor( public activityApi_service: ActivityApiService, private route: ActivatedRoute, public toaster_service: ToasterService, private router: Router ){}
+	constructor( public activityApi_service: ActivityApiService, private route: ActivatedRoute, public modalName_service: ModalNameService, private router: Router ){}
 	ngOnInit(){
 		this.route.params.subscribe( params => {
 			if( params.info == 'game-dont-exist'){
 				setTimeout(()=>{
-					this.toaster_service.launch_toast({ message: 'This game doest exist' });
+					this.modalName_service.open_modal({modal_id: 'inexistant', status: 'open'});
 				}, 1000);
 			}
 		})

@@ -131,6 +131,21 @@ const token_manager = require('../helpers/token_manager'),
 			})
 	});
 
+
+	router.post('/get-game-status', function (req, res) {
+		game_model.get_all_action_cards( req.body.game_token )
+			.then( action_card_length => {
+				if( action_card_length > 0 ){
+					res.status(200).json({ game_status: 'started' });
+				}else{
+					res.status(200).json({ game_status: 'pending' });
+				}
+			})
+			.catch( error => {
+				res.status(401).json( error );
+			})
+	});
+
 	router.post('/get-last-50-activities', function (req, res) {
 		game_model.get_last_activities( req.body.game_token, 50 )
 			.then(last_50_activities => {

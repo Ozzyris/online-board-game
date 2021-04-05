@@ -1,0 +1,16 @@
+<section class="game_id" *ngIf="is_modal_active">
+	<div class="modal">
+		<div class="header">
+			<h4>This game does not exist or it has already started.</h4>
+		</div>
+		<div class="body">
+			<div class="illustration" >
+				<img src="../../assets/images/homme-pecheur.png" alt="">
+				<p>Please cry in silence</p>
+			</div>
+		</div>
+		<div class="footer">
+			<a class="button" (click)="is_modal_active = false">Close</a>
+		</div>
+	</div>
+</section>
