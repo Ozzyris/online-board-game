@@ -344,7 +344,7 @@ function start_turn( game_token ){
 		.then(are_game_states_updated => {
 			activity.content = 'It\'s <span>' + player_details.name + '</span>turn to play.';
 			broadcast('new-toast', player_details._id, {content: "It's your turn to play!"});
-			broadcast('active_player', game_token, {player_id: player_details._id});
+			broadcast('update_active_player', game_token, {player_id: player_details._id});
 			return game_model.add_activity( game_token, activity );
 		})
 		.then(is_activity_added => {

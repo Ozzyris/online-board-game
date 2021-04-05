@@ -77,7 +77,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('update-game-states', (game_states) => { observer.next(game_states); this.update_game_states( game_states ); });
 			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
-			this.socket.on('active_player', (payload) => { observer.next(payload); this.active_player_update( payload );  });
+			this.socket.on('update_active_player', (payload) => { observer.next(payload); this.active_player_update( payload );  });
 			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload}); });
 			this.socket.on('update_player_cards', (payload) => { observer.next(payload); this.update_player_cards( payload ); });
 			this.socket.on('update_player_game_status', (payload) => { observer.next(payload); this.update_player_game_status( payload ); });
@@ -142,7 +142,6 @@ export class BoardComponent implements OnInit {
 	get_current_water_card(){
 		this.gameApi_service.get_current_water_card({ game_token: this.game_token })
 			.subscribe( current_water_card => {
-				console.log(current_water_card);
 				this.update_water_card( current_water_card );
 			});
 	}
@@ -236,6 +235,7 @@ export class BoardComponent implements OnInit {
 	get_game_states(){
 		this.gameApi_service.get_game_states({ game_token: this.game_token })
 			.subscribe( game_states => {
+				console.log( game_states );
 				this.game_states = game_states;
 			});
 	}

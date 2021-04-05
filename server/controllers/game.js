@@ -121,24 +121,24 @@ const littlebirds = require('../helpers/littlebirds'),
 	router.post('/get-water', function (req, res) {
 		let current_player,
 		    multiplicateur = 1,
-			current_water_card;
+			current_water_card,
 			current_game_states,
-			activity = {},
+			activity = {};
 
-		game_model.get_a_player( req.body.game_token, req.body.player_id ) // Check if the current player has a water multiplicator 
+		game_model.get_a_player( req.body.game_token, req.body.player_id ) 
 			.then(player => {
 				current_player = player;
-				if( player.game_detail.bonus.square_water ){ multiplicateur = 2 }
+				if( player.game_detail.bonus.square_water ){ multiplicateur = 2 } // Check if the current player has a water multiplicator 
 				return game_model.get_current_water_card( req.body.game_token );
 			})
 			.then(water_card => { // Get the current water state
-				console.log(current_water_card);
-				current_water_card = water_card
+				console.log( water_card );
+				current_water_card = water_card;
 				return game_model.get_game_states( req.body.game_token );
 			})
 			.then(game_states => { // Get the current games state
-				console.log( game_states );
 				current_game_states = game_states;
+				console.log( current_game_states );
 
 				// update game states
 				current_game_states.water_level = current_game_states.water_level + (current_water_card.water_level * multiplicateur);
@@ -155,7 +155,7 @@ const littlebirds = require('../helpers/littlebirds'),
 				littlebirds.broadcast('new-activity', req.body.game_token, activity);
 				littlebirds.broadcast('update-game-states', req.body.game_token, current_game_states);
 
-				next_turn( req.body.game_token, current_game_states );
+				// next_turn( req.body.game_token, current_game_states );
 				res.status(200).json({content: 'player got water'});
 			})
 						.catch( error => {
@@ -166,28 +166,32 @@ const littlebirds = require('../helpers/littlebirds'),
 
 	function next_turn( game_token, current_game_states ){
 		let is_next_round,
-			activity,
+			activity = {},
 			next_player;
 
 		game_model.get_all_players( game_token )
 			.then( players => {
 				console.log( players.length );
-				console.log( game_token.turn / players.length );
-				console.log( Number.isInteger( game_token.turn / players.length ) );
+				console.log( current_game_states.turn / players.length );
+				console.log( current_game_states);
+				console.log( Number.isInteger( current_game_states.turn / players.length ) );
 
-				is_next_round = Number.isInteger( game_token.turn / players.length );
-
+				is_next_round = Number.isInteger( current_game_states.turn / players.length );
 				if( is_next_round ){
 					// update water
+					// turn back to 0
+					
 				}
 				return game_model.get_next_player( game_token, current_game_states.turn );
 			})
 			.then(next_player => {
 				current_game_states.active_player = next_player._id;
+				console.log(current_game_states);
+				console.log(next_player);
 
 				activity.content = 'It\'s <span>' + next_player.name + '</span>turn to play.';
 				littlebirds.broadcast('new-toast', next_player._id, {content: "It's your turn to play!"});
-				littlebirds.broadcast('current_player', game_token, {player_id: next_player._id});
+				littlebirds.broadcast('update_active_player', game_token, {player_id: next_player._id});
 
 				return game_model.add_activity( game_token, activity );
 			})
@@ -200,11 +204,9 @@ const littlebirds = require('../helpers/littlebirds'),
 				setTimeout(function(){
 					littlebirds.broadcast('new-activity', game_token, activity);
 				}, 1000);
-				res.status(200).json({content: 'Next turn over'});
 			})
 			.catch( error => {
 				console.log(error);
-				res.status(401).json( error );
 			})
 	}
 

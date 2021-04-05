@@ -55,6 +55,12 @@ A way to play board game online to play during confinement.
 
 - [x] What does happen if I arrived in the lobby when a game has already stared?
 - [x] Redirect the user toward a 404 is the lobby have a wrond id
+- [ ] Clear user cache if opening a new game
+- [ ] Hold notification on until I return to the page.
+- [ ] Add desktop notification for:
+	- [ ] start of a game
+	- [ ] start of you turn
+	- [ ] Vote
 
 #### Board
 
@@ -71,6 +77,7 @@ A way to play board game online to play during confinement.
 - [x] delete old games
 
 - [x] Start turn
+- [ ] Update totem position
 - [ ] Recovery player's turn (When page reload page, the turn should be the same)
 - [ ] End turn
 
@@ -81,6 +88,6 @@ A way to play board game online to play during confinement.
 - [x] Action Pick up food
 - [x] Action Pick up card
 - [ ] Action vote
-
+- [x] Allow user to leave the game.
 
 - [ ] Add X elems of water by typing "Add 5 water"

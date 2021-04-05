@@ -135,6 +135,7 @@ game.statics.get_next_player = function(game_token, position){
 		game.findOne({game_token: game_token}, {}).exec()
 			.then(game => {
 				if( game ){
+					console.log('model ' + game_token + ' ' + position);
 					for (var i = game.players.length - 1; i >= 0; i--) {
 						if( game.players[i].game_detail.position == position){
 							resolve( game.players[i] );
