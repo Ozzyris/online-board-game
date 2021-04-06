@@ -56,7 +56,7 @@ A way to play board game online to play during confinement.
 - [x] What does happen if I arrived in the lobby when a game has already stared?
 - [x] Redirect the user toward a 404 is the lobby have a wrond id
 - [ ] Clear user cache if opening a new game
-- [ ] Hold notification on until I return to the page.
+- [x] Hold notification on until I return to the page.
 - [ ] Add desktop notification for:
 	- [ ] start of a game
 	- [ ] start of you turn

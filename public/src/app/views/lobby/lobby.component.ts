@@ -38,7 +38,8 @@ export class LobbyComponent implements OnInit {
 	//Chat
 	chat_input: string;
 	tab_active: boolean;
-	unread_notification: number = 0;
+	unread_notification: any = [];
+
 
 	//Socket.io
 	private socket;
@@ -139,16 +140,16 @@ export class LobbyComponent implements OnInit {
 
 	new_activity( activity ){
 		this.activities.push( activity );
-		this.denewsify_activity( activity.timestamp );
 		if( this.tab_active == false ){
-			this.unread_notification ++;
-			if( this.unread_notification == 1){
-				document.title = this.unread_notification + ' new activity - ☠️ Illegal - Gallerapagos ☠️';
+			this.unread_notification.push(activity.timestamp);
+			if( this.unread_notification.length == 1){
+				document.title = this.unread_notification.length + ' new activity - ☠️ Illegal - Gallerapagos ☠️';
 			}
 			else{
-				document.title = this.unread_notification + ' new activities - ☠️ Illegal - Gallerapagos ☠️';
+				document.title = this.unread_notification.length + ' new activities - ☠️ Illegal - Gallerapagos ☠️';
 			}
-			
+		}else{
+			this.denewsify_activity( activity.timestamp );
 		}
 	}
 
@@ -326,7 +327,10 @@ export class LobbyComponent implements OnInit {
 				this.tab_active = false;
 			}else{
 				this.tab_active = true;
-				this.unread_notification = 0;
+				for (var i = this.unread_notification.length - 1; i >= 0; i--) {
+					this.denewsify_activity( this.unread_notification[i] );
+				}
+				this.unread_notification = [];
 				document.title = '☠️ Illegal - Gallerapagos ☠️';
 			}
 		});
