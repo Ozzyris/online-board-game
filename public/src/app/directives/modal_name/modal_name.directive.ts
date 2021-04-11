@@ -59,7 +59,8 @@ export class ModalNameDirective implements OnInit, OnDestroy{
 		if(is_name_correct == true){
 			this.activityApi_service.add_player({ game_token: this.game_token, player_name: this.input_player_name })
 				.subscribe( is_player_added => {
-					localStorage.setItem('player_id', is_player_added.player_id );
+					let localstorage_details = {player_id: is_player_added.player_id};
+					localStorage.setItem('game_' + this.game_token, JSON.stringify( localstorage_details ) );
 					this.modalName_service.player_id.next( is_player_added.player_id );
 					this.modalName_service.close_modal({ modal_id: 'name', status: 'close' });
 

@@ -172,11 +172,13 @@ export class BoardComponent implements OnInit {
 
 	init_board(){
 		return new Promise((resolve, reject)=>{
-			this.get_elem_from_storage( 'player_id' )
-				.then( player_id => {
-					if( player_id == null ){
+			this.get_elem_from_storage( 'game_' + this.game_token )
+				.then( local_storage_data => {
+					if( local_storage_data == null ){
 						console.log('player_id is not in storage')
 					}else{
+						let local_storage = JSON.parse( local_storage_data ),
+							player_id = local_storage.player_id;
 						resolve( player_id );
 					}
 					
@@ -194,7 +196,7 @@ export class BoardComponent implements OnInit {
 		this.activityApi_service.get_all_players_details({ game_token: this.game_token })
 			.subscribe( players_details => {
 				if( players_details == null ){
-					localStorage.clear();
+					localStorage.removeItem( this.game_token );
 					this.router.navigate(['/home', 'game-dont-exist']);
 				}else{
 					this.players_details = players_details;

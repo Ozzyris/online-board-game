@@ -55,6 +55,7 @@ export class LobbyComponent implements OnInit {
 			this.check_game_started()
 			.then( game_status => {
 				if( game_status == "started"){
+					localStorage.removeItem( this.game_token );
 					this.router.navigate(['/home', 'game-dont-exist']);
 				}else{
 					return this.init_lobby();
@@ -80,9 +81,9 @@ export class LobbyComponent implements OnInit {
 
 	init_lobby(){
 		return new Promise((resolve, reject)=>{
-			this.get_elem_from_storage( 'player_id' )
-				.then( player_id => {
-					if( player_id == null ){
+			this.get_elem_from_storage( 'game_' + this.game_token )
+				.then( local_storage_data => {
+					if( local_storage_data == null ){
 						this.modalName_service.open_modal({game_token: this.game_token, modal_id: 'name', status: 'open'});
 						this.player_id_subscription = this.modalName_service.get_player_id()
 							.subscribe( player_id_from_back => {
@@ -90,6 +91,8 @@ export class LobbyComponent implements OnInit {
 								this.player_id_subscription.unsubscribe();
 							});
 					}else{
+						let local_storage = JSON.parse( local_storage_data ),
+							player_id = local_storage.player_id;
 						resolve( player_id );
 					}
 					
@@ -191,7 +194,7 @@ export class LobbyComponent implements OnInit {
 		this.activityApi_service.get_all_players_details({ game_token: this.game_token })
 			.subscribe( players_details => {
 				if( players_details == null || players_details.length == 0){
-					localStorage.clear();
+					localStorage.removeItem( this.game_token );
 					this.router.navigate(['/home', 'game-dont-exist']);
 				}else{
 					this.players_details = players_details;
@@ -231,7 +234,7 @@ export class LobbyComponent implements OnInit {
 			this.modalName_service.open_modal({ modal_id: 'alert', status: 'open', title: 'Are you sure to leave this game?', content: 'As administrator of this game, if you leave everyone will be kicked out of the game.'});
 
 			this.leave_confirmation_subscription = this.modalName_service.get_leave_confirmation()
-				.subscribe( confirmation_to_leave=> {
+				.subscribe( confirmation_to_leave => {
 					this.activityApi_service.delete_lobby({ game_token: this.game_token })
 						.subscribe( is_game_closed => {
 							localStorage.clear();

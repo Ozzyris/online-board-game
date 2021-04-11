@@ -2,20 +2,21 @@
 const express = require('express'),
     app = express(),
     server = require('http').createServer(app),
+    config = require('./config'),    
     io = require('socket.io')(server, { 
         cors: {
-            origin: "http://192.168.86.120:4200",
+            origin: config.public_url,
             methods: ["GET", "POST"],
         },
         "close timeout": 300,
         "heartbeat timeout": 300,
         "heartbeat interval": 15,
     }),
-    config = require('./config'),    
     morgan = require('morgan');
 
 //HELPERS
 const littlebirds = require('./helpers/littlebirds');
+console.log(config.public_url);
 
 // CORS
 app.use(function(req, res, next) {

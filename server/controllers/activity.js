@@ -135,6 +135,7 @@ const token_manager = require('../helpers/token_manager'),
 	router.post('/get-game-status', function (req, res) {
 		game_model.get_all_action_cards( req.body.game_token )
 			.then( action_card_length => {
+				console.log(action_card_length);
 				if( action_card_length > 0 ){
 					res.status(200).json({ game_status: 'started' });
 				}else{
@@ -142,6 +143,7 @@ const token_manager = require('../helpers/token_manager'),
 				}
 			})
 			.catch( error => {
+				console.log( error );
 				res.status(401).json( error );
 			})
 	});

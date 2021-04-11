@@ -356,7 +356,7 @@ game.statics.get_all_action_cards = function( game_token ){
 					console.log( game.action_cards.cards.length )
 					resolve( game.action_cards.cards.length )
 				}else{
-					reject( undefined );
+					resolve( [] );
 				}
 			})
 	})
