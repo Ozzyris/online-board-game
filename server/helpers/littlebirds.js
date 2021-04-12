@@ -241,47 +241,46 @@ function all_active_cron(){
 
 function test_for_admin_command( game_token, player_id, content, rank ){
 	return new Promise((resolve, reject)=>{
-		if( content.slice(0, 8) == "/admin: " && rank == "administrator"){
-			resolve(true);
-			switch( content.slice(8, content.length) ){
-				case 'add water':
-					manage_game_states(game_token, 'water', 'add', 1);
-					break;
-				case 'remove water':
-					manage_game_states(game_token, 'water', 'remove', 1);
-					break;
-				case 'add food':
-					manage_game_states(game_token, 'food', 'add', 1);
-					break;
-				case 'remove food':
-					manage_game_states(game_token, 'food', 'remove', 1);
-					break;
-				case 'add wood':
-					manage_game_states(game_token, 'wood', 'add', 1);
-					break;
-				case 'remove wood':
-					manage_game_states(game_token, 'wood', 'remove', 1);
-					break;
-				case 'add raft':
-					manage_game_states(game_token, 'raft', 'add', 1);
-					break;
-				case 'remove raft':
-					manage_game_states(game_token, 'raft', 'remove', 1);
-					break;
-				case 'start turn':
-					start_turn( game_token );
-					break;
-				case 'reset turn':
-					reset_turn( game_token );
-					break;
-				default:
-					broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
-					break;
+		if( content.slice(0, 8) == "/admin: "){
+			if( rank == "administrator" ){
+				resolve(true);
+				switch( content.slice(8, 11) ){
+					case 'add':
+						if( Number.isInteger( parseInt(content.slice(13, 14)) ) ){
+							broadcast('new-toast', player_id, {content: 'Only number from 0 to 9 are accepted'});
+						}else if( !Number.isInteger( parseInt(content.slice(12, 13)) ) ){
+							broadcast('new-toast', player_id, {content: 'There is a probleme with your number'});
+						}else{
+							manage_game_states(game_token, content.slice(14, content.length), 'add', parseInt(content.slice(12, 13)));
+						}
+						break;
+					case 'rem':
+						if( Number.isInteger( parseInt(content.slice(16, 17)) ) ){
+							broadcast('new-toast', player_id, {content: 'Only number from 0 to 9 are accepted'});
+						}else if( !Number.isInteger( parseInt(content.slice(15, 16)) ) ){
+							broadcast('new-toast', player_id, {content: 'There is a probleme with your number'});
+						}else{
+							manage_game_states(game_token, content.slice(17, content.length), 'remove', parseInt(content.slice(15, 16)));
+						}
+						break;
+					case 'sta':
+						start_turn( game_token );
+						break;
+					// case 'res':
+					// 	reset_turn( game_token );
+					// 	break;
+					case 'ski':
+						console.log("skip player turn")
+						break;
+					default:
+						broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
+						break;
+				}
+			}else{
+				broadcast('new-toast', player_id, {content: 'You need to be administrator for this command.'});
+				resolve(false);
 			}
 		}else{
-			if(rank != "administrator"){
-				broadcast('new-toast', player_id, {content: 'You need to be administrator for this command.'});
-			}
 			resolve(false);
 		}
 		

@@ -1,4 +1,6 @@
 <modal-admin-cheetset></modal-admin-cheetset>
+<modal-alert></modal-alert>
+<modal-banned></modal-banned>
 <modal-card></modal-card>
 <modal-player></modal-player>
 <modal-wood></modal-wood>
@@ -12,7 +14,7 @@
 				<span>Illegal</span>
 			</div>
 			<div class="user_actions">
-				<a class="link"><span class="icon"></span>Leave game</a>
+				<a class="link" (click)="remove_player()"><span class="icon"></span>Leave game</a>
 				<p>Hello, <span class="icon" *ngIf="current_player.rank == 'administrator'"></span>{{current_player.name}}</p>
 			</div>
 		</div>

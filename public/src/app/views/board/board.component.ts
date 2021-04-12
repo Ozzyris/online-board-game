@@ -24,6 +24,7 @@ export class BoardComponent implements OnInit {
 	game_token: string;
 	current_player: any = {};
 	players_details: any = [];
+	leave_confirmation_subscription: Subscription;
 	activities: any = [];
 	player_online: any = {
 		total: [],
@@ -59,11 +60,37 @@ export class BoardComponent implements OnInit {
 				.then( player_id => {
 					this.current_player.player_id = player_id;
 					this.get_all_players_details();
-					this.get_current_water_card();
+					this.get_current_water_card(); 
 				})
 		})
 
 		this.init_socket_io().subscribe();
+	}
+
+	check_game_started(){
+		return new Promise((resolve, reject)=>{
+			this.activityApi_service.get_game_status({ game_token: this.game_token })
+				.subscribe( game_status => {
+					resolve( game_status );
+				});
+		})
+	}
+
+	init_board(){
+		return new Promise((resolve, reject)=>{
+			this.get_elem_from_storage( 'game_' + this.game_token )
+				.then( local_storage_data => {
+					if( local_storage_data == null ){
+						localStorage.removeItem( this.game_token );
+						this.router.navigate(['/home', 'game-dont-exist']);
+					}else{
+						let local_storage = JSON.parse( local_storage_data ),
+							player_id = local_storage.player_id;
+						resolve( player_id );
+					}
+					
+			})
+		})	
 	}
 
 	init_socket_io(){
@@ -72,6 +99,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('handshake', (payload) => { observer.next(payload); this.handshake(payload); });
 			this.socket.on('update-player-status', (payload) => { observer.next(payload); this.update_player_status(payload); });
 			this.socket.on('new-activity', (activity) => { observer.next(activity); this.new_activity( activity ); });
+			this.socket.on('leave-game', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'banned', status: 'open'}); });
 			this.socket.on('update-player-last-online-time', (payload) => { observer.next(payload); this.update_player_last_online_time( payload ); });
 			//game
 			this.socket.on('update-game-states', (game_states) => { observer.next(game_states); this.update_game_states( game_states ); });
@@ -170,32 +198,32 @@ export class BoardComponent implements OnInit {
 		}
 	}
 
-	init_board(){
-		return new Promise((resolve, reject)=>{
-			this.get_elem_from_storage( 'game_' + this.game_token )
-				.then( local_storage_data => {
-					if( local_storage_data == null ){
-						console.log('player_id is not in storage')
-					}else{
-						let local_storage = JSON.parse( local_storage_data ),
-							player_id = local_storage.player_id;
-						resolve( player_id );
-					}
-					
-			})
-		})	
-	}
-
 	get_elem_from_storage( elem_name ): Promise<any>{
 		return new Promise((resolve, reject)=>{
 			resolve( localStorage.getItem( elem_name ) );
 		})
 	}
 
+	remove_player(){
+		this.modalName_service.open_modal({ modal_id: 'alert', status: 'open', title: 'Are you sure to leave this game?', content: 'Once the game is started, if you leave everyone will be kicked out.'});
+
+		this.leave_confirmation_subscription = this.modalName_service.get_leave_confirmation()
+			.subscribe( confirmation_to_leave => {
+				this.activityApi_service.delete_lobby({ game_token: this.game_token })
+					.subscribe( is_game_closed => {
+						localStorage.clear();
+						this.router.navigate(['/home']);
+					}, error => {
+						console.log( error );
+					})
+				this.leave_confirmation_subscription.unsubscribe();
+			});
+	}
+
 	get_all_players_details(){
 		this.activityApi_service.get_all_players_details({ game_token: this.game_token })
 			.subscribe( players_details => {
-				if( players_details == null ){
+				if( players_details == null || players_details.length == 0 ){
 					localStorage.removeItem( this.game_token );
 					this.router.navigate(['/home', 'game-dont-exist']);
 				}else{

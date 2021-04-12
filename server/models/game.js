@@ -130,14 +130,13 @@ game.statics.get_a_player = function(game_token, player_id){
 	})
 };
 
-game.statics.get_next_player = function(game_token, position){
+game.statics.get_next_player = function(game_token, turn){
 	return new Promise((resolve, reject) => {
 		game.findOne({game_token: game_token}, {}).exec()
 			.then(game => {
 				if( game ){
-					console.log('model ' + game_token + ' ' + position);
 					for (var i = game.players.length - 1; i >= 0; i--) {
-						if( game.players[i].game_detail.position == position){
+						if( game.players[i].game_detail.position == turn){
 							resolve( game.players[i] );
 						}
 					}

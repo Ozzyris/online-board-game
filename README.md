@@ -55,8 +55,11 @@ A way to play board game online to play during confinement.
 
 - [x] What does happen if I arrived in the lobby when a game has already stared?
 - [x] Redirect the user toward a 404 is the lobby have a wrond id
-- [ ] Clear user cache if opening a new game
+- [x] Clear user cache if opening a new game
 - [x] Hold notification on until I return to the page.
+- [x] Kick out bad url user
+- [x] Allow user to leave game.
+
 - [ ] Add desktop notification for:
 	- [ ] start of a game
 	- [ ] start of you turn
@@ -65,29 +68,39 @@ A way to play board game online to play during confinement.
 #### Board
 
 - [x] Init board game
-- [x] Add admin action on the chat.
+	- [x] Allow user to leave the game.
+	- [x] Delete old games
+
+- [ ] Add admin action on the chat.
 	- [x] Add the admin action logic
 	- [x] Add the admin action admin security
 	- [x] Add the admin action cheetset on the menu
 	- [x] Admin command need to be done twice.
+	- [x] Add X elems of water by typing "Add 5 water"
+	- [ ] Admin skip player turn
 
 - [x] Display player's card
-	- [x] let the user show some card!
-
-- [x] delete old games
+	- [x] Let the user show some card!
+	- [ ] Add multiplicator
 
 - [x] Start turn
-- [ ] Update totem position
-- [ ] Recovery player's turn (When page reload page, the turn should be the same)
+	- [x] Update totem position
+	- [x] Recovery player's turn (When page reload page, the turn should be the same)
+
 - [ ] End turn
+	- [ ] Deduce food & water
+	- [ ] Kill player
+	 - [ ] Gost message type
+	 - [ ] Dead user indicator
+	 - [ ] Update turn (move player from active to another table ?)
 
 - [ ] Last turn
+	- [ ] Winning player
 
-- [x] Action Pick up wood
-- [x] Action Pick up water
-- [x] Action Pick up food
-- [x] Action Pick up card
-- [ ] Action vote
-- [x] Allow user to leave the game.
-
-- [ ] Add X elems of water by typing "Add 5 water"
+- [ ] Create action type
+	- [x] Action Pick up wood
+	- [x] Action Pick up water
+	- [x] Action Pick up food
+	- [x] Action Pick up card
+	- [ ] Action empty (if sick or dead)
+	- [ ] Action vote

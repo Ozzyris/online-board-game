@@ -53,18 +53,18 @@ export class LobbyComponent implements OnInit {
 			this.game_token = params.game_token;
 			this.share_link = environment.public_url + "lobby/" + this.game_token;
 			this.check_game_started()
-			.then( game_status => {
-				if( game_status == "started"){
-					localStorage.removeItem( this.game_token );
-					this.router.navigate(['/home', 'game-dont-exist']);
-				}else{
-					return this.init_lobby();
-				}
-			})
-			.then( player_id => {
-				this.current_player.player_id = player_id;
-				this.get_all_players_details(); 
-			})
+				.then( game_status => {
+					if( game_status == "started"){
+						localStorage.removeItem( this.game_token );
+						this.router.navigate(['/home', 'game-dont-exist']);
+					}else{
+						return this.init_lobby();
+					}
+				})
+				.then( player_id => {
+					this.current_player.player_id = player_id;
+					this.get_all_players_details(); 
+				})
 		})
 
 		this.init_socket_io().subscribe();

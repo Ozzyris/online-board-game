@@ -44,7 +44,8 @@ export class ModalAdminCheetsetDirective implements OnInit, OnDestroy{
 		document.execCommand('copy');
 		document.body.removeChild(temp_textarea);
 
-		this.toaster_service.launch_toast({ message: 'Le lien de partage à été copié' });
+		this.toaster_service.launch_toast({ message: 'Le code admin a été copié' });
+		this.is_modal_active = false;
 	}
 
 	close(){
