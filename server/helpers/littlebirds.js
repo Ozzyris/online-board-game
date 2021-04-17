@@ -19,7 +19,6 @@ function init_socket_io( io ){
 		currentSockets[socket.id] = {socket: socket};
 
 		handshake( socket );
-
 		socket.on('connect-player', (payload) => {
 			currentSockets[socket.id].player_id = payload.player_id; 
 			currentSockets[socket.id].game_token = payload.game_token;
@@ -52,11 +51,11 @@ function handshake( socket ){
 		timestamp: moment(),
 		content: 'Connecté au serveur'
 	};
-
 	socket.emit('handshake', handshake_payload);
 }
 
 function connect_player( socket ){
+	console.log('connect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 	let activity = {},
 		is_new_connection, 
 		updated_online_time = moment();
@@ -75,7 +74,7 @@ function connect_player( socket ){
 				return;
 			}else{
 				activity.author_id = player._id;
-				activity.content = '<span>' + player.name + '</span> joined the lobby.';
+				activity.content = '<span>' + player.name + '</span> joined.';
 				is_new_connection = true;
 
 				return game_model.add_activity( currentSockets[socket.id].game_token, activity );
@@ -99,10 +98,8 @@ function connect_player( socket ){
 }
 
 function reconnect_player( socket ){
-	// console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
-
+	console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 	let updated_online_time = moment();
-
 	game_model.update_last_online_time( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, updated_online_time )
 		.then(is_last_online_time_updated => {
 			broadcast('update-player-last-online-time', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, last_online_time: updated_online_time});
@@ -117,6 +114,7 @@ function reconnect_player( socket ){
 }
 
 function disconnect( socket ){
+	console.log('disconnect', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 	game_model.update_activity_status( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, 'inactive'  )
 		.then(is_activity_status_updated => {
 			broadcast('update-player-status', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, status: 'inactive'})
@@ -133,10 +131,9 @@ function disconnect( socket ){
 }
 
 function go_offline( socket ){
-	// console.log('go_offline', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	console.log('go_offline', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 
 	let activity = {};
-
 	game_model.update_activity_status( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, 'offline'  )
 		.then(is_activity_status_updated => {
 			broadcast('update-player-status', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, status: 'offline'});
@@ -147,7 +144,7 @@ function go_offline( socket ){
 		})
 		.then(player => {
 			activity.author_id = player._id;
-			activity.content = '<span>' + player.name + '</span> left the lobby.';
+			activity.content = '<span>' + player.name + '</span> left.';
 			return game_model.add_activity( currentSockets[socket.id].game_token, activity );
 		})
 		.then(is_activity_added => {

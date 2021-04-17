@@ -17,9 +17,8 @@ function shuffle_water_cards( water_cards ){
 
 function shuffle_action_cards( action_card, player_length ){
 	return new Promise((resolve, reject)=>{
-		console.log(player_length);
 		let shuffled_action_card = shuffle_array( action_card ),
-			nb_of_card_by_player = 4,
+			nb_of_card_by_player = 20,
 			distributed_card = {
 				"draft": [], 
 			};

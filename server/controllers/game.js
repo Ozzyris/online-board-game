@@ -409,26 +409,25 @@ const littlebirds = require('../helpers/littlebirds'),
 							break;
 					}
 					game_states = temp_game_states;
-
-					console.log( game_token, game_states );
 					return game_model.update_game_states( game_token, game_states );
 				})
 				.then(are_game_states_updated => {
-					console.log( are_game_states_updated );
 					littlebirds.broadcast('update-game-states', game_token, game_states);
 
 					if( send_new_activity ){
-						console.log('send_new_activity ' + send_new_activity);
 						return game_model.add_activity( game_token, activity );
 					}else{
-						console.log('alex');
 						resolve( game_states );
+						throw( false );
 					}
 				})
 				.then(is_activity_added => {
 					activity.status = 'new';
 					littlebirds.broadcast('new-activity', game_token, activity);
 					resolve( game_states );
+				})
+				.catch( error => {
+					console.log(error);
 				})
 			});
 	}
@@ -473,14 +472,6 @@ const littlebirds = require('../helpers/littlebirds'),
 				res.status(401).json( error );
 			})
 	});
-
-function launch_vote(){
-	//broadcast to every ppl the time to vote + the number of voter to do
-}
-
-function get_vote(){
-
-}
 
 function delete_old_game(){
 	game_model.get_all_games()

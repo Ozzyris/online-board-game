@@ -86,7 +86,13 @@ A way to play board game online to play during confinement.
 - [x] Start turn
 	- [x] Update totem position
 	- [x] Recovery player's turn (When page reload page, the turn should be the same)
-	- [ ] Next turn after every action
+	- [x] Next turn after every action
+
+- [ ] In game action
+	- [ ] Make someone sick
+	- [ ] Cure someone
+	- [ ] Kill someone
+	- [ ] Resurrect someone
 
 - [ ] End turn
 	- [ ] Deduce food & water
@@ -109,8 +115,11 @@ A way to play board game online to play during confinement.
 #### Bugs
 - [x] The raft updated states wont save on the db?
 - [x] The new-action-card wont launch the modal, nothing arrive on the front
-- [ ] An empty notification is sent when the raft is is updated
-- [ ] The user status is not update when reconnected.
-- [ ] When a user has too many card, it break the organisation.
+- [x] An empty notification is sent when the raft is is updated
+- [x] When a user has too many card, it break the organisation.
+- [x] Certain screen the number are too high in height.
 - [ ] Sometime showing a card is not working well.
+- [x] "Alex perso left the lobby" appearing at wrong time!
+- [ ] The user status is not update when reconnected.
+- [ ] Les timers des notifications sont ensemblent.
 
