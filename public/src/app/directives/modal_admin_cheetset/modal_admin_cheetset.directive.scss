@@ -38,7 +38,9 @@ section.game_id{
 		div.body{
 			width: calc(100% - 48px);
 			height: auto;
+			max-height: 300px;
 			padding: 42px 24px;
+			overflow: auto;
 
 			ul{
 				li{

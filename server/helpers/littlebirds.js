@@ -265,6 +265,18 @@ function test_for_admin_command( game_token, player_id, content, rank ){
 					case 'ski':
 						skip_turn( game_token );
 						break;
+					case 'sic':
+						sick_user( game_token );
+						break;
+					case 'cur':
+						cure_user( game_token );
+						break;
+					case 'kil':
+						kill_user( game_token );
+						break;
+					case 'sav':
+						save_user( game_token );
+						break;
 					default:
 						broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
 						break;
@@ -389,6 +401,22 @@ function skip_turn( game_token ){
 		.catch( error => {
 			console.log(error);
 		})
+}
+
+function sick_user( game_token ){
+
+}
+
+function cure_user( game_token ){
+
+}
+
+function kill_user( game_token ){
+
+}
+
+function save_user( game_token ){
+
 }
 
 module.exports={
