@@ -107,7 +107,6 @@ const littlebirds = require('../helpers/littlebirds'),
 	})
 
 	router.post('/get-current-water-card', function (req, res) {
-		console.log(req.body.game_token );
 		game_model.get_current_water_card( req.body.game_token )
 			.then(water_card => {
 				res.status(200).json(water_card);
@@ -154,7 +153,9 @@ const littlebirds = require('../helpers/littlebirds'),
 				littlebirds.broadcast('new-activity', req.body.game_token, activity);
 				littlebirds.broadcast('update-game-states', req.body.game_token, current_game_states);
 
-				next_turn( req.body.game_token, current_game_states );
+				return next_turn( req.body.game_token, current_game_states );
+			})
+			.then(is_turn_updated => {
 				res.status(200).json({content: 'player got water'});
 			})
 			.catch( error => {
@@ -205,9 +206,10 @@ const littlebirds = require('../helpers/littlebirds'),
 				activity.status = 'new';
 				littlebirds.broadcast('new-activity', req.body.game_token, activity);
 
-				next_turn( req.body.game_token, game_states );
+				return next_turn( req.body.game_token, game_states );
+			})
+			.then(is_turn_updated => {
 				res.status(200).json({content: 'player got food'});
-
 			})
 			.catch( error => {
 				console.log(error);
@@ -249,7 +251,6 @@ const littlebirds = require('../helpers/littlebirds'),
 					return game_model.update_player_game_status( req.body.game_token, req.body.player_id, 'sick' );
 				}else{
 					activity.content = '<span>' + current_player.name + '</span> found ' + (random_wood_array.length + multiplicator) + ' unit of wood and avoid the snakes!';
-					// next();
 				}
 			})
 			.then(is_game_status_updated => {
@@ -271,10 +272,13 @@ const littlebirds = require('../helpers/littlebirds'),
 				littlebirds.broadcast('update-game-states', req.body.game_token, game_states);
 				return game_model.update_game_states( req.body.game_token, game_states );
 			})
-			.then(are_game_states_updated => {
-				update_raft_status( req.body.game_token );
-				next_turn( req.body.game_token, game_states );
-
+			.then(are_game_states_updated => {				
+				return update_raft_status( req.body.game_token, game_states );
+			})
+			.then(new_game_states => {
+				return next_turn( req.body.game_token, new_game_states );
+			})
+			.then(is_turn_updated => {
 				res.status(200).json({content: 'player got wood'});
 			})
 			.catch( error => {
@@ -282,86 +286,6 @@ const littlebirds = require('../helpers/littlebirds'),
 				res.status(401).json( error );
 			})
 	})
-
-	function next_turn( game_token, current_game_states ){
-		let is_next_round,
-			activity = {}
-			game_states = current_game_states;
-
-		game_model.get_all_players( game_token )
-			.then( players => {
-				if( game_states.turn / (players.length - 1) == 1 ){
-					game_states.turn = 0
-				}else{
-					game_states.turn ++;
-				}
-				return game_model.get_next_player( game_token, game_states.turn );
-			})
-			.then(next_player => {
-				game_states.active_player = next_player._id;
-
-				// create activity content
-				activity.content = 'It\'s <span>' + next_player.name + '</span>turn to play.';
-
-				return game_model.update_game_states( game_token, game_states );
-			})
-			.then(are_game_states_updated => { // Update game states
-				littlebirds.broadcast('new-toast', game_states.active_player, {content: "It's your turn to play!"});
-				littlebirds.broadcast('update_active_player', game_token, {player_id: game_states.active_player});
-
-				return game_model.add_activity( game_token, activity );
-			})
-			.then(is_activity_added => {
-				activity.status = 'new';
-				setTimeout(function(){
-					littlebirds.broadcast('new-activity', game_token, activity);
-				}, 1000);
-			})
-			.catch( error => {
-				console.log(error);
-			})
-	}
-
-	function update_raft_status( game_token ){
-		let game_states = {},
-			activity = {};
-
-		game_model.get_game_states( game_token )
-			.then(temp_game_states => {
-				game_states = temp_game_states;
-
-				switch( Math.floor(game_states.wood_level / 5) ){
-					case 0:
-						console.log('nothing to update');
-						break;
-					case 1:
-						activity.content = '<span>5 of woods</span> where converted into 1 rack';
-						game_states.wood_level = game_states.wood_level - 5;
-						game_states.raft_level = game_states.raft_level + 1; 
-						break;
-					case 2:
-						activity.content = '<span>10 of woods</span> where converted into 2 rack';
-						game_states.wood_level = game_states.wood_level - 10;
-						game_states.raft_level = game_states.raft_level + 2; 
-						break;
-					default:
-						console.log( game_states );
-						break;
-				}
-
-				littlebirds.broadcast('update-game-states', game_token, game_states);
-				return game_model.update_game_states( game_token, game_states );
-			})
-			.then(are_game_states_updated => {
-				console.log( are_game_states_updated );
-				return game_model.add_activity( game_token, activity );
-			})
-			.then(is_activity_added => {
-				console.log( is_activity_added );
-				activity.status = 'new';
-				littlebirds.broadcast('new-activity', game_token, activity);
-			})
-	}
 
 	router.post('/get-card', function (req, res) {
 		let new_card = {},
@@ -377,7 +301,7 @@ const littlebirds = require('../helpers/littlebirds'),
 			.then(player => {
 				current_player = player;
 				current_player.game_detail.cards.push(new_card);
-				littlebirds.broadcast('new-action-card', player._id, new_card);
+				littlebirds.broadcast('new-action-card', player._id.toString(), new_card);
 				littlebirds.broadcast('update_player_cards', req.body.game_token, {player_id: req.body.player_id, cards: current_player.game_detail.cards});
 				return game_model.update_player_cards( req.body.game_token, req.body.player_id, current_player.game_detail.cards );
 			})
@@ -396,24 +320,12 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 			.then(temp_game_states => {
 				game_states = temp_game_states;
-				game_states.turn ++;
 				return game_model.update_game_states( req.body.game_token, game_states );
 			})
 			.then(are_game_states_updated => {
-				return game_model.get_next_player( req.body.game_token, game_states.turn );
+				return next_turn( req.body.game_token, game_states );
 			})
-			.then(player => {
-				activity.content = 'It\'s <span>' + player.name + '</span>turn to play.';
-				delete activity.status; 
-				littlebirds.broadcast('new-toast', player._id, {content: "It's your turn to play!"});
-				littlebirds.broadcast('current_player', req.body.game_token, {player_id: player._id});
-				return game_model.add_activity( req.body.game_token, activity );
-			})
-			.then(is_activity_added => {
-				activity.status = 'new';
-				setTimeout(function(){
-					littlebirds.broadcast('new-activity', req.body.game_token, activity);
-				}, 1000);
+			.then(is_turn_updated => {
 				res.status(200).json({content: 'player got card'});
 			})
 			.catch( error => {
@@ -421,6 +333,105 @@ const littlebirds = require('../helpers/littlebirds'),
 				res.status(401).json( error );
 			})
 	})
+
+	function next_turn( game_token, current_game_states ){
+		return new Promise((resolve, reject)=>{
+			let is_next_round,
+				activity = {},
+				game_states = current_game_states;
+
+			game_model.get_all_players( game_token )
+				.then( players => {
+					if( game_states.turn / (players.length - 1) == 1 ){
+						game_states.turn = 0
+					}else{
+						game_states.turn ++;
+					}
+					return game_model.get_next_player( game_token, game_states.turn );
+				})
+				.then(next_player => {
+					game_states.active_player = next_player._id;
+					activity.content = 'It\'s <span>' + next_player.name + '</span>turn to play.'; // create activity content
+
+					return game_model.update_game_states( game_token, game_states );
+				})
+				.then(are_game_states_updated => { // Update game states
+					littlebirds.broadcast('new-toast', game_states.active_player, {content: "It's your turn to play!"});
+					littlebirds.broadcast('update_active_player', game_token, {player_id: game_states.active_player});
+
+					return game_model.add_activity( game_token, activity );
+				})
+				.then(is_activity_added => {
+					activity.status = 'new';
+					setTimeout(function(){
+						littlebirds.broadcast('new-activity', game_token, activity);
+					}, 1000);
+					resolve(true);
+				})
+
+		});
+	}
+
+	function update_raft_status( game_token ){
+		return new Promise((resolve, reject)=>{
+			let game_states = {},
+				send_new_activity = true,
+				activity = {};
+
+			game_model.get_game_states( game_token )
+				.then(temp_game_states => {
+					switch( temp_game_states.wood_level / 5 ){
+						case 0.2:
+						case 0.4:
+						case 0.6:
+						case 0.8:
+							send_new_activity = false;
+							break;
+						case 1:
+						case 1.2:
+						case 1.4:
+						case 1.6:
+						case 1.8:
+							activity.content = '<span>5 of woods</span> where converted into 1 rack';
+							temp_game_states.wood_level = temp_game_states.wood_level - 5;
+							temp_game_states.raft_level = temp_game_states.raft_level + 1; 
+							break;
+						case 2:
+						case 2.2:
+						case 2.4:
+						case 2.6:
+						case 2.8:
+							activity.content = '<span>10 of woods</span> where converted into 2 rack';
+							temp_game_states.wood_level = temp_game_states.wood_level - 10;
+							temp_game_states.raft_level = temp_game_states.raft_level + 2; 
+							break;
+						default:
+							break;
+					}
+					game_states = temp_game_states;
+
+					console.log( game_token, game_states );
+					return game_model.update_game_states( game_token, game_states );
+				})
+				.then(are_game_states_updated => {
+					console.log( are_game_states_updated );
+					littlebirds.broadcast('update-game-states', game_token, game_states);
+
+					if( send_new_activity ){
+						console.log('send_new_activity ' + send_new_activity);
+						return game_model.add_activity( game_token, activity );
+					}else{
+						console.log('alex');
+						resolve( game_states );
+					}
+				})
+				.then(is_activity_added => {
+					activity.status = 'new';
+					littlebirds.broadcast('new-activity', game_token, activity);
+					resolve( game_states );
+				})
+			});
+	}
 
 	router.post('/update-card-visibility', function (req, res) {
 		let activity = {};

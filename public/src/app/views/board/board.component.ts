@@ -106,7 +106,7 @@ export class BoardComponent implements OnInit {
 			this.socket.on('new-toast', (payload) => { observer.next(payload); this.toaster_service.launch_toast({ message: payload.content }); });
 			this.socket.on('new-water-card', (payload) => { observer.next(payload); this.update_water_card( payload );  });
 			this.socket.on('update_active_player', (payload) => { observer.next(payload); this.active_player_update( payload );  });
-			this.socket.on('new-action-card', (payload) => { observer.next(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload}); });
+			this.socket.on('new-action-card', (payload) => { observer.next(payload); console.log('alex'); console.log(payload); this.modalName_service.open_modal({ modal_id: 'card', status: 'open', payload: payload}); });
 			this.socket.on('update_player_cards', (payload) => { observer.next(payload); this.update_player_cards( payload ); });
 			this.socket.on('update_player_game_status', (payload) => { observer.next(payload); this.update_player_game_status( payload ); });
 			this.socket.on('update-card-visibility', (payload) => { observer.next(payload); this.update_card_visibility( payload ); });

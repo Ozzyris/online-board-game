@@ -352,7 +352,6 @@ game.statics.get_all_action_cards = function( game_token ){
 		game.findOne({game_token: game_token}, {}).exec()
 			.then(game => {
 				if( game ){
-					console.log( game.action_cards.cards.length )
 					resolve( game.action_cards.cards.length )
 				}else{
 					resolve( [] );

@@ -71,13 +71,13 @@ A way to play board game online to play during confinement.
 	- [x] Allow user to leave the game.
 	- [x] Delete old games
 
-- [ ] Add admin action on the chat.
+- [x] Add admin action on the chat.
 	- [x] Add the admin action logic
 	- [x] Add the admin action admin security
 	- [x] Add the admin action cheetset on the menu
 	- [x] Admin command need to be done twice.
 	- [x] Add X elems of water by typing "Add 5 water"
-	- [ ] Admin skip player turn
+	- [x] Admin skip player turn
 
 - [x] Display player's card
 	- [x] Let the user show some card!
@@ -86,6 +86,7 @@ A way to play board game online to play during confinement.
 - [x] Start turn
 	- [x] Update totem position
 	- [x] Recovery player's turn (When page reload page, the turn should be the same)
+	- [ ] Next turn after every action
 
 - [ ] End turn
 	- [ ] Deduce food & water
@@ -104,3 +105,12 @@ A way to play board game online to play during confinement.
 	- [x] Action Pick up card
 	- [ ] Action empty (if sick or dead)
 	- [ ] Action vote
+
+#### Bugs
+- [x] The raft updated states wont save on the db?
+- [x] The new-action-card wont launch the modal, nothing arrive on the front
+- [ ] An empty notification is sent when the raft is is updated
+- [ ] The user status is not update when reconnected.
+- [ ] When a user has too many card, it break the organisation.
+- [ ] Sometime showing a card is not working well.
+

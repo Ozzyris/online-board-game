@@ -16,6 +16,11 @@ const token_manager = require('../helpers/token_manager'),
 		res.status(200).json({message: 'pong'});
 	});
 
+	router.post('/littlebird', function (req, res) {
+		littlebirds.broadcast(req.body.route, req.body.room_id, {content: req.body.payload});
+		res.status(200).json({route: req.body.route, room_id: req.body.room_id, payload: req.body.payload });		
+	});
+
 	router.get('/create-lobby', function (req, res) {
 		let activity = {
 				content: 'The <span>lobby</span> was created.'

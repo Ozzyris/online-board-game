@@ -194,7 +194,6 @@ function send_message( socket, message ){
 }
 
 function broadcast(route, room_id, payload){
-	// console.log(route, room_id, payload);
 	global_io.in( room_id ).emit( route, payload );
 }
 
@@ -266,11 +265,8 @@ function test_for_admin_command( game_token, player_id, content, rank ){
 					case 'sta':
 						start_turn( game_token );
 						break;
-					// case 'res':
-					// 	reset_turn( game_token );
-					// 	break;
 					case 'ski':
-						console.log("skip player turn")
+						skip_turn( game_token );
 						break;
 					default:
 						broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
@@ -354,27 +350,48 @@ function start_turn( game_token ){
 		})
 }
 
-function reset_turn( game_token ){
-	let activity = {};
+function skip_turn( game_token ){
+	let is_next_round,
+		activity = {},
+		game_states;
 
 	game_model.get_game_states( game_token )
-		.then(game_states => {
-			game_states.turn = 0;
+		.then( current_game_states => {
+			game_states = current_game_states;
 
-			broadcast('update-game-states', game_token, game_states);
+			return game_model.get_all_players( game_token );
+		})
+		.then( players => {
+			if( game_states.turn / (players.length - 1) == 1 ){
+				game_states.turn = 0
+			}else{
+				game_states.turn ++;
+			}
+			return game_model.get_next_player( game_token, game_states.turn );
+		})
+		.then(next_player => {
+			game_states.active_player = next_player._id;
+
+			// create activity content
+			activity.content = 'It\'s <span>' + next_player.name + '</span>turn to play.';
+
 			return game_model.update_game_states( game_token, game_states );
 		})
-		.then(are_game_states_updated => {
-			activity.content = 'The game turn has been <span>reseted</span>';
+		.then(are_game_states_updated => { // Update game states
+			broadcast('new-toast', game_states.active_player, {content: "It's your turn to play!"});
+			broadcast('update_active_player', game_token, {player_id: game_states.active_player});
+
 			return game_model.add_activity( game_token, activity );
 		})
 		.then(is_activity_added => {
 			activity.status = 'new';
-			broadcast('new-activity', game_token, activity);
+			setTimeout(function(){
+				broadcast('new-activity', game_token, activity);
+			}, 1000);
 		})
 		.catch( error => {
 			console.log(error);
-		})	
+		})
 }
 
 module.exports={
