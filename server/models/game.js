@@ -113,6 +113,29 @@ game.statics.get_all_games = function(){
 	})
 };
 
+game.statics.get_player_from_name = function(game_token, player_name){
+	return new Promise((resolve, reject) => {
+		game.findOne({game_token: game_token}, {}).exec()
+			.then(game => {
+				if( game ){
+					let player_name_exist = false;
+					for (var i = game.players.length - 1; i >= 0; i--) {
+						if( game.players[i].name == player_name){
+							player_name_exist == true;
+							resolve( game.players[i] );
+						}
+					}
+					if(player_name_exist == false){
+						reject( 'player name undefined' );
+					}
+				}else{
+					reject( undefined );
+				}
+			})
+	})
+};
+
+
 game.statics.get_a_player = function(game_token, player_id){
 	return new Promise((resolve, reject) => {
 		game.findOne({game_token: game_token}, {}).exec()

@@ -235,7 +235,7 @@ function all_active_cron(){
 	})
 }
 
-function test_for_admin_command( game_token, player_id, content, rank ){
+function test_for_admin_command( game_token, admin_id, content, rank ){
 	return new Promise((resolve, reject)=>{
 		if( content.slice(0, 8) == "/admin: "){
 			if( rank == "administrator" ){
@@ -243,18 +243,18 @@ function test_for_admin_command( game_token, player_id, content, rank ){
 				switch( content.slice(8, 11) ){
 					case 'add':
 						if( Number.isInteger( parseInt(content.slice(13, 14)) ) ){
-							broadcast('new-toast', player_id, {content: 'Only number from 0 to 9 are accepted'});
+							broadcast('new-toast', admin_id, {content: 'Only number from 0 to 9 are accepted'});
 						}else if( !Number.isInteger( parseInt(content.slice(12, 13)) ) ){
-							broadcast('new-toast', player_id, {content: 'There is a probleme with your number'});
+							broadcast('new-toast', admin_id, {content: 'There is a probleme with your number'});
 						}else{
 							manage_game_states(game_token, content.slice(14, content.length), 'add', parseInt(content.slice(12, 13)));
 						}
 						break;
 					case 'rem':
 						if( Number.isInteger( parseInt(content.slice(16, 17)) ) ){
-							broadcast('new-toast', player_id, {content: 'Only number from 0 to 9 are accepted'});
+							broadcast('new-toast', admin_id, {content: 'Only number from 0 to 9 are accepted'});
 						}else if( !Number.isInteger( parseInt(content.slice(15, 16)) ) ){
-							broadcast('new-toast', player_id, {content: 'There is a probleme with your number'});
+							broadcast('new-toast', admin_id, {content: 'There is a probleme with your number'});
 						}else{
 							manage_game_states(game_token, content.slice(17, content.length), 'remove', parseInt(content.slice(15, 16)));
 						}
@@ -266,23 +266,20 @@ function test_for_admin_command( game_token, player_id, content, rank ){
 						skip_turn( game_token );
 						break;
 					case 'sic':
-						sick_user( game_token );
+						sicken_user( game_token, content.slice(13, content.length).toLowerCase(), admin_id );
 						break;
 					case 'cur':
-						cure_user( game_token );
+						cure_user( game_token, content.slice(13, content.length).toLowerCase(), admin_id );
 						break;
 					case 'kil':
-						kill_user( game_token );
-						break;
-					case 'sav':
-						save_user( game_token );
+						kill_user( game_token, content.slice(13, content.length).toLowerCase(), admin_id );
 						break;
 					default:
-						broadcast('new-toast', player_id, {content: 'The admin action wasn\'t recognize.'});
+						broadcast('new-toast', admin_id, {content: 'The admin action wasn\'t recognize.'});
 						break;
 				}
 			}else{
-				broadcast('new-toast', player_id, {content: 'You need to be administrator for this command.'});
+				broadcast('new-toast', admin_id, {content: 'You need to be administrator for this command.'});
 				resolve(false);
 			}
 		}else{
@@ -403,20 +400,103 @@ function skip_turn( game_token ){
 		})
 }
 
-function sick_user( game_token ){
+function sicken_user( game_token, player_name, admin_id ){
+	let activity = {},
+		current_player,
+		snake_card = {
+			name: "Sick",
+			illustration: "maladie.jpg"
+		};
 
+	game_model.get_player_from_name( game_token, player_name )
+		.then(player => {
+			current_player = player;
+			return game_model.update_player_game_status( game_token, current_player._id.toString(), 'sick' );
+		})
+		.then(is_game_status_updated => {
+			broadcast('new-action-card', current_player._id.toString(), snake_card);
+			broadcast('update_player_game_status', game_token, {player_id: current_player._id.toString(), status: 'sick'});
+			activity.content = '<span>' + current_player.name + '</span> got sick 🤮!';
+			return game_model.add_activity( game_token, activity );
+		})
+		.then(is_activity_added => {
+			activity.status = 'new';
+			broadcast('new-activity', game_token, activity);
+		})
+		.catch( error => {
+			if( error == "player name undefined"){
+				broadcast('new-toast', admin_id, {content: "Can't find the player's name!"});
+			}
+			console.log(error);
+		})
 }
 
-function cure_user( game_token ){
+function cure_user( game_token, player_name, admin_id ){
+	let activity = {},
+		current_player,
+		anti_venin_card = {
+			name: "Anti-venin",
+			illustration: "anti_venin.jpg"
+		};
 
+	game_model.get_player_from_name( game_token, player_name )
+		.then(player => {
+			current_player = player;
+			return game_model.update_player_game_status( game_token, current_player._id.toString(), 'alive' );
+		})
+		.then(is_game_status_updated => {
+			broadcast('new-action-card', current_player._id.toString(), anti_venin_card);
+			broadcast('update_player_game_status', game_token, {player_id: current_player._id.toString(), status: 'alive'});
+			activity.content = '<span>' + current_player.name + '</span> is cured 🙂!';
+			return game_model.add_activity( game_token, activity );
+		})
+		.then(is_activity_added => {
+			activity.status = 'new';
+			broadcast('new-activity', game_token, activity);
+		})
+		.catch( error => {
+			if( error == "player name undefined"){
+				broadcast('new-toast', admin_id, {content: "Can't find the player's name!"});
+			}
+			console.log(error);
+		})
 }
 
-function kill_user( game_token ){
+function kill_user( game_token, player_name, admin_id ){
+	let activity = {},
+		current_player,
+		dead_card = {
+			name: "R.I.P",
+			illustration: "rip.jpg"
+		};
 
-}
+	console.log('game_token, player_name, admin_id');
+	console.log(game_token, player_name, admin_id);
 
-function save_user( game_token ){
-
+	game_model.get_player_from_name( game_token, player_name )
+		.then(player => {
+			console.log(player);
+			current_player = player;
+			return game_model.update_player_game_status( game_token, current_player._id.toString(), 'dead' );
+		})
+		.then(is_game_status_updated => {
+			console.log(is_game_status_updated);
+			broadcast('new-action-card', current_player._id.toString(), dead_card);
+			broadcast('update_player_game_status', game_token, {player_id: current_player._id.toString(), status: 'dead'});
+			activity.content = '<span>' + current_player.name + '</span> is dead ☠️!';
+			return game_model.add_activity( game_token, activity );
+		})
+		.then(is_activity_added => {
+			console.log(is_activity_added);
+			activity.status = 'new';
+			broadcast('new-activity', game_token, activity);
+		})
+		.catch( error => {
+			if( error == "player name undefined"){
+				broadcast('new-toast', admin_id, {content: "Can't find the player's name!"});
+			}
+			console.log(error);
+		})
 }
 
 module.exports={

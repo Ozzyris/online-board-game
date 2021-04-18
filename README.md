@@ -76,8 +76,6 @@ A way to play board game online to play during confinement.
 	- [x] Add the admin action admin security
 	- [x] Add the admin action cheetset on the menu
 	- [x] Admin command need to be done twice.
-	- [x] Add X elems of water by typing "Add 5 water"
-	- [x] Admin skip player turn
 
 - [x] Display player's card
 	- [x] Let the user show some card!
@@ -89,10 +87,11 @@ A way to play board game online to play during confinement.
 	- [x] Next turn after every action
 
 - [ ] In game action
-	- [ ] Make someone sick
-	- [ ] Cure someone
-	- [ ] Kill someone
-	- [ ] Resurrect someone
+	- [x] Add X elems of water by typing "Add 5 water"
+	- [x] Admin skip player turn
+	- [x] Make someone sick
+	- [x] Cure someone
+	- [X] Kill someone
 
 - [ ] End turn
 	- [ ] Deduce food & water
@@ -118,8 +117,11 @@ A way to play board game online to play during confinement.
 - [x] An empty notification is sent when the raft is is updated
 - [x] When a user has too many card, it break the organisation.
 - [x] Certain screen the number are too high in height.
-- [ ] Sometime showing a card is not working well.
 - [x] "Alex perso left the lobby" appearing at wrong time!
-- [ ] The user status is not update when reconnected.
+- [ ] Escape empty chat box
+- [ ] when sick / cure / dead, don't allow to display card to the other player + update de modal card title
 - [ ] Les timers des notifications sont ensemblent.
+- [ ] Bug d'affichage sur ma tv pour la carte météo & raft
+- [ ] Sometime showing a card is not working well.
+- [ ] The user status is not update when reconnected.
 
