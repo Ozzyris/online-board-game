@@ -54,6 +54,11 @@ export class GameApiService {
 		return this.http.post(url, payload, this.httpOptions);
 	}
 
+	skip_turn( payload ): Observable<any>{
+		let url = this.base_url + 'skip-turn';
+		return this.http.post(url, payload, this.httpOptions);
+	}
+
 	update_card_visibility( payload ): Observable<any>{
 		let url = this.base_url + 'update-card-visibility';
 		return this.http.post(url, payload, this.httpOptions);

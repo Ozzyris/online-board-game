@@ -266,6 +266,9 @@ section.board{
 									position: relative;
 
 									&.new{
+										span.icon{
+											color: #F2A413;
+										}
 										p.text{
 											color: #F2A413;
 
@@ -283,24 +286,48 @@ section.board{
 										}
 									}
 									&.own{
-										p.text{
-											text-align: right;
+										div.container_text{
+											span.icon{
+												float: right;
+											}
+											p.text{
+												float: right;
+											}
 										}
 										p.time{
 											text-align: right;
 											padding-right: 6px;
 										}
 									}
-									p.text{
-										font-size: 14px;
-										font-weight: 400;
+									&.dead{
+										opacity: .5;
+									}
+									
+									div.container_text{
+										display: block;
+										overflow: auto;
 
-										&::ng-deep span{
+										span.icon{
+											font-family: 'font_awesome';
+											float: left;
+											display: block;
+											width: 14px;
+											font-size: 12px;
+										}
+										p.text{
 											font-size: 14px;
-											font-weight: 800;
-											margin-right: 3px;
+											font-weight: 400;
+											width: auto;
+											display: inline;
+	
+											&::ng-deep span{
+												font-size: 14px;
+												font-weight: 800;
+												margin-right: 3px;
+											}
 										}
 									}
+									
 									p.time{
 										padding-left: 6px;
 										font-size: 12px;
@@ -363,14 +390,14 @@ section.board{
 					width: 25%;
 					float: left;
 					height: 100%;
-					overflow: auto;
+					overflow: hidden;
 
 					div.rain_container{
 						width: 60%;
 						float: right;
 						background-color: rgba(#F2F2F2, 0.7);
 						border-radius: 12px;
-						padding: 12px 12px 8px 12px;
+						padding: 12px 12px 4px 12px;
 
 						img{
 							width: 100%;
@@ -391,16 +418,21 @@ section.board{
 						div.content{
 							position: relative;
 							z-index: 2;
+							background-color: rgba(#F2F2F2, 0.7);
+							padding: 8px;
+							border-radius: 12px;
 
 							p{
 								text-align: center;
 								margin-top: 10px;
+								font-size: 12px;
 
 								span.icon{
 									font-family: 'font_awesome';
 									margin-left: 5px;
 									color: #333333;
 									font-weight: 400;
+									font-size: 14px;
 									
 									&.bold{
 										font-weight: 800;
@@ -495,7 +527,8 @@ section.board{
 									}
 									span.icon{
 										font-family: 'font_awesome';
-										font-weight: 800;
+										font-size: 12px;
+										font-weight: 00;
 										cursor: default;
 										position: relative;
 

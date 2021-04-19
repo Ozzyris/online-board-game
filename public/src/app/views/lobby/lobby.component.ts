@@ -290,13 +290,14 @@ export class LobbyComponent implements OnInit {
 	}
 
 	send_chat(){
-		if( this.chat_input == undefined ){
-			console.log('empty');
+		let regex = /[a-zA-Z0-9!@#$%^&*]/g;
+		if( this.chat_input == undefined || regex.test(this.chat_input) == false ){
+			this.chat_input = '';
 			return;
+		}else{
+			this.socket.emit('send-message', {content: this.chat_input});
+			this.chat_input = '';
 		}
-		
-		this.socket.emit('send-message', {content: this.chat_input});
-		this.chat_input = undefined;
 	}
 
 	add_player_to_the_online_count(player_id , count){

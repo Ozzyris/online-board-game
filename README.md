@@ -89,16 +89,17 @@ A way to play board game online to play during confinement.
 - [ ] In game action
 	- [x] Add X elems of water by typing "Add 5 water"
 	- [x] Admin skip player turn
-	- [x] Make someone sick
-	- [x] Cure someone
-	- [X] Kill someone
+	- [x] Make player sick
+	- [x] Cure player
+		-[x] Update game stats
+	- [x] Kill someone
+	 - [x] Update game stats
+	 - [x] Gost message type
+	 - [x] Dead user indicator
+	- [ ] Leave the island
 
 - [ ] End turn
 	- [ ] Deduce food & water
-	- [ ] Kill player
-	 - [ ] Gost message type
-	 - [ ] Dead user indicator
-	 - [ ] Update turn (move player from active to another table ?)
 
 - [ ] Last turn
 	- [ ] Winning player
@@ -108,8 +109,7 @@ A way to play board game online to play during confinement.
 	- [x] Action Pick up water
 	- [x] Action Pick up food
 	- [x] Action Pick up card
-	- [ ] Action empty (if sick or dead)
-	- [ ] Action vote
+	- [x] Action skip turn (if sick or dead)
 
 #### Bugs
 - [x] The raft updated states wont save on the db?
@@ -118,10 +118,10 @@ A way to play board game online to play during confinement.
 - [x] When a user has too many card, it break the organisation.
 - [x] Certain screen the number are too high in height.
 - [x] "Alex perso left the lobby" appearing at wrong time!
-- [ ] Escape empty chat box
+- [x] Escape empty chat box
+- [x] Bug d'affichage sur ma tv pour la carte météo & raft
 - [ ] when sick / cure / dead, don't allow to display card to the other player + update de modal card title
 - [ ] Les timers des notifications sont ensemblent.
-- [ ] Bug d'affichage sur ma tv pour la carte météo & raft
 - [ ] Sometime showing a card is not working well.
 - [ ] The user status is not update when reconnected.
 

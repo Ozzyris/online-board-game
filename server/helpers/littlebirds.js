@@ -55,7 +55,7 @@ function handshake( socket ){
 }
 
 function connect_player( socket ){
-	console.log('connect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('connect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 	let activity = {},
 		is_new_connection, 
 		updated_online_time = moment();
@@ -98,7 +98,7 @@ function connect_player( socket ){
 }
 
 function reconnect_player( socket ){
-	console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('reconnect_player', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 	let updated_online_time = moment();
 	game_model.update_last_online_time( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, updated_online_time )
 		.then(is_last_online_time_updated => {
@@ -114,7 +114,7 @@ function reconnect_player( socket ){
 }
 
 function disconnect( socket ){
-	console.log('disconnect', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('disconnect', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 	game_model.update_activity_status( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, 'inactive'  )
 		.then(is_activity_status_updated => {
 			broadcast('update-player-status', currentSockets[socket.id].game_token, {player_id: currentSockets[socket.id].player_id, status: 'inactive'})
@@ -131,7 +131,7 @@ function disconnect( socket ){
 }
 
 function go_offline( socket ){
-	console.log('go_offline', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
+	// console.log('go_offline', socket.id, currentSockets[socket.id].player_id, currentSockets[socket.id].game_token );
 
 	let activity = {};
 	game_model.update_activity_status( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, 'offline'  )
@@ -170,6 +170,7 @@ function send_message( socket, message ){
 		})
 		.then(player => {
 			activity.author_id = player._id;
+			activity.player_status = message.player_status;
 			activity.content = '<span>' + player.name + '</span>says: ' + message.content;
 			return test_for_admin_command( currentSockets[socket.id].game_token, currentSockets[socket.id].player_id, message.content, player.rank );
 		})
@@ -237,6 +238,7 @@ function all_active_cron(){
 
 function test_for_admin_command( game_token, admin_id, content, rank ){
 	return new Promise((resolve, reject)=>{
+		console.log(content);
 		if( content.slice(0, 8) == "/admin: "){
 			if( rank == "administrator" ){
 				resolve(true);
@@ -442,6 +444,14 @@ function cure_user( game_token, player_name, admin_id ){
 	game_model.get_player_from_name( game_token, player_name )
 		.then(player => {
 			current_player = player;
+			return game_model.get_game_states( game_token );
+		})
+		.then(game_states => {
+			game_states.dead_level --;
+			broadcast('update-game-states', game_token, game_states);
+			return game_model.update_game_states( game_token, game_states );
+		})
+		.then(are_game_states_updated => {
 			return game_model.update_player_game_status( game_token, current_player._id.toString(), 'alive' );
 		})
 		.then(is_game_status_updated => {
@@ -470,24 +480,26 @@ function kill_user( game_token, player_name, admin_id ){
 			illustration: "rip.jpg"
 		};
 
-	console.log('game_token, player_name, admin_id');
-	console.log(game_token, player_name, admin_id);
-
 	game_model.get_player_from_name( game_token, player_name )
 		.then(player => {
-			console.log(player);
 			current_player = player;
+			return game_model.get_game_states( game_token );
+		})
+		.then(game_states => {
+			game_states.dead_level ++;
+			broadcast('update-game-states', game_token, game_states);
+			return game_model.update_game_states( game_token, game_states );
+		})
+		.then(are_game_states_updated => {
 			return game_model.update_player_game_status( game_token, current_player._id.toString(), 'dead' );
 		})
 		.then(is_game_status_updated => {
-			console.log(is_game_status_updated);
 			broadcast('new-action-card', current_player._id.toString(), dead_card);
 			broadcast('update_player_game_status', game_token, {player_id: current_player._id.toString(), status: 'dead'});
 			activity.content = '<span>' + current_player.name + '</span> is dead ☠️!';
 			return game_model.add_activity( game_token, activity );
 		})
 		.then(is_activity_added => {
-			console.log(is_activity_added);
 			activity.status = 'new';
 			broadcast('new-activity', game_token, activity);
 		})

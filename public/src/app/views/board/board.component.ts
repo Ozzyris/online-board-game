@@ -22,7 +22,9 @@ import { ModalNameService } from '../../services/modals/modal_name/modal-name.se
 export class BoardComponent implements OnInit {
 	//Activity
 	game_token: string;
-	current_player: any = {};
+	current_player: any = {
+		player_status: "unknown",
+	};
 	players_details: any = [];
 	leave_confirmation_subscription: Subscription;
 	activities: any = [];
@@ -32,7 +34,9 @@ export class BoardComponent implements OnInit {
 	}
 
 	//Game
-	game_states: any = {};
+	game_states: any = {
+		active_player: 'alex',
+	};
 	turns: any = Array(37).fill(1).map((x,i)=>i).reverse();
 	raft_spot: any;
 	wood_stock = Array(5).fill(1).map((x,i)=>i);
@@ -196,6 +200,9 @@ export class BoardComponent implements OnInit {
 				this.players_details[i].game_detail.status = payload.status;
 			}
 		}
+		if( this.current_player.player_id == payload.player_id ){
+			this.current_player.player_status = payload.status;
+		}
 	}
 
 	get_elem_from_storage( elem_name ): Promise<any>{
@@ -250,6 +257,7 @@ export class BoardComponent implements OnInit {
 			if( players_details[i]._id == this.current_player.player_id ){
 				this.current_player.name = players_details[i].name;
 				this.current_player.rank = players_details[i].rank;
+				this.current_player.player_status = players_details[i].game_detail.status;
 				this.socket.emit('connect-player', {'game_token': this.game_token, 'player_id': this.current_player.player_id});
 			}
 		}
@@ -265,7 +273,6 @@ export class BoardComponent implements OnInit {
 	get_game_states(){
 		this.gameApi_service.get_game_states({ game_token: this.game_token })
 			.subscribe( game_states => {
-				console.log( game_states );
 				this.game_states = game_states;
 			});
 	}
@@ -301,13 +308,14 @@ export class BoardComponent implements OnInit {
 	}
 
 	send_chat(){
-		if( this.chat_input == undefined ){
-			console.log('empty');
+		let regex = /[a-zA-Z0-9!@#$%^&*]/g;
+		if( this.chat_input == undefined || regex.test(this.chat_input) == false ){
+			this.chat_input = '';
 			return;
+		}else{
+			this.socket.emit('send-message', {content: this.chat_input, player_status: this.current_player.player_status});
+			this.chat_input = '';
 		}
-		
-		this.socket.emit('send-message', {content: this.chat_input});
-		this.chat_input = '';
 	}
 
 	check_tab_visibility(){
@@ -358,6 +366,14 @@ export class BoardComponent implements OnInit {
 							console.log(does_player_got_wood);
 						});
 					this.nb_of_more_wood.unsubscribe();
+				});
+		}
+	}
+	skip_turn(){
+		if( this.current_player.player_id == this.game_states.active_player ){
+			this.gameApi_service.skip_turn({ game_token: this.game_token, player_id: this.current_player.player_id })
+				.subscribe( does_player_ski_turn => {
+					console.log(does_player_ski_turn);
 				});
 		}
 	}

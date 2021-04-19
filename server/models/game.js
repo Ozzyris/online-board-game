@@ -38,7 +38,7 @@ var game = new mongoose.Schema({
 	],
 	game_states : {
 		turn: {type: Number, default: 0},
-		active_player: {type: String},
+		active_player: {type: String, default: ''},
 		water_level: {type: Number, default: 0},
 		food_level: {type: Number, default: 0},
 		wood_level: {type: Number, default: 0},
@@ -80,7 +80,8 @@ var game = new mongoose.Schema({
 			author_id: {type: String},
 			content: {type: String},
 			timestamp: {type: Date, default: () => moment()},
-			status: {type: String, default: ''}
+			status: {type: String, default: ''},
+			player_status: {type: String, default: ''}
 		}
 	]
 }, {collection: 'game'});

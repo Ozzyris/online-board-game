@@ -32,6 +32,7 @@ const littlebirds = require('../helpers/littlebirds'),
 				wood_level: 0,
 				raft_level: 0,
 				dead_level: 0,
+				active_player: ''
 			};
 
 		game_helper.shuffle_water_cards( water_cards )
@@ -247,7 +248,7 @@ const littlebirds = require('../helpers/littlebirds'),
 				if( is_player_bitten_by_a_snake ){
 					littlebirds.broadcast('new-action-card', player._id, snake_card);
 					littlebirds.broadcast('update_player_game_status', req.body.game_token, {player_id: req.body.player_id, status: 'sick'});
-					activity.content = '<span>' + current_player.name + '</span> found ' + multiplicator + ' unit of wood but got bitten by a snake!';
+					activity.content = '<span>' + current_player.name + '</span> found ' + multiplicator + ' unit of wood but got bitten by a snake 🐍!';
 					return game_model.update_player_game_status( req.body.game_token, req.body.player_id, 'sick' );
 				}else{
 					activity.content = '<span>' + current_player.name + '</span> found ' + (random_wood_array.length + multiplicator) + ' unit of wood and avoid the snakes!';
@@ -327,6 +328,33 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 			.then(is_turn_updated => {
 				res.status(200).json({content: 'player got card'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	})
+
+	router.post('/skip-turn', function (req, res) {
+		let activity = {},
+			game_states = {};
+
+		game_model.get_a_player( req.body.game_token, req.body.player_id )
+			.then(player => {
+				activity.content = '<span>' + player.name + '</span> skip this turn';
+				return game_model.get_game_states( req.body.game_token );
+			})
+			.then(temp_game_states => {
+				game_states = temp_game_states;
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				return next_turn( req.body.game_token, game_states );
+			})
+			.then(is_turn_updated => {
+				res.status(200).json({content: 'player skip turn'});
 			})
 			.catch( error => {
 				console.log(error);

@@ -33,8 +33,11 @@
 					<div class="activities_container">
 						<div class="activities">
 							<ul>
-								<li *ngFor="let activity of activities | sortByDate" [ngClass]="{'new': activity.status == 'new', 'own': activity.author_id == current_player.player_id}">
-									<p class="text" [innerHtml]="activity.content" ></p>
+								<li *ngFor="let activity of activities | sortByDate" [ngClass]="{'new': activity.status == 'new', 'own': activity.author_id == current_player.player_id,'dead': activity.player_status == 'dead'}">
+									<div class="container_text">
+										<p class="text" [innerHtml]="activity.content" ></p>
+										<span class="icon" *ngIf="activity.player_status == 'dead'"></span>
+									</div>
 									<p class="time" [innerHtml]="activity.timestamp | amTimeAgo"></p>
 								</li>
 							</ul>
@@ -76,7 +79,7 @@
 							<span class="indicator" [ngClass]="player_details.status"></span>
 							<div class="content">
 								<p>
-									<span *ngIf="player_details.game_detail.status == 'dead'"class="icon dead"> </span>
+									<span *ngIf="player_details.game_detail.status == 'dead'"class="icon dead"> </span>
 									<span *ngIf="player_details.game_detail.status == 'sick'" class="icon sick"> </span>
 									<a class="user" (click)="modalName_service.open_modal({ modal_id: 'modal-player', status: 'open', 'current_player': game_states.active_player, player_details: player_details, 'current_player_id': current_player.player_id, 'game_token': game_token})" >{{player_details.name}}</a>
 									<span class="small">{{player_details.last_online_time | amTimeAgo }}</span>
@@ -94,11 +97,14 @@
 				</div>
 			</div>
 			<div class="action_content">
-				<div class="inner_group">
+				<div class="inner_group" *ngIf="current_player.player_status == 'alive'">
 					<a class="button" (click)="get_water()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }"><span class="icon"></span>Chercher de l'eau</a>
 					<a class="button" (click)="get_food()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }" ><span class="icon"></span>Chercher de la nourriture</a>
 					<a class="button" (click)="get_wood()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }" ><span class="icon"></span>Chercher du bois</a>
 					<a class="button" (click)="get_card()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }" ><span class="icon"></span>Fouiller l'épave</a>
+				</div>
+				<div class="inner_group" *ngIf="current_player.player_status == 'sick' || current_player.player_status == 'dead'">
+					<a class="button" (click)="skip_turn()" [ngClass]="{'inactive': current_player.player_id != game_states.active_player }"><span class="icon"></span>Skip turn</a>
 				</div>
 			</div>
 		</div>
