@@ -12,6 +12,7 @@ var global_io,
 	cron_manager = new CronJobManager();;
 
 
+// IO
 function init_socket_io( io ){
 	global_io = io;
 
@@ -195,7 +196,7 @@ function broadcast(route, room_id, payload){
 	global_io.in( room_id ).emit( route, payload );
 }
 
-//CRON
+// CRON
 function convert_date_to_cron( date ){
 	return new Promise((resolve, reject)=>{
 		let cron_date = moment(date).minute() + ' ' + moment(date).hour() + ' ' + moment(date).date() + ' ' + moment(date).month() + ' *';
@@ -236,6 +237,7 @@ function all_active_cron(){
 	})
 }
 
+// ADMIN
 function test_for_admin_command( game_token, admin_id, content, rank ){
 	return new Promise((resolve, reject)=>{
 		console.log(content);
@@ -275,6 +277,9 @@ function test_for_admin_command( game_token, admin_id, content, rank ){
 						break;
 					case 'kil':
 						kill_user( game_token, content.slice(13, content.length).toLowerCase(), admin_id );
+						break;
+					case 'nex':
+						next_water_card( game_token );
 						break;
 					default:
 						broadcast('new-toast', admin_id, {content: 'The admin action wasn\'t recognize.'});
@@ -507,6 +512,31 @@ function kill_user( game_token, player_name, admin_id ){
 			if( error == "player name undefined"){
 				broadcast('new-toast', admin_id, {content: "Can't find the player's name!"});
 			}
+			console.log(error);
+		})
+}
+
+function next_water_card( game_token ){
+	let water_card_details,
+		current_game_states;
+
+	game_model.get_game_states( game_token )
+		.then(game_states => {
+			current_game_states = game_states;
+			current_game_states.round ++;
+			return game_model.update_game_states( game_token, current_game_states );
+		})
+		.then(are_game_states_updated => {
+			return game_model.get_a_water_card( game_token, current_game_states.round );
+		})
+		.then(water_card => {
+			water_card_details = water_card;
+			return game_model.update_current_water_card( game_token, water_card_details );
+		})
+		.then( is_current_water_card_updated => {
+			broadcast('new-water-card', game_token, water_card_details);
+		})
+		.catch( error => {
 			console.log(error);
 		})
 }

@@ -120,7 +120,7 @@ const littlebirds = require('../helpers/littlebirds'),
 
 	router.post('/get-water', function (req, res) {
 		let current_player,
-		    multiplicateur = 1,
+			multiplicateur = 1,
 			current_water_card,
 			current_game_states,
 			activity = {};
@@ -185,18 +185,14 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 			.then(temp_game_states => {
 				game_states = temp_game_states;
-				let food_total = 0,
-					food_nb_string = '';
+				let food_total = 0;
 				for (var i = random_fish_balls.length - 1; i >= 0; i--) {
 					game_states.food_level = game_states.food_level + random_fish_balls[i];
-					food_nb_string += ' ' + random_fish_balls[i] + ' +';
 					food_total += random_fish_balls[i];
 				}
-				food_nb_string = food_nb_string.substring(0, (food_nb_string.length - 2));
 
 				// create activity content
-				activity.content = '<span>' + current_player.name + '</span> found ' + food_total + ' unit(s) of food (' + food_nb_string + ' )';
-
+				activity.content = '<span>' + current_player.name + '</span> found ' + food_total + ' unit(s) of food';
 				return game_model.update_game_states( req.body.game_token, game_states );
 			})
 			.then(are_game_states_updated => {
@@ -362,6 +358,47 @@ const littlebirds = require('../helpers/littlebirds'),
 			})
 	})
 
+	router.post('/update-card-visibility', function (req, res) {
+		let activity = {};
+		let card_to_update = {
+			player_id: req.body.player_id,
+			card_id: req.body.card_id,
+			card_visibility: req.body.card_visibility
+		}
+
+		game_model.get_a_player( req.body.game_token, req.body.player_id )
+			.then(player => {
+				let card_name;
+
+				for (var i = player.game_detail.cards.length - 1; i >= 0; i--) {
+					if(player.game_detail.cards[i]._id == req.body.card_id){
+						player.game_detail.cards[i].visibility = req.body.card_visibility;
+						card_name = player.game_detail.cards[i].name;
+					}
+				}
+
+				if(req.body.card_visibility == 'visible'){
+					activity.content = '<span>' + player.name + '</span> show one of his card: ' + card_name;
+				}else{
+					activity.content = '<span>' + player.name + '</span> hide one of his card: ' + card_name;
+				}
+				return game_model.update_player_cards( req.body.game_token, req.body.player_id, player.game_detail.cards );
+			})
+			.then(are_cards_updated => {
+				return game_model.add_activity( req.body.game_token, activity );
+			})
+			.then(is_activity_added => {
+				activity.status = 'new';
+				littlebirds.broadcast('new-activity', req.body.game_token, activity);
+				littlebirds.broadcast('update-card-visibility', req.body.game_token, card_to_update );
+				res.status(200).json({content: 'card visibility was updated'});
+			})
+			.catch( error => {
+				console.log(error);
+				res.status(401).json( error );
+			})
+	});
+
 	function next_turn( game_token, current_game_states ){
 		return new Promise((resolve, reject)=>{
 			let is_next_round,
@@ -384,7 +421,6 @@ const littlebirds = require('../helpers/littlebirds'),
 					littlebirds.broadcast('update_active_player', game_token, {player_id: game_states.active_player});
 					littlebirds.broadcast('update-game-states', game_token, game_states);
 
-
 					return game_model.add_activity( game_token, activity );
 				})
 				.then(is_activity_added => {
@@ -400,46 +436,63 @@ const littlebirds = require('../helpers/littlebirds'),
 
 	function end_turn_manager( game_token, game_states ){
 		return new Promise((resolve, reject)=>{
-			let activity = {};
+			let activity = {},
+				current_player,
+				current_game_states = game_states,
+				water_card_details;
 
 			game_model.get_all_players( game_token )
 				.then( players => {
-
-					if( game_states.turn / (players.length - 1) == 1 ){
-						console.log('****** Starting end of turn ******')
-						console.log('water_level ' +  game_states.water_level);
-						console.log('food_level ' +  game_states.food_level);
-						console.log('dead_level ' +  game_states.dead_level);
-						console.log('players_length ' +  players.length);
-
-						if((game_states.water_level - (players.length - game_states.dead_level) < 0)){
-							console.log("not enough water !")
-						}else if((game_states.food_level - (players.length - game_states.dead_level) < 0)){
-							console.log("not enough food !")
+					current_player = players;
+					if( current_game_states.turn / (current_player.length - 1) == 1 ){
+						if((current_game_states.water_level - (current_player.length - current_game_states.dead_level) < 0)){
+							throw "Not enough water !";
+						}else if((current_game_states.food_level - (current_player.length - current_game_states.dead_level) < 0)){
+							throw "Not enough food !";
 						}else{
-							game_states.water_level = (game_states.water_level - (players.length - game_states.dead_level));
-							game_states.food_level = (game_states.water_level - (players.length - game_states.dead_level));
-							//Update water card
-							game_states.turn = 0;
+							current_game_states.water_level = (current_game_states.water_level - (current_player.length - current_game_states.dead_level));
+							current_game_states.food_level = (current_game_states.food_level - (current_player.length - current_game_states.dead_level));
+							current_game_states.turn = 0;
+							current_game_states.round ++;
 
-							activity.content = (players.length - game_states.dead_level) + ' of water and ' + (players.length - game_states.dead_level) + ' of food were consumed during the day'; // create activity content
-							activity.status = 'new';
-							littlebirds.broadcast('new-activity', game_token, activity);
+							activity.content = '🌖🌗🌘🌑 End of the day 🌑🌒🌓🌔';
+							return game_model.add_activity( game_token, activity );
 						}
-
 					}else{
-						game_states.turn ++;
+						current_game_states.turn ++;
+						resolve( current_game_states );
+						throw false;
 					}
-					console.log(game_states);
-					resolve( game_states );
+				})
+				.then(is_activity_added => {
+					activity.status = 'new';
+					littlebirds.broadcast('new-activity', game_token, activity);
+					delete activity.status;
+
+					activity.content = '<b>' + (current_player.length - current_game_states.dead_level) + ' of water</b> (' + (current_game_states.water_level + (current_player.length - current_game_states.dead_level)) + ' → ' + current_game_states.water_level + ') and <b>' + (current_player.length - current_game_states.dead_level) + ' of food</b> (' + (current_game_states.food_level + (current_player.length - current_game_states.dead_level)) + ' → ' + current_game_states.food_level + ') were consumed during the night'; // create activity content
+					return game_model.add_activity( game_token, activity );
+				})
+				.then(is_activity_added => {
+					activity.status = 'new';
+					littlebirds.broadcast('new-activity', game_token, activity);
+
+					return game_model.get_a_water_card( game_token, current_game_states.round );
+				})
+				.then(water_card => {
+					water_card_details = water_card;
+					return game_model.update_current_water_card( game_token, water_card_details );
+				})
+				.then( is_current_water_card_updated => {
+					littlebirds.broadcast('new-water-card', game_token, water_card_details);
+					resolve( current_game_states );
+				})
+				.catch( error => {
+					console.log(error);
 				})
 		});
 	}
 
-	function end_game(){
-		return new Promise((resolve, reject)=>{
-		});
-	}
+	function end_game(){}
 
 	function update_raft_status( game_token ){
 		return new Promise((resolve, reject)=>{
@@ -501,57 +554,16 @@ const littlebirds = require('../helpers/littlebirds'),
 			});
 	}
 
-	router.post('/update-card-visibility', function (req, res) {
-		let activity = {};
-		let card_to_update = {
-			player_id: req.body.player_id,
-			card_id: req.body.card_id,
-			card_visibility: req.body.card_visibility
-		}
-
-		game_model.get_a_player( req.body.game_token, req.body.player_id )
-			.then(player => {
-				let card_name;
-
-				for (var i = player.game_detail.cards.length - 1; i >= 0; i--) {
-					if(player.game_detail.cards[i]._id == req.body.card_id){
-						player.game_detail.cards[i].visibility = req.body.card_visibility;
-						card_name = player.game_detail.cards[i].name;
+	function delete_old_game(){
+		game_model.get_all_games()
+			.then(games => {
+				for (var i = games.length - 1; i >= 0; i--) {
+					if( moment( games[i].creation_date).isAfter( moment().subtract(24, 'hours')) == false ){
+						game_model.delete_old_game( games[i].game_token );
 					}
 				}
-
-				if(req.body.card_visibility == 'visible'){
-					activity.content = '<span>' + player.name + '</span> show one of his card: ' + card_name;
-				}else{
-					activity.content = '<span>' + player.name + '</span> hide one of his card: ' + card_name;
-				}
-				return game_model.update_player_cards( req.body.game_token, req.body.player_id, player.game_detail.cards );
 			})
-			.then(are_cards_updated => {
-				return game_model.add_activity( req.body.game_token, activity );
-			})
-			.then(is_activity_added => {
-				activity.status = 'new';
-				littlebirds.broadcast('new-activity', req.body.game_token, activity);
-				littlebirds.broadcast('update-card-visibility', req.body.game_token, card_to_update );
-				res.status(200).json({content: 'card visibility was updated'});
-			})
-			.catch( error => {
-				console.log(error);
-				res.status(401).json( error );
-			})
-	});
-
-function delete_old_game(){
-	game_model.get_all_games()
-		.then(games => {
-			for (var i = games.length - 1; i >= 0; i--) {
-				if( moment( games[i].creation_date).isAfter( moment().subtract(24, 'hours')) == false ){
-					game_model.delete_old_game( games[i].game_token );
-				}
-			}
-		})
-}
+	}
 
 module.exports = {
 	"game" : router
