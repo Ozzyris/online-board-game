@@ -100,6 +100,8 @@ A way to play board game online to play during confinement.
 
 - [ ] End turn
 	- [ ] Deduce food & water
+	- [ ] Add a step to kill someone
+	- [ ] Add a step to add food or water (game_states history)?
 
 - [ ] Last turn
 	- [ ] Winning player
@@ -124,4 +126,5 @@ A way to play board game online to play during confinement.
 - [ ] Les timers des notifications sont ensemblent.
 - [ ] Sometime showing a card is not working well.
 - [ ] The user status is not update when reconnected.
+- [ ] Loop who forces a player to keep playing.
 

@@ -368,13 +368,9 @@ const littlebirds = require('../helpers/littlebirds'),
 				activity = {},
 				game_states = current_game_states;
 
-			game_model.get_all_players( game_token )
-				.then( players => {
-					if( game_states.turn / (players.length - 1) == 1 ){
-						game_states.turn = 0
-					}else{
-						game_states.turn ++;
-					}
+			end_turn_manager( game_token, game_states )
+				.then( temp_game_states => {
+					game_states = temp_game_states;
 					return game_model.get_next_player( game_token, game_states.turn );
 				})
 				.then(next_player => {
@@ -386,6 +382,8 @@ const littlebirds = require('../helpers/littlebirds'),
 				.then(are_game_states_updated => { // Update game states
 					littlebirds.broadcast('new-toast', game_states.active_player, {content: "It's your turn to play!"});
 					littlebirds.broadcast('update_active_player', game_token, {player_id: game_states.active_player});
+					littlebirds.broadcast('update-game-states', game_token, game_states);
+
 
 					return game_model.add_activity( game_token, activity );
 				})
@@ -397,6 +395,49 @@ const littlebirds = require('../helpers/littlebirds'),
 					resolve(true);
 				})
 
+		});
+	}
+
+	function end_turn_manager( game_token, game_states ){
+		return new Promise((resolve, reject)=>{
+			let activity = {};
+
+			game_model.get_all_players( game_token )
+				.then( players => {
+
+					if( game_states.turn / (players.length - 1) == 1 ){
+						console.log('****** Starting end of turn ******')
+						console.log('water_level ' +  game_states.water_level);
+						console.log('food_level ' +  game_states.food_level);
+						console.log('dead_level ' +  game_states.dead_level);
+						console.log('players_length ' +  players.length);
+
+						if((game_states.water_level - (players.length - game_states.dead_level) < 0)){
+							console.log("not enough water !")
+						}else if((game_states.food_level - (players.length - game_states.dead_level) < 0)){
+							console.log("not enough food !")
+						}else{
+							game_states.water_level = (game_states.water_level - (players.length - game_states.dead_level));
+							game_states.food_level = (game_states.water_level - (players.length - game_states.dead_level));
+							//Update water card
+							game_states.turn = 0;
+
+							activity.content = (players.length - game_states.dead_level) + ' of water and ' + (players.length - game_states.dead_level) + ' of food were consumed during the day'; // create activity content
+							activity.status = 'new';
+							littlebirds.broadcast('new-activity', game_token, activity);
+						}
+
+					}else{
+						game_states.turn ++;
+					}
+					console.log(game_states);
+					resolve( game_states );
+				})
+		});
+	}
+
+	function end_game(){
+		return new Promise((resolve, reject)=>{
 		});
 	}
 
