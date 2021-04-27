@@ -18,7 +18,7 @@ export class ModalPlayerDirective implements OnInit, OnDestroy{
 	modal_subscription: Subscription;
 	is_modal_active: Boolean = false;
 	player_details: any;
-	current_player_id: string;
+	current_player: string;
 	active_player: string;
 	game_token: string;
 
@@ -27,7 +27,7 @@ export class ModalPlayerDirective implements OnInit, OnDestroy{
 		this.modal_subscription = this.modalName_service.get_modal_status()
 			.subscribe( modal_info => {
 				this.active_player = modal_info.active_player;
-				this.current_player_id = modal_info.current_player_id;
+				this.current_player = modal_info.current_player;
 				this.player_details = modal_info.player_details;
 				this.game_token = modal_info.game_token;
 

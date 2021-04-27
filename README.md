@@ -79,6 +79,7 @@ A way to play board game online to play during confinement.
 
 - [x] Display player's card
 	- [x] Let the user show some card!
+	- [ ] Void card
 	- [ ] Add multiplicator
 
 - [x] Start turn
@@ -99,7 +100,7 @@ A way to play board game online to play during confinement.
 	- [ ] Leave the island
 
 - [ ] End turn
-	- [ ] Deduce food & water
+	- [x] Deduce food & water
 	- [ ] Add a step to kill someone
 	- [ ] Add a step to add food or water (game_states history)?
 

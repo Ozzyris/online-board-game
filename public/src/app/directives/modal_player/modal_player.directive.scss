@@ -70,6 +70,7 @@ section.modal_player{
 						left: 0;
 						right: 0;
 						padding: 4px 8px;
+						border-radius: 0px 0px 6px 6px;
 
 						span.status{
 							float: left;
@@ -83,6 +84,7 @@ section.modal_player{
 							cursor: pointer;
 							transition: all 200ms;
 							color: lighten(rgb(95, 170, 239), 25%);
+							margin-left: 10px;
 
 
 							&:hover{

@@ -7,12 +7,13 @@
 			<ul>
 				<li *ngIf="player_details._id == active_player" ><img src="./../../assets/images/galerapagos/premier_joueur.jpg"></li>
 				<li *ngFor="let cards of player_details.game_detail.cards">
-					<img *ngIf="cards.visibility != 'hidden' || current_player_id == player_details._id" [src]="'./../../assets/images/galerapagos/' + cards.illustration">
-					<img *ngIf="cards.visibility == 'hidden' && current_player_id != player_details._id" [src]="'./../../assets/images/galerapagos/back.jpg'">
-					<div class="label" *ngIf="current_player_id == player_details._id">
+					<img *ngIf="cards.visibility != 'hidden' || current_player.player_id == player_details._id" [src]="'./../../assets/images/galerapagos/' + cards.illustration">
+					<img *ngIf="cards.visibility == 'hidden' && current_player.player_id != player_details._id" [src]="'./../../assets/images/galerapagos/back.jpg'">
+					<div class="label" *ngIf="current_player.player_id == player_details._id || current_player.rank == 'administrator'">
 						<span class="status">{{cards.visibility}}</span>
-						<span *ngIf="cards.visibility == 'hidden'" class="action" (click)="update_card_visibility( current_player_id, cards)" ></span>
-						<span *ngIf="cards.visibility != 'hidden'" class="action" (click)="update_card_visibility( current_player_id, cards)" ></span>
+						<span *ngIf="current_player.player_id == player_details._id && cards.visibility == 'hidden'" class="action" (click)="update_card_visibility( current_player.player_id, cards)" ></span>
+						<span *ngIf="current_player.player_id == player_details._id && cards.visibility != 'hidden'" class="action" (click)="update_card_visibility( current_player.player_id, cards)" ></span>
+						<span *ngIf="cards.visibility != 'hidden' && current_player.rank == 'administrator'" class="action" ></span>
 					</div>
 				</li>
 			</ul>
