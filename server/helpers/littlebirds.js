@@ -9,7 +9,7 @@ const game_model = require('../models/game').game;
 // GOLBALES
 var global_io,
 	currentSockets = {},
-	cron_manager = new CronJobManager();;
+	cron_manager = new CronJobManager();
 
 
 // IO
